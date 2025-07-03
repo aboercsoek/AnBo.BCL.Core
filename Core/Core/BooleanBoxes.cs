@@ -2,14 +2,13 @@
 // File:    BooleanBoxes.cs
 // Content:	Implementation of class BooleanBoxes
 // Author:	Andreas Börcsök
-// Copyright © 2025 Andreas Börcsök
 //--------------------------------------------------------------------------
 #region Using directives
 using System;
 using System.Linq;
 #endregion
 
-namespace AnBo
+namespace AnBo.Core
 {
     ///<summary>BooleanBoxes optimizes performance for boxing boolean values, by holding two boxed intances for <c>true</c> and <c>false</c> values.</summary>
     public static class BooleanBoxes

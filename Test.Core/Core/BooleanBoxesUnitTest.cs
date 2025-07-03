@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Xunit;
+using AnBo.Core;
 
 namespace AnBo.Test
 {
