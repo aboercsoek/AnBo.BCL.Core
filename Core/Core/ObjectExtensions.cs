@@ -16,14 +16,34 @@ namespace AnBo.Core
         /// <typeparam name="T">Type to cast to</typeparam>
         /// <param name="item">value to be casted</param>
         /// <returns>casted value</returns>
-        public static T? As<T>(this object item)
+        //public static T? As<T>(this object item)
+        //{
+        //    if (item == null)
+        //        return default(T);
+
+        //    if (item is T)
+        //        return (T)item;
+
+        //    return default(T);
+        //}
+
+        /// <summary>
+        /// Fluent version of C# "as" keyword
+        /// </summary>
+        /// <typeparam name="T">Type to cast to</typeparam>
+        /// <param name="item">value to be casted</param>
+        /// <returns>casted value</returns>
+        public static T? AsUniversal<T>(this object? item)
         {
-            if (item == null)
-                return default(T);
+            // Prüft, ob 'item' mit dem Typ 'T' kompatibel ist.
+            // Wenn ja, wird 'result' der umgewandelte Wert zugewiesen und zurückgegeben.
+            if (item is T result)
+            {
+                return result;
+            }
 
-            if (item is T)
-                return (T)item;
-
+            // Wenn die Umwandlung nicht möglich ist, gib den Standardwert zurück
+            // (was 'null' für alle Referenztypen und nullable Wertetypen ist).
             return default(T);
         }
 
@@ -39,15 +59,15 @@ namespace AnBo.Core
             if (source == null)
                 yield break;
 
-            if (typeof(TTarget).IsAssignableFrom(typeof(TSource)) == false)
-                yield break;
+            //if (typeof(TTarget).IsAssignableFrom(typeof(TSource)) == false)
+            //    yield break;
 
             foreach (var sourceItem in source)
             {
                 if (sourceItem == null)
                     continue;
 
-                var castedItem = sourceItem.As<TTarget>();
+                var castedItem = sourceItem.AsUniversal<TTarget>();
                 if (castedItem != null)
                 {
                     yield return castedItem;
@@ -71,10 +91,9 @@ namespace AnBo.Core
                 if (sourceItem == null)
                     continue;
 
-                TTarget? item = sourceItem.As<TTarget>();
+                TTarget? item = sourceItem.AsUniversal<TTarget>();
 
-                // Fix for CS8604: Ensure 'item' is not null before calling IsDefaultValue
-                if (item != null && item.IsDefaultValue() && typeof(TTarget).IsValueType.IsFalse())
+                if (item.IsDefaultValue() && typeof(TTarget).IsValueType.IsFalse())
                     continue;
 
                 yield return item!;
@@ -125,9 +144,15 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="type">Type to instantiate</param>
         /// <returns>Instance of the given Type</returns>
-        public static object? New(this Type type)
+        public static object? New(this Type? type)
         {
-            return (type == null) ? null : Activator.CreateInstance(type);
+            if (type == null)
+                return null;
+            
+            if (type == typeof(string))
+                return string.Empty; // Special case for string to avoid Activator.CreateInstance throwing an exception
+
+            return Activator.CreateInstance(type);
         }
 
 
@@ -288,10 +313,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsNull<T>(this T instance)
         {
-            if (typeof(T).IsValueType)
-                return false;
-
-            return (Equals(instance, default(T)));
+            return instance is null;
         }
 
         /// <summary>
@@ -313,7 +335,7 @@ namespace AnBo.Core
         /// <returns>
         /// 	<see langword="true"/> if <paramref name="value" /> is the default value for this reference or value type; or <see langword="false"/> not.
         /// </returns>
-        public static bool IsDefaultValue(this object value)
+        public static bool IsDefaultValue(this object? value)
         {
             if (ReferenceEquals(value, null))
             {
