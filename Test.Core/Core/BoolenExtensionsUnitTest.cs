@@ -2,7 +2,7 @@
 using Xunit;
 using AnBo.Core;
 
-namespace AnBo.BCL8.Test.Core.Core
+namespace AnBo.Test
 {
     public class BoolenExtensionsUnitTest
     {
