@@ -27,6 +27,20 @@ namespace AnBo.Core
         //    return default(T);
         //}
 
+        public static Nullable<T> AsValue<T>(this object? item) where T : struct
+        {
+            // Prüft, ob 'item' mit dem Typ 'T' kompatibel ist.
+            // Wenn ja, wird 'result' der umgewandelte Wert zugewiesen und zurückgegeben.
+            if (item is T result)
+            {
+                return result;
+            }
+            // Wenn die Umwandlung nicht möglich ist, gib den Standardwert zurück
+            // (was 'null' für alle Referenztypen und nullable Wertetypen ist).
+            return null;
+        }
+        
+
         /// <summary>
         /// Fluent version of C# "as" keyword
         /// </summary>
@@ -112,8 +126,8 @@ namespace AnBo.Core
             if (item == null)
                 return default(T);
 
-            if (item is T)
-                return (T)item;
+            if (item is T result)
+                return result;
 
             throw new InvalidCastException(string.Format("Can not cast from type {0} to {1}", item.GetType().Name, typeof(T).Name));
         }
@@ -134,6 +148,7 @@ namespace AnBo.Core
             {
                 if (sourceItem == null)
                     continue;
+
                 yield return sourceItem.Cast<TTarget>();
 
             }

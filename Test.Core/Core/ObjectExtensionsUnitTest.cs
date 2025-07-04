@@ -45,10 +45,23 @@ namespace AnBo.Test
             object item = "test string";
 
             // Act
-            var result = item.AsUniversal<int>();
+            int? result = item.AsUniversal<int>();
 
             // Assert
             result.Should().Be(0);
+        }
+
+        [Fact]
+        public void TestCase003a_As_With_Incompatible_Type_Should_Return_Null()
+        {
+            // Arrange
+            object item = "test string";
+
+            // Act
+            var result = item.AsValue<int>();
+
+            // Assert
+            result.Should().BeNull();
         }
 
         [Fact]
@@ -75,6 +88,32 @@ namespace AnBo.Test
 
             // Assert
             result.Should().Be(42);
+        }
+
+        [Fact]
+        public void TestCase005a_As_With_Nullable_Value_Type_Should_Return_Null()
+        {
+            // Arrange
+            object? item = null;
+
+            // Act
+            var result = item.AsUniversal<int?>();
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public void TestCase005b_As_With_Nullable_Value_Type_Should_Return_Null()
+        {
+            // Arrange
+            object? item = "test string";
+
+            // Act
+            var result = item.AsUniversal<int?>();
+
+            // Assert
+            result.Should().BeNull();
         }
 
         [Fact]
@@ -337,10 +376,10 @@ namespace AnBo.Test
         public void TestCase024_CastSequence_With_Null_Items_Should_Skip_Null_Items()
         {
             // Arrange
-            var source = new List<object?> { "test1", null, "test2" };
+            var source = new List<object> { "test1", null, "test2" };
 
             // Act
-            var result = source.CastSequence<object?, string>().ToList();
+            var result = source.CastSequence<object, string>().ToList();
 
             // Assert
             result.Should().HaveCount(2);
