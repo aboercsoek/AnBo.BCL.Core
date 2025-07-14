@@ -141,7 +141,9 @@ namespace AnBo.Test
             IEnumerable<object>? source = null;
 
             // Act
+#pragma warning disable CS8604 // Possible null reference argument.
             var result = source.AsSequence<object, string>().ToList();
+#pragma warning restore CS8604 // Possible null reference argument.
 
             // Assert
             result.Should().BeEmpty();
@@ -213,7 +215,9 @@ namespace AnBo.Test
             IEnumerable? source = null;
 
             // Act
+#pragma warning disable CS8604 // Possible null reference argument.
             var result = source.AsSequence<string>().ToList();
+#pragma warning restore CS8604 // Possible null reference argument.
 
             // Assert
             result.Should().BeEmpty();
@@ -341,7 +345,9 @@ namespace AnBo.Test
             IEnumerable<object>? source = null;
 
             // Act
+#pragma warning disable CS8604 // Possible null reference argument.
             var result = source.CastSequence<object, string>().ToList();
+#pragma warning restore CS8604 // Possible null reference argument.
 
             // Assert
             result.Should().BeEmpty();
@@ -682,7 +688,9 @@ namespace AnBo.Test
             object? obj = null;
 
             // Act & Assert
+#pragma warning disable CS8604 // Possible null reference argument.
             var action = () => obj.DisposeIfNecessary();
+#pragma warning restore CS8604 // Possible null reference argument.
             action.Should().NotThrow();
         }
 
@@ -721,7 +729,9 @@ namespace AnBo.Test
             IEnumerable? sequence = null;
 
             // Act & Assert
+#pragma warning disable CS8604 // Possible null reference argument.
             var action = () => sequence.DisposeElementsIfNecessary();
+#pragma warning restore CS8604 // Possible null reference argument.
             action.Should().NotThrow();
         }
 
@@ -990,7 +1000,9 @@ namespace AnBo.Test
             object? value = null;
 
             // Act
+#pragma warning disable CS8604 // Possible null reference argument.
             var result = value.IsDefaultValueOrEmptyString();
+#pragma warning restore CS8604 // Possible null reference argument.
 
             // Assert
             result.Should().BeTrue();
