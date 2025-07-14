@@ -3,7 +3,11 @@
 // Content:	Implementation of class ObjectExtensions
 // Author:	Andreas Börcsök
 //--------------------------------------------------------------------------
+#region Using directives
+
 using System.Collections;
+
+#endregion
 
 namespace AnBo.Core
 {
@@ -139,7 +143,7 @@ namespace AnBo.Core
         /// <typeparam name="TTarget">Target sequence item type to cast to</typeparam>
         /// <param name="source">The source sequence</param>
         /// <returns>The casted target sequence.</returns>
-        public static IEnumerable<TTarget> CastSequence<TSource, TTarget>(this IEnumerable<TSource> source)
+        public static IEnumerable<TTarget?> CastSequence<TSource, TTarget>(this IEnumerable<TSource> source)
         {
             if (source == null)
                 yield break;

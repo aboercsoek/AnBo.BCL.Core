@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="ErrorArgumentTemplate1Arg" xml:space="preserve">
+    <value>Argument {0} is not valid.</value>
+  </data>
+  <data name="ErrorArgumentFilePathExceptionTemplate2Args" xml:space="preserve">
+    <value>File path {1} provided by argument {0} does not exist.</value>
+  </data>
+  <data name="ErrorArgumentNotEmptyValidationTemplate1Arg" xml:space="preserve">
+    <value>Argument {0} may not be empty.</value>
+  </data>
+  <data name="ErrorShouldNotBeNullOrEmptyValidationTemplate2Args" xml:space="preserve">
+    <value>Argument {0} may not be null or empty (Value: {1}).</value>
+  </data>
+  <data name="ErrorShouldNotBeNullValidationTemplate1Arg" xml:space="preserve">
+    <value>Argument {0} may not be null.</value>
+  </data>
+  <data name="ErrorArgumentOutOfRangeValidationTemplate4Args" xml:space="preserve">
+    <value>Argument {0} is out of range (Value: {1}).</value>
+  </data>
+  <data name="ErrorArgumentOutOfRangeValidationWithRangeTemplate4Args" xml:space="preserve">
+    <value>Argument {0} is out of range [{2} &lt;= Value: {1} &lt;= {3}].</value>
+  </data>
+  <data name="ErrorArgumentValidationFailedTemplate2Args" xml:space="preserve">
+    <value>Argument validation failed ({0}: {1})</value>
+  </data>
+  <data name="ErrorInvalidOperationRequestTemplate1Arg" xml:space="preserve">
+    <value>Object state permits execution of operation '{0}'.</value>
+  </data>
+  <data name="ErrorOperationExecutionFailedTemplate1Arg" xml:space="preserve">
+    <value>Operation execution failed (operation: {0}). </value>
+  </data>
+  <data name="ErrorWin32ExecutionFailedTemplate2Args" xml:space="preserve">
+    <value>Win32 error {0} occured during {1} execution.</value>
+  </data>
+  <data name="ConsoleMenuMoreThan15MenuItemsAreNotSupported" xml:space="preserve">
+    <value>More than 15 menu items are not supported</value>
+  </data>
+  <data name="ErrorArgumentDirectoryPathExceptionTemplate2Args" xml:space="preserve">
+    <value>Directory path {1} provided by argument {0} does not exist.</value>
+  </data>
+  <data name="ErrorTypesAreNotAssignableTemplate2Args" xml:space="preserve">
+    <value>The type {0} cannot be assigned to variables of type {1}.</value>
+  </data>
+  <data name="ErrorArgDirectoryPathToLongTemplate2Args" xml:space="preserve">
+    <value>Argument {0} is not valid. The specified path {1} is too long. The directory name must be less than 248 characters.</value>
+  </data>
+  <data name="ErrorArgFilePathToLongTemplate2Args" xml:space="preserve">
+    <value>Argument {0} is not valid. The specified file name {1} is too long. The fully qualified file name must be less than 260 characters.</value>
+  </data>
+  <data name="ErrorDirectoryPathToLong" xml:space="preserve">
+    <value>The specified path is too long. The directory name must be less than 248 characters.</value>
+  </data>
+  <data name="ErrorFilePathToLong" xml:space="preserve">
+    <value>The specified file name is too long. The fully qualified file name must be less than 260 characters.</value>
+  </data>
+  <data name="TrackedCollectionArrayTooSmall" xml:space="preserve">
+    <value>The number of elements to copy is greater than the available space in the destination array.</value>
+  </data>
+  <data name="TrackedCollectionEnumHasChanged" xml:space="preserve">
+    <value>The collection was modified after the enumerator was created.</value>
+  </data>
+  <data name="TrackedCollectionEnumInvalidPos" xml:space="preserve">
+    <value>The enumerator is positioned before the first element of the collection or after the last element.</value>
+  </data>
+  <data name="TrackedCollectionIndexNotInArray" xml:space="preserve">
+    <value>The specified index is greater than or equal to than the length of the destination array.</value>
+  </data>
+  <data name="TrackedCollectionNotOneDimensional" xml:space="preserve">
+    <value>The destination array must be one-dimensional.</value>
+  </data>
+  <data name="ErrorAccessViolation" xml:space="preserve">
+    <value>Access violation.</value>
+  </data>
+  <data name="ErrorInfrastructureOrSystem" xml:space="preserve">
+    <value>Failure in infrastructure/system.</value>
+  </data>
+  <data name="ErrorBusinessRuleViolation" xml:space="preserve">
+    <value>Business rule violation.</value>
+  </data>
+</root>

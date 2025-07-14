@@ -180,10 +180,10 @@ namespace AnBo.Test
         public void TestCase010_AsSequence_Generic_With_Mixed_Compatible_Items_Should_Filter_Compatible()
         {
             // Arrange
-            var source = new List<object> { "test1", 42, "test2", null, "test3" };
+            var source = new List<object?> { "test1", 42, "test2", null, "test3" };
 
             // Act
-            var result = source.AsSequence<object, string>().ToList();
+            var result = source.AsSequence<object?, string>().ToList();
 
             // Assert
             result.Should().HaveCount(3);
@@ -382,10 +382,10 @@ namespace AnBo.Test
         public void TestCase024_CastSequence_With_Null_Items_Should_Skip_Null_Items()
         {
             // Arrange
-            var source = new List<object> { "test1", null, "test2" };
+            var source = new List<object?> { "test1", null, "test2" };
 
             // Act
-            var result = source.CastSequence<object, string>().ToList();
+            var result = source.CastSequence<object?, string>().ToList();
 
             // Assert
             result.Should().HaveCount(2);
