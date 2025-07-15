@@ -14,6 +14,7 @@ namespace AnBo.Core
     ///<summary>Fluent <see cref="Object"/> and <see cref="Type"/> Extensions.</summary>
 	public static class ObjectEx
     {
+        // Obsolete: The As<T> method is not used anymore, because it is not type-safe and can lead to runtime errors.
         /// <summary>
         /// Fluent version of C# "as" keyword
         /// </summary>
