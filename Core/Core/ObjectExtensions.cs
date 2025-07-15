@@ -14,24 +14,6 @@ namespace AnBo.Core
     ///<summary>Fluent <see cref="Object"/> and <see cref="Type"/> Extensions.</summary>
 	public static class ObjectEx
     {
-        // Obsolete: The As<T> method is not used anymore, because it is not type-safe and can lead to runtime errors.
-        /// <summary>
-        /// Fluent version of C# "as" keyword
-        /// </summary>
-        /// <typeparam name="T">Type to cast to</typeparam>
-        /// <param name="item">value to be casted</param>
-        /// <returns>casted value</returns>
-        //public static T? As<T>(this object item)
-        //{
-        //    if (item == null)
-        //        return default(T);
-
-        //    if (item is T)
-        //        return (T)item;
-
-        //    return default(T);
-        //}
-
         public static Nullable<T> AsValue<T>(this object? item) where T : struct
         {
             // Prüft, ob 'item' mit dem Typ 'T' kompatibel ist.
