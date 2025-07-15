@@ -1,8 +1,8 @@
-# AnBo.BCL8.Core - Legacy Base Class Library Migration to .NET 8
+# AnBo.BCL.Core - Legacy Base Class Library Migration from .NET 4.8 to .NET 8 and above
 
 ## Project Overview
 
-This repository contains the migration of a legacy Base Class Library originally developed for use in customer projects targeting .NET Framework 4.0. The library has served as a foundational utility set in various enterprise applications, offering reusable components and helper functions.
+This repository contains the migration of a legacy Base Class Library originally developed for use in customer projects targeting .NET Framework 4.8. The library has served as a foundational utility set in various enterprise applications, offering reusable components and helper functions.
 
 ## Migration Goals
 
