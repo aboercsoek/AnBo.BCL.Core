@@ -54,11 +54,11 @@ namespace AnBo.Core
         /// <returns>Description text to display.</returns>
         private string GetDescriptionFromOptionCodeDelegate()
         {
-            DescriptionAttribute description =
+            DescriptionAttribute? description =
                 m_MenuItemAction.Method.GetCustomAttributes(typeof(DescriptionAttribute), false)
                     .AsSequence<DescriptionAttribute>().FirstOrDefault();
 
-            return description == null ? "No description present" : description.Description;
+            return description != null ? description.Description : "No description present";
         }
     }
 }

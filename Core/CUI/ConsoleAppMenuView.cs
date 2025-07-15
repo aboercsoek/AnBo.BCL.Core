@@ -43,6 +43,7 @@ namespace AnBo.Core
             m_MenuHeaderText = menuHeaderText;
             m_CursorTop = 0;
             m_MenuConsoleLeft = 0;
+            m_ProcessName = string.Empty;
         }
 
         #endregion
@@ -210,12 +211,12 @@ namespace AnBo.Core
 
         private void InitProcessInfo()
         {
-            Assembly entryAssembly = Assembly.GetEntryAssembly();
+            Assembly? entryAssembly = Assembly.GetEntryAssembly();
 
             if ((entryAssembly.IsNull()))
                 m_ProcessName = string.Empty;
             else
-                m_ProcessName = entryAssembly.GetName(false).Name + " v" + entryAssembly.GetName(false).Version;
+                m_ProcessName = entryAssembly!.GetName(false).Name + " v" + entryAssembly!.GetName(false).Version;
         }
 
         private void WriteMenuItemCmd(int index)
