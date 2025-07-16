@@ -143,7 +143,6 @@ namespace AnBo.Core
         public static string ToHexString(Int16 value, int hexDigits)
         {
             const int maxDigits = 4;
-            var charArray = new char[maxDigits];
 
             if (hexDigits < 1)
                 hexDigits = 1;
@@ -151,22 +150,8 @@ namespace AnBo.Core
             if (hexDigits > maxDigits)
                 hexDigits = maxDigits;
 
-            int index = maxDigits - 1;
-            int endIndex = maxDigits - hexDigits;
-
-            do
-            {
-                int i = value & 0x0F;
-                charArray[index] = GetHexValue(i);
-                if ((i != 0) && (index < endIndex))
-                {
-                    endIndex = index;
-                }
-                index--;
-                value = (Int16)(value >> 4);
-            } while (index >= 0);
-
-            return new string(charArray, 0, maxDigits - (endIndex / 2));
+            // For minimal digits combine with PadLeft
+            return Convert.ToString(value, 16).PadLeft(hexDigits, '0');
         }
 
         /// <summary>
@@ -180,7 +165,6 @@ namespace AnBo.Core
         public static string ToHexString(int value, int hexDigits)
         {
             const int maxDigits = 8;
-            var charArray = new char[maxDigits];
 
             if (hexDigits < 1)
                 hexDigits = 1;
@@ -188,22 +172,8 @@ namespace AnBo.Core
             if (hexDigits > maxDigits)
                 hexDigits = maxDigits;
 
-            int index = maxDigits - 1;
-            int endIndex = maxDigits - hexDigits;
-
-            do
-            {
-                int i = value & 0x0F;
-                charArray[index] = GetHexValue(i);
-                if ((i != 0) && (index < endIndex))
-                {
-                    endIndex = index;
-                }
-                index--;
-                value = value >> 4;
-            } while (index >= 0);
-
-            return new string(charArray, 0, maxDigits - (endIndex / 2));
+            // For minimal digits combine with PadLeft
+            return Convert.ToString(value, 16).PadLeft(hexDigits, '0');
         }
 
         /// <summary>
@@ -217,7 +187,6 @@ namespace AnBo.Core
         public static string ToHexString(long value, int hexDigits)
         {
             const int maxDigits = 16;
-            var charArray = new char[maxDigits];
 
             if (hexDigits < 1)
                 hexDigits = 1;
@@ -225,51 +194,8 @@ namespace AnBo.Core
             if (hexDigits > maxDigits)
                 hexDigits = maxDigits;
 
-            int index = maxDigits - 1;
-            int endIndex = maxDigits - hexDigits;
-
-            do
-            {
-                var i = (int)(value & 0x0F);
-                charArray[index] = GetHexValue(i);
-                if ((i != 0) && (index < endIndex))
-                {
-                    endIndex = index;
-                }
-                index--;
-                value = value >> 4;
-            } while (index >= 0);
-
-            return new string(charArray, 0, maxDigits - (endIndex / 2));
-        }
-
-        /// <summary>
-        /// Convert byte array to hex string
-        /// </summary>
-        /// <param name="buffer">The byte buffer to convert.</param>
-        /// <returns>The hex string.</returns>
-        public static string ToOctetString(byte[] buffer)
-        {
-            if (buffer == null)
-                return string.Empty;
-            if (buffer.Length == 0)
-                return string.Empty;
-
-            int capacity = buffer.Length * 0x2;
-
-            var sb = new StringBuilder(capacity);
-            int bufferIndex = 0x0;
-
-            while (bufferIndex < buffer.Length)
-            {
-                int num = (buffer[bufferIndex] & 0xf0) >> 0x4;
-                sb.Append(HexDigit(num));
-                num = buffer[bufferIndex] & 0xf;
-                sb.Append(HexDigit(num));
-                bufferIndex++;
-            }
-
-            return sb.ToString();
+            // For minimal digits combine with PadLeft
+            return Convert.ToString(value, 16).PadLeft(hexDigits, '0');
         }
 
         /// <summary>
