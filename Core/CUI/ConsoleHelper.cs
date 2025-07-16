@@ -1,15 +1,15 @@
 ﻿//--------------------------------------------------------------------------
-// Class:	ConsoleHelper
-// Copyright © 2008 Andreas Börcsök. All rights reserved
-// Content:	A console helper class
+// File:    ConsoleHelper.cs
+// Content:	A command line parser implementation.
+// Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 
-using System;
 using System.Collections;
 using System.Security;
 using System.Text;
-using AnBo.Core;
 
 #endregion
 

@@ -2,6 +2,8 @@
 // File:    CustomAttributeProviderEx.cs
 // Content:	Implementation of class CustomAttributeProviderEx
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 

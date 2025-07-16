@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>AnBo.Core</RootNamespace>
+    <BaseOutputPath>..\..\build\bin</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

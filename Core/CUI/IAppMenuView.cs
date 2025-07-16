@@ -1,8 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//--------------------------------------------------------------------------
+// File:    IAppMenuView.cs
+// Content:	Application Menu View Contract.
+// Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
+//--------------------------------------------------------------------------
+#region Using directives
+
+#endregion
 
 namespace AnBo.Core
 {

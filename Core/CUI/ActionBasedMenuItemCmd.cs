@@ -2,6 +2,8 @@
 // File:    ActionBasedMenuItemCmd.cs
 // Content:	Implementation of class ActionBasedMenuItemCmd
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 
@@ -33,10 +35,7 @@ namespace AnBo.Core
         /// <summary>
         /// Text to display in the menu.
         /// </summary>
-        public override string Text
-        {
-            get { return m_MenuItemText; }
-        }
+        public override string Text => m_MenuItemText;
 
         /// <summary>
         /// Execute the actual operation.

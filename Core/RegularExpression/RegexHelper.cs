@@ -2,8 +2,8 @@
 // File:    RegexHelper.cs
 // Content:	Implementation of Regex helper class
 // Author:	Andreas Börcsök
-// Website:	http://www.smartexpert.de
-// Copyright © 2009 Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 

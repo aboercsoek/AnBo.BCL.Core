@@ -2,6 +2,8 @@
 // File:    StringConversionHelper.cs
 // Content:	Implementation of a string conversion helper class
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 

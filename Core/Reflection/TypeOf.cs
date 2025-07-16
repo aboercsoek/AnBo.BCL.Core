@@ -2,12 +2,11 @@
 // File:    TypeOf.cs
 // Content:	Implementation of class TypeOf
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+#region Using directives
+#endregion
 
 namespace AnBo.Core
 {

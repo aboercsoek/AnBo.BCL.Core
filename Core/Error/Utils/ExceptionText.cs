@@ -2,8 +2,8 @@
 // File:    ExceptionText.cs
 // Content:	Implementation of class ExceptionText
 // Author:	Andreas Börcsök
-// Website:	http://www.smartexpert.de
-// Copyright © 2010 Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 

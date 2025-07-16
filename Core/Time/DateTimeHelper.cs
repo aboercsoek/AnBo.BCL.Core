@@ -2,6 +2,8 @@
 // File:    DateTimeHelper.cs
 // Content:	Implementation of class DateTimeUtlities
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 

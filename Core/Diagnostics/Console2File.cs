@@ -2,6 +2,8 @@
 // File:    Console2File.cs
 // Content:	Implementation of class Console2File
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 

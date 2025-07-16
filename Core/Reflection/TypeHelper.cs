@@ -2,13 +2,18 @@
 // File:    TypeHelper.cs
 // Content:	Implementation of class TypeHelper
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
-using System;
+#region Using directives
+
 using System.Collections;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+#endregion
 
 namespace AnBo.Core
 {

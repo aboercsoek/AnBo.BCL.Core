@@ -2,6 +2,8 @@
 // File:    MonthType.cs
 // Content:	Implementation of enumeration Month
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 

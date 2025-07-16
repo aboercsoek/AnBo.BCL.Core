@@ -2,6 +2,8 @@
 // File:    AppMenuController.cs
 // Content:	Implementation of class AppMenuController
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 
@@ -60,6 +62,7 @@ namespace AnBo.Core
         /// </summary>
         public void Run()
         {
+            // Initialize the view with menu items texts
             m_View.InitView(this.Select(menuItem => menuItem.Text));
 
             while (!m_View.ShouldQuit)
@@ -69,6 +72,7 @@ namespace AnBo.Core
                 m_View.PromptToContinue();
             }
 
+            // User selected to quit the application
             Environment.Exit(0);
         }
 

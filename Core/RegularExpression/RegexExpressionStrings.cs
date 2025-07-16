@@ -2,6 +2,8 @@
 // File:    RegexExpressionStrings.cs
 // Content:	Implementation of Regex Expression String Library
 // Author:	Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 #region Using directives
 
