@@ -34,19 +34,20 @@ namespace AnBo.Core
 
         #region HexString- & HexDigit-Methods
 
-        /// <summary>
-        /// Turns an integer into a string; independent of current culture, and more efficient (may cache strings)
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        internal static string Int32ToString(int value)
-        {
-            return (value < CachedInt32Strings.Length) ? CachedInt32Strings[value] : value.ToString(CultureInfo.InvariantCulture);
-        }
+        // /// <summary>
+        // /// Turns an integer into a string; independent of current culture, and more efficient (may cache strings)
+        // /// </summary>
+        // /// <param name="value"></param>
+        // /// <returns></returns>
+        //internal static string Int32ToString(int value)
+        //{
+        //    return (value < CachedInt32Strings.Length) ? CachedInt32Strings[value] : value.ToString(CultureInfo.InvariantCulture);
+        //}
 
         /// <summary>
         /// Converts a hex digit.
         /// </summary>
+        /// <exception cref="ArgException{TValue}">Is thrown if <paramref name="val"/> has imcompatible digits for hex convertian.</exception>
         /// <param name="val">The value.</param>
         /// <returns>The converted hex digit.</returns>
         public static int ConvertHexDigit(char val)
@@ -61,7 +62,7 @@ namespace AnBo.Core
             }
             if ((val < 'A') || (val > 'F'))
             {
-                throw new ArgumentException("Index was out of range. Must be between '0'-'9' or 'A'-'F'.");
+                throw new ArgException<char>(val, "val", "Value was out of range. Must be between '0'-'9' or 'a'-'f' or 'A'-'F'.");
             }
             return ((val - 'A') + 0xa);
         }
@@ -82,7 +83,7 @@ namespace AnBo.Core
 
             bool flag = false;
             int currentHexStringIndex = 0x0;
-            string normalizedHexString = hexString.TrimStart();
+            string normalizedHexString = hexString.TrimStart().TrimEnd();
             int length = normalizedHexString.Length;
 
             if (((length >= 2) && (normalizedHexString[0] == '0')) && ((normalizedHexString[1] == 'x') || (normalizedHexString[1] == 'X')))
@@ -94,7 +95,7 @@ namespace AnBo.Core
             if (length == 0)
                 return new byte[0];
 
-            if (((length % 2) != 0) && ((length % 3) != 2))
+            if ((length % 2) != 0 && ((length % 3) != 2))
             {
                 throw new ArgException<string>(hexString, "hexString", "Inproperly formatted hex string");
             }
