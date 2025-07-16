@@ -143,13 +143,13 @@ namespace AnBo.Test
         public void TestCase009_FromHexString_With_0X_Prefix_Should_Strip_Prefix()
         {
             // Arrange
-            string hexString = "0X4101";
+            string hexString = "0X4241";
 
             // Act
             var result = HexConverter.FromHexString(hexString);
 
             // Assert
-            result.Should().Equal(new byte[] { 0x41, 0x01 });
+            result.Should().Equal(new byte[] { 0x42, 0x41 });
         }
 
         [Fact]
@@ -219,22 +219,22 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase015_FromHexString_With_Invalid_Format_Odd_Length_Should_Throw_ArgException()
+        public void TestCase015_FromHexString_With_Simple_Hex_But_Wrong_Fromat_Throw_ArgException()
         {
             // Arrange
-            string hexString = "0414243";
+            string hexString = "a41424344";
 
             // Act & Assert
             var action = () => HexConverter.FromHexString(hexString);
             action.Should().Throw<ArgException<string>>()
-               .WithMessage("Inproperly formatted hex string");
+                .WithMessage("Inproperly formatted hex string");
         }
 
         [Fact]
-        public void TestCase016_FromHexString_With_Invalid_Format_Space_Not_Third_Should_Throw_ArgException()
+        public void TestCase016_FromHexString_With_Space_Separated_Hex_With_Wrong_Fromat_Throw_ArgExecption()
         {
             // Arrange
-            string hexString = "41 42  43";
+            string hexString = "a 41 42  43";
 
             // Act & Assert
             var action = () => HexConverter.FromHexString(hexString);
@@ -250,7 +250,8 @@ namespace AnBo.Test
 
             // Act & Assert
             var action = () => HexConverter.FromHexString(hexString);
-            action.Should().Throw<ArgException<char>>();
+            action.Should().Throw<ArgException<string>>()
+                .WithMessage("Inproperly formatted hex string");
         }
 
         #endregion

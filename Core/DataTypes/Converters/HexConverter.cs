@@ -19,16 +19,16 @@ namespace AnBo.Core
 	/// </summary>
 	public static class HexConverter
     {
-        private static readonly string[] CachedInt32Strings;
+        // private static readonly string[] CachedInt32Strings;
 
         static HexConverter()
         {
-            var strArray = new string[0x100];
-            for (int i = 0; i < strArray.Length; i++)
-            {
-                strArray[i] = i.ToString(CultureInfo.InvariantCulture);
-            }
-            CachedInt32Strings = strArray;
+            //var strArray = new string[0x100];
+            //for (int i = 0; i < strArray.Length; i++)
+            //{
+            //    strArray[i] = i.ToString(CultureInfo.InvariantCulture);
+            //}
+            //CachedInt32Strings = strArray;
 
         }
 
@@ -72,56 +72,32 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="hexString">The hex string.</param>
         /// <returns>The converted byte buffer.</returns>
-        public static byte[] FromHexString(string hexString)
+        /// <exception cref="ArgException{TValue}">Is thrown if <paramref name="hexString"/> is not properly formatted.</exception>"
+        public static byte[] FromHexString(string hexString) 
         {
-            byte[] buffer;
-
-            if (hexString.IsNullOrEmptyWithTrim())
+            try
             {
-                return new byte[0];
+                if (hexString.IsNullOrEmptyWithTrim())
+                {
+                    return new byte[0];
+                }
+
+                hexString = hexString.Replace(" ", "");
+
+                // Remove 0x prefix if present
+                if (hexString.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                {
+                    hexString = hexString.Substring(2);
+                }
+
+                // Convert hex string to byte array
+                return Convert.FromHexString(hexString);
             }
-
-            bool flag = false;
-            int currentHexStringIndex = 0x0;
-            string normalizedHexString = hexString.TrimStart().TrimEnd();
-            int length = normalizedHexString.Length;
-
-            if (((length >= 2) && (normalizedHexString[0] == '0')) && ((normalizedHexString[1] == 'x') || (normalizedHexString[1] == 'X')))
-            {
-                length = normalizedHexString.Length - 2;
-                currentHexStringIndex = 2;
-            }
-
-            if (length == 0)
-                return new byte[0];
-
-            if ((length % 2) != 0 && ((length % 3) != 2))
+            catch (FormatException)
             {
                 throw new ArgException<string>(hexString, "hexString", "Inproperly formatted hex string");
             }
-
-            if ((length >= 0x3) && (normalizedHexString[currentHexStringIndex + 0x2] == ' '))
-            {
-                flag = true;
-                buffer = new byte[(length / 0x3) + 0x1];
-            }
-            else
-            {
-                buffer = new byte[length / 0x2];
-            }
-
-            for (int i = 0x0; currentHexStringIndex < normalizedHexString.Length; i++)
-            {
-                int num4 = ConvertHexDigit(normalizedHexString[currentHexStringIndex]);
-                int num3 = ConvertHexDigit(normalizedHexString[currentHexStringIndex + 0x1]);
-                buffer[i] = (byte)(num3 | (num4 << 0x4));
-                if (flag)
-                {
-                    currentHexStringIndex++;
-                }
-                currentHexStringIndex += 0x2;
-            }
-            return buffer;
+            
         }
 
         private static char GetHexValue(int i)
