@@ -1,11 +1,9 @@
 using AnBo.Core;
 using FluentAssertions;
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Numerics;
-using Xunit;
 
 namespace AnBo.Test
 {
@@ -1210,6 +1208,256 @@ namespace AnBo.Test
 
             // Assert
             result.Should().Contain("[1, 2]").And.Contain("[3, 4, 5]");
+        }
+
+        #endregion
+
+        #region ToInvariantString Method Tests - TypeConverters
+
+        [Fact]
+        public void TestCase083_ToInvariantString_With_TypeConverter_Should_Use_Converter()
+        {
+            
+            // Arrange
+            var value = new Person("Max Mustermann", 42);
+            // Act
+            var result = value.ToInvariantString();
+            // Assert
+            result.Should().Be("[TypeConverter] Max Mustermann (42)");
+        }
+
+        // Beispiel einer benutzerdefinierten Klasse mit TypeConverter
+        [TypeConverter(typeof(PersonConverter))]
+        internal class Person
+        {
+            public string Name { get; set; }
+            public int Age { get; set; }
+
+            public Person(string name, int age)
+            {
+                Name = name;
+                Age = age;
+            }
+
+            public override string ToString()
+            {
+                return $"Person: {Name}, {Age} Jahre alt";
+            }
+        }
+
+        // Benutzerdefinierter TypeConverter für Person
+        internal class PersonConverter : TypeConverter
+        {
+            public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
+            {
+                // Sagt, dass wir zu string konvertieren können
+                return destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
+            }
+
+            public override object? ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
+            {
+                if (destinationType == typeof(string) && value is Person person)
+                {
+                    // Spezielle Formatierung durch TypeConverter
+                    return $"[TypeConverter] {person.Name} ({person.Age})";
+                }
+                return base.ConvertTo(context, culture, value, destinationType);
+            }
+        }
+
+        [Fact]
+        public void TestCase084_ToInvariantString_With_ClassToString_Should_Use_ToString()
+        {
+            // Arrange
+            var value = new SimpleProduct("Max Mustermann", 42.2m);
+            // Act
+            var result = value.ToInvariantString();
+            // Assert
+            result.Should().Be("SimpleProduct: Max Mustermann - 42.2");
+        }
+
+        // Beispiel 2: Klasse OHNE TypeConverter (fällt auf ToString() zurück)
+        internal class SimpleProduct : IFormattable
+        {
+            public string Name { get; set; }
+            public decimal Price { get; set; }
+
+            public SimpleProduct(string name, decimal price)
+            {
+                Name = name;
+                Price = price;
+            }
+
+            public override string ToString()
+            {
+                return $"SimpleProduct: {Name} - {Price}";
+            }
+
+            public string ToString(string? format, IFormatProvider? formatProvider)
+            {
+                return string.Format(formatProvider, "SimpleProduct: {0} - {1}", Name, Price);
+            }
+        }
+
+        [Fact]
+        public void TestCase085_ToInvariantString_With_Broken_TypeConverter_Should_Return_Empty()
+        {
+            // Arrange
+            var value = new BrokenItem("42");
+            // Act
+            var result = value.ToInvariantString();
+            // Assert
+            result.Should().Be(String.Empty);
+        }
+
+        // Beispiel 3: Klasse mit TypeConverter der eine Exception wirft
+        [TypeConverter(typeof(BrokenConverter))]
+        internal class BrokenItem
+        {
+            public string Value { get; set; }
+
+            public BrokenItem(string value)
+            {
+                Value = value;
+            }
+
+            public override string? ToString()
+            {
+                return null;
+            }
+        }
+
+        internal class BrokenConverter : TypeConverter
+        {
+            public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
+            {
+                return destinationType == typeof(string);
+            }
+
+            public override object ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
+            {
+                // Simuliert eine Exception im TypeConverter
+                throw new InvalidOperationException("Converter ist kaputt!");
+            }
+        }
+
+        [Fact]
+        public void TestCase086_ToInvariantString_With_TypeConverter_That_Cannot_Convert_To_String_Should_Return_Empty()
+        {
+            // Arrange
+            var value = new BrokenItem2("42");
+            // Act
+            var result = value.ToInvariantString();
+            // Assert
+            result.Should().Be(String.Empty);
+        }
+
+        // Beispiel 4: Klasse mit TypeConverter nicht nach string konvertieren kann
+        [TypeConverter(typeof(BrokenConverter2))]
+        internal class BrokenItem2
+        {
+            public string Value { get; set; }
+
+            public BrokenItem2(string value)
+            {
+                Value = value;
+            }
+
+            public override string? ToString()
+            {
+                return null;
+            }
+        }
+
+        internal class BrokenConverter2 : TypeConverter
+        {
+            public override bool CanConvertTo(ITypeDescriptorContext? context, Type? destinationType)
+            {
+                return destinationType == typeof(int);
+            }
+
+            public override object ConvertTo(ITypeDescriptorContext? context, CultureInfo? culture, object? value, Type destinationType)
+            {
+                // Simuliert eine Exception im TypeConverter
+                throw new InvalidOperationException("Converter ist kaputt!");
+            }
+        }
+
+        #endregion
+
+        #region ToInvariantString Method Tests - Multidimensional Elements
+
+        [Fact]
+        public void TestCase087_ToInvariantString_With_Multidimensional_Array_Should_Format_Correctly()
+        {
+            // Arrange
+            int[,,] value = new int[3, 4, 2];
+            var options = new ToStringOptions { ShowArrayDimensions = true, MaxNestingDepth = value.Rank };
+            // Act
+            var result = value.ToInvariantString(options);
+            // Assert
+            result.Should().NotContain("<max nesting depth reached>");
+        }
+
+        [Fact]
+        public void TestCase088_ToInvariantString_With_Multidimensional_Array_With_Rank_Greater_Than_MaxDepth_Show_Max_Nesting_Messages()
+        {
+            // Arrange
+            int[,,] value = new int[3, 4, 2];
+            var options = new ToStringOptions { ShowArrayDimensions = true, MaxNestingDepth = 2 };
+            // Act
+            var result = value.ToInvariantString(options);
+            // Assert
+            result.Should().Contain("<max nesting depth reached>");
+        }
+
+        [Fact]
+        public void TestCase089_ToInvariantString_With_Multidimensional_Array_And_MaxDepth_Zero_Show_Max_Nesting_Message()
+        {
+            // Arrange
+            int[,,] value = new int[3, 4, 2];
+            var options = new ToStringOptions { ShowArrayDimensions = true, MaxNestingDepth = 0 };
+            // Act
+            var result = value.ToInvariantString(options);
+            // Assert
+            result.Should().Be("<max nesting depth reached>");
+        }
+
+        [Fact]
+        public void TestCase090_ToInvariantString_With_2x2_Array_And_MaxDepth_1_Show_Max_Nesting_Message()
+        {
+            // Arrange
+            int[,] value = new int[2,2];
+            var options = new ToStringOptions { MaxNestingDepth = 1 };
+            // Act
+            var result = value.ToInvariantString(options);
+            // Assert
+            result.Should().Contain("<max nesting depth reached>");
+        }
+
+        
+        [Fact]
+        public void TestCase091_ToInvariantString_With_2x100_Array_And_MaxCollectionItems_5_Show_3_Points()
+        {
+            // Arrange
+            int[,] value = new int[2, 100];
+            var options = new ToStringOptions { MaxCollectionItems = 5 };
+            // Act
+            var result = value.ToInvariantString(options);
+            // Assert
+            result.Should().Contain("...");
+        }
+
+        [Fact]
+        public void TestCase091_ToInvariantString_With_2x10x7_Array_And_MaxCollectionItems_5_Show_3_Points()
+        {
+            // Arrange
+            int[,,] value = new int[2, 10, 7];
+            var options = new ToStringOptions { MaxCollectionItems = 5 };
+            // Act
+            var result = value.ToInvariantString(options);
+            // Assert
+            result.Should().Contain("...");
         }
 
         #endregion

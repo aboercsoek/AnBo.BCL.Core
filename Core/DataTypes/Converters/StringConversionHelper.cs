@@ -157,7 +157,8 @@ namespace AnBo.Core
                 //IEnumerable enumerable when ShouldFormatAsCollection(enumerable)
                 IEnumerable enumerable => FormatEnumerable(enumerable, options, currentDepth),
 
-                _ => TryConvertWithTypeConverter(val) ?? val.ToString() ?? string.Empty
+                //_ => TryConvertWithTypeConverter(val) ?? Convert.ToString(val, CultureInfo.InvariantCulture) ?? string.Empty
+                _ => TryConvertWithTypeConverter(val) ?? string.Empty
             };
         }
 
@@ -284,8 +285,8 @@ namespace AnBo.Core
         private static string FormatMultidimensionalArray(Array array, ToStringOptions options, int currentDepth = 0)
         {
             // Depth-Check vor der Verarbeitung
-            if (currentDepth >= options.MaxNestingDepth)
-                return "<max nesting depth reached>";
+            //if (currentDepth >= options.MaxNestingDepth)
+            //    return "<max nesting depth reached>";
 
             var dimensions = new int[array.Rank];
             for (int i = 0; i < array.Rank; i++)
@@ -348,6 +349,7 @@ namespace AnBo.Core
                     processedCount++;
                 }
 
+
                 return $"[{string.Join(options.CollectionSeparator, items)}]";
             }
             else
@@ -355,6 +357,7 @@ namespace AnBo.Core
                 // Rekursive Dimension
                 var subArrays = new List<string>();
                 int processedCount = 0;
+
 
                 for (int i = 0; i < dimensions[currentDimension]; i++)
                 {
@@ -429,7 +432,8 @@ namespace AnBo.Core
         private static int GetOptimalBufferSize(ISpanFormattable spanFormattable)
         {
             // BigInteger kann sehr groß sein, daher kein fester Puffer
-            if (spanFormattable is BigInteger bi) {
+            if (spanFormattable is BigInteger bi)
+            {
                 if (bi.IsZero) return 1;
                 // Logarithmische Schätzung: log10(2^bits) ≈ bits * 0.301
                 int bits = (int)Math.Ceiling(BigInteger.Log(BigInteger.Abs(bi), 2));
