@@ -119,12 +119,12 @@ namespace AnBo.Core
             {
                 using (new Console2File(OutputFileName))
                 {
-                    Console.WriteLine(value.ToInvariantString("<null>"));
+                    Console.WriteLine(value.ToInvariantString());
                 }
             }
             var tmpColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.WriteLine(value.ToInvariantString("<null>"));
+            Console.WriteLine(value.ToInvariantString());
             Console.ForegroundColor = tmpColor;
         }
 
@@ -214,13 +214,13 @@ namespace AnBo.Core
             {
                 using (new Console2File(OutputFileName))
                 {
-                    Console.Write(value.ToInvariantString("<null>"));
+                    Console.Write(value.ToInvariantString());
                 }
             }
 
             var tmpColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.Write(value.ToInvariantString("<null>"));
+            Console.Write(value.ToInvariantString());
             Console.ForegroundColor = tmpColor;
         }
 
@@ -874,7 +874,7 @@ namespace AnBo.Core
                 else
                     Write(separator, collectionValueColor);
 
-                Write(o.ToInvariantString("<null>"), collectionValueColor);
+                Write(o.ToInvariantString(), collectionValueColor);
 
             }
             if (firstLoop)
@@ -924,7 +924,7 @@ namespace AnBo.Core
                 else
                     Write(separator, separatorColor);
 
-                Write(o.ToInvariantString("<null>"), collectionValueColor);
+                Write(o.ToInvariantString(), collectionValueColor);
 
             }
             if (firstLoop)
@@ -994,7 +994,7 @@ namespace AnBo.Core
                 Write(" [{0}]".SafeFormatWith(value.GetType().GetTypeName()), nameColor);
 
                 Write(string.IsNullOrEmpty(separator) ? " = " : separator, separatorColor);
-                WriteLine(value.ToInvariantString("<null>"), valueColor);
+                WriteLine(value.ToInvariantString(), valueColor);
             }
             else if (value.AsUniversal<IEnumerable>().IsNotNull())
             {
@@ -1006,7 +1006,7 @@ namespace AnBo.Core
                 Write(" [{0}]".SafeFormatWith(value.GetType().GetTypeName()), nameColor);
 
                 Write(string.IsNullOrEmpty(separator) ? " = " : separator, separatorColor);
-                WriteLine(value.ToInvariantString("<null>"), valueColor);
+                WriteLine(value.ToInvariantString(), valueColor);
             }
 
         }

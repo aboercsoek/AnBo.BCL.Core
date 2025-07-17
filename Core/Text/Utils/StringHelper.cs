@@ -110,7 +110,7 @@ namespace AnBo.Core
             try
             {
                 //return String.Format(format, args);
-                return String.Format(format, args.Select(arg => arg.ToInvariantString("<null>")).ToArray());
+                return String.Format(format, args.Select(arg => arg.ToInvariantString()).ToArray());
             }
             catch (Exception ex)
             {
