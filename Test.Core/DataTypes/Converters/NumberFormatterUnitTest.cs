@@ -1,13 +1,11 @@
 using FluentAssertions;
-using Xunit;
 using AnBo.Core;
-using System;
 
 namespace AnBo.Test
 {
     public class NumberFormatterUnitTest
     {
-        #region ByteToBinaryString Tests
+        #region Byte ToBinaryString Tests
 
         [Fact]
         public void TestCase001_ByteToBinaryString_With_Zero_Should_Return_Zero()
@@ -16,7 +14,7 @@ namespace AnBo.Test
             byte value = 0;
 
             // Act
-            var result = NumberFormatter.ByteToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("0");
@@ -29,7 +27,7 @@ namespace AnBo.Test
             byte value = 1;
 
             // Act
-            var result = NumberFormatter.ByteToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1");
@@ -42,7 +40,7 @@ namespace AnBo.Test
             byte value = byte.MaxValue; // 255
 
             // Act
-            var result = NumberFormatter.ByteToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("11111111");
@@ -55,7 +53,7 @@ namespace AnBo.Test
             byte value = 128; // 2^7
 
             // Act
-            var result = NumberFormatter.ByteToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("10000000");
@@ -68,7 +66,7 @@ namespace AnBo.Test
             byte value = 85; // 01010101
 
             // Act
-            var result = NumberFormatter.ByteToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1010101");
@@ -76,7 +74,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region Int16ToBinaryString Tests
+        #region Int16 ToBinaryString Tests
 
         [Fact]
         public void TestCase006_Int16ToBinaryString_With_Zero_Should_Return_Zero()
@@ -85,7 +83,7 @@ namespace AnBo.Test
             Int16 value = 0;
 
             // Act
-            var result = NumberFormatter.Int16ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("0");
@@ -98,7 +96,7 @@ namespace AnBo.Test
             Int16 value = 255;
 
             // Act
-            var result = NumberFormatter.Int16ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("11111111");
@@ -111,7 +109,7 @@ namespace AnBo.Test
             Int16 value = -1;
 
             // Act
-            var result = NumberFormatter.Int16ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1111111111111111");
@@ -124,7 +122,7 @@ namespace AnBo.Test
             Int16 value = Int16.MaxValue; // 32767
 
             // Act
-            var result = NumberFormatter.Int16ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("111111111111111");
@@ -137,7 +135,7 @@ namespace AnBo.Test
             Int16 value = Int16.MinValue; // -32768
 
             // Act
-            var result = NumberFormatter.Int16ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1000000000000000");
@@ -145,7 +143,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region UInt16ToBinaryString Tests
+        #region UInt16 ToBinaryString Tests
 
         [Fact]
         public void TestCase011_UInt16ToBinaryString_With_Zero_Should_Return_Zero()
@@ -154,7 +152,7 @@ namespace AnBo.Test
             UInt16 value = 0;
 
             // Act
-            var result = NumberFormatter.UInt16ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("0");
@@ -167,7 +165,7 @@ namespace AnBo.Test
             UInt16 value = UInt16.MaxValue; // 65535
 
             // Act
-            var result = NumberFormatter.UInt16ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1111111111111111");
@@ -180,7 +178,7 @@ namespace AnBo.Test
             UInt16 value = 1024; // 2^10
 
             // Act
-            var result = NumberFormatter.UInt16ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("10000000000");
@@ -188,7 +186,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region Int32ToBinaryString Tests
+        #region Int32 ToBinaryString Tests
 
         [Fact]
         public void TestCase014_Int32ToBinaryString_With_Zero_Should_Return_Zero()
@@ -197,7 +195,7 @@ namespace AnBo.Test
             Int32 value = 0;
 
             // Act
-            var result = NumberFormatter.Int32ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("0");
@@ -210,7 +208,7 @@ namespace AnBo.Test
             Int32 value = 255;
 
             // Act
-            var result = NumberFormatter.Int32ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("11111111");
@@ -223,7 +221,7 @@ namespace AnBo.Test
             Int32 value = -1;
 
             // Act
-            var result = NumberFormatter.Int32ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("11111111111111111111111111111111");
@@ -236,7 +234,7 @@ namespace AnBo.Test
             Int32 value = Int32.MaxValue;
 
             // Act
-            var result = NumberFormatter.Int32ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1111111111111111111111111111111");
@@ -249,7 +247,7 @@ namespace AnBo.Test
             Int32 value = Int32.MinValue;
 
             // Act
-            var result = NumberFormatter.Int32ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("10000000000000000000000000000000");
@@ -257,7 +255,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region UInt32ToBinaryString Tests
+        #region UInt32 ToBinaryString Tests
 
         [Fact]
         public void TestCase019_UInt32ToBinaryString_With_Zero_Should_Return_Zero()
@@ -266,7 +264,7 @@ namespace AnBo.Test
             UInt32 value = 0;
 
             // Act
-            var result = NumberFormatter.UInt32ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("0");
@@ -279,7 +277,7 @@ namespace AnBo.Test
             UInt32 value = UInt32.MaxValue;
 
             // Act
-            var result = NumberFormatter.UInt32ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("11111111111111111111111111111111");
@@ -292,7 +290,7 @@ namespace AnBo.Test
             UInt32 value = 1048576; // 2^20
 
             // Act
-            var result = NumberFormatter.UInt32ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("100000000000000000000");
@@ -300,7 +298,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region Int64ToBinaryString Tests
+        #region Int64 ToBinaryString Tests
 
         [Fact]
         public void TestCase022_Int64ToBinaryString_With_Zero_Should_Return_Zero()
@@ -309,7 +307,7 @@ namespace AnBo.Test
             Int64 value = 0;
 
             // Act
-            var result = NumberFormatter.Int64ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("0");
@@ -322,7 +320,7 @@ namespace AnBo.Test
             Int64 value = 255;
 
             // Act
-            var result = NumberFormatter.Int64ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("11111111");
@@ -335,7 +333,7 @@ namespace AnBo.Test
             Int64 value = -1;
 
             // Act
-            var result = NumberFormatter.Int64ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1111111111111111111111111111111111111111111111111111111111111111");
@@ -348,7 +346,7 @@ namespace AnBo.Test
             Int64 value = Int64.MaxValue;
 
             // Act
-            var result = NumberFormatter.Int64ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("111111111111111111111111111111111111111111111111111111111111111");
@@ -361,7 +359,7 @@ namespace AnBo.Test
             Int64 value = Int64.MinValue;
 
             // Act
-            var result = NumberFormatter.Int64ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1000000000000000000000000000000000000000000000000000000000000000");
@@ -369,7 +367,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region UInt64ToBinaryString Tests
+        #region UInt64 ToBinaryString Tests
 
         [Fact]
         public void TestCase027_UInt64ToBinaryString_With_Zero_Should_Return_Zero()
@@ -378,7 +376,7 @@ namespace AnBo.Test
             UInt64 value = 0;
 
             // Act
-            var result = NumberFormatter.UInt64ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("0");
@@ -391,7 +389,7 @@ namespace AnBo.Test
             UInt64 value = UInt64.MaxValue;
 
             // Act
-            var result = NumberFormatter.UInt64ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1111111111111111111111111111111111111111111111111111111111111111");
@@ -404,7 +402,7 @@ namespace AnBo.Test
             UInt64 value = 18446744073709551615; // UInt64.MaxValue
 
             // Act
-            var result = NumberFormatter.UInt64ToBinaryString(value);
+            var result = NumberFormatter.ToBinaryString(value);
 
             // Assert
             result.Should().Be("1111111111111111111111111111111111111111111111111111111111111111");
@@ -412,7 +410,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region Int16ToHexString Tests
+        #region Int16 ToHexString Tests
 
         [Fact]
         public void TestCase030_Int16ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
@@ -421,7 +419,7 @@ namespace AnBo.Test
             Int16 value = 0;
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("0");
@@ -434,7 +432,7 @@ namespace AnBo.Test
             Int16 value = 255;
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("ff");
@@ -447,7 +445,7 @@ namespace AnBo.Test
             Int16 value = -1;
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("ffff");
@@ -461,7 +459,7 @@ namespace AnBo.Test
             int minHexDigits = 4;
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value, minHexDigits);
+            var result = NumberFormatter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("000f");
@@ -475,7 +473,7 @@ namespace AnBo.Test
             int minHexDigits = 1;
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value, minHexDigits);
+            var result = NumberFormatter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("ff");
@@ -486,10 +484,11 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = 255;
+            int minHexDigits = 1;
             bool addZeroXPrefix = true;
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("0xff");
@@ -500,10 +499,11 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = 255;
+            int minHexDigits = 1;
             bool addZeroXPrefix = false;
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("ff");
@@ -518,7 +518,7 @@ namespace AnBo.Test
             bool addZeroXPrefix = true;
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value, minHexDigits, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("0x000f");
@@ -531,7 +531,7 @@ namespace AnBo.Test
             Int16 value = Int16.MaxValue; // 32767
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("7fff");
@@ -544,7 +544,7 @@ namespace AnBo.Test
             Int16 value = Int16.MinValue; // -32768
 
             // Act
-            var result = NumberFormatter.Int16ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("8000");
@@ -552,7 +552,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region Int32ToHexString Tests
+        #region Int32 ToHexString Tests
 
         [Fact]
         public void TestCase040_Int32ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
@@ -561,7 +561,7 @@ namespace AnBo.Test
             int value = 0;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("0");
@@ -574,7 +574,7 @@ namespace AnBo.Test
             int value = 255;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("ff");
@@ -587,7 +587,7 @@ namespace AnBo.Test
             int value = -1;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("ffffffff");
@@ -601,7 +601,7 @@ namespace AnBo.Test
             int minHexDigits = 8;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value, minHexDigits);
+            var result = NumberFormatter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("0000000f");
@@ -612,10 +612,11 @@ namespace AnBo.Test
         {
             // Arrange
             int value = 255;
+            int minHexDigits = 1;
             bool addZeroXPrefix = true;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("0xff");
@@ -626,10 +627,11 @@ namespace AnBo.Test
         {
             // Arrange
             int value = 255;
+            int minHexDigits = 1;
             bool addZeroXPrefix = false;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("ff");
@@ -644,7 +646,7 @@ namespace AnBo.Test
             bool addZeroXPrefix = true;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value, minHexDigits, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("0x0000000f");
@@ -657,7 +659,7 @@ namespace AnBo.Test
             int value = Int32.MaxValue;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("7fffffff");
@@ -670,7 +672,7 @@ namespace AnBo.Test
             int value = Int32.MinValue;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("80000000");
@@ -683,7 +685,7 @@ namespace AnBo.Test
             int value = 0x12345678;
 
             // Act
-            var result = NumberFormatter.Int32ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("12345678");
@@ -691,7 +693,7 @@ namespace AnBo.Test
 
         #endregion
 
-        #region Int64ToHexString Tests
+        #region Int64 ToHexString Tests
 
         [Fact]
         public void TestCase050_Int64ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
@@ -700,7 +702,7 @@ namespace AnBo.Test
             long value = 0;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("0");
@@ -713,7 +715,7 @@ namespace AnBo.Test
             long value = 255;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("ff");
@@ -726,7 +728,7 @@ namespace AnBo.Test
             long value = -1;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("ffffffffffffffff");
@@ -740,7 +742,7 @@ namespace AnBo.Test
             int minHexDigits = 16;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value, minHexDigits);
+            var result = NumberFormatter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("000000000000000f");
@@ -751,10 +753,11 @@ namespace AnBo.Test
         {
             // Arrange
             long value = 255;
+            int minHexDigits = 1;
             bool addZeroXPrefix = true;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("0xff");
@@ -765,10 +768,11 @@ namespace AnBo.Test
         {
             // Arrange
             long value = 255;
+            int minHexDigits = 1;
             bool addZeroXPrefix = false;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("ff");
@@ -783,7 +787,7 @@ namespace AnBo.Test
             bool addZeroXPrefix = true;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value, minHexDigits, addZeroXPrefix);
+            var result = NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
 
             // Assert
             result.Should().Be("0x000000000000000f");
@@ -796,7 +800,7 @@ namespace AnBo.Test
             long value = Int64.MaxValue;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("7fffffffffffffff");
@@ -809,7 +813,7 @@ namespace AnBo.Test
             long value = Int64.MinValue;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("8000000000000000");
@@ -822,7 +826,7 @@ namespace AnBo.Test
             long value = 0x123456789ABCDEF0;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value);
+            var result = NumberFormatter.ToHexString(value);
 
             // Assert
             result.Should().Be("123456789abcdef0");
@@ -836,7 +840,7 @@ namespace AnBo.Test
             int minHexDigits = 1;
 
             // Act
-            var result = NumberFormatter.Int64ToHexString(value, minHexDigits);
+            var result = NumberFormatter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("123456789abcdef0");
@@ -850,81 +854,96 @@ namespace AnBo.Test
         public void TestCase061_All_Binary_Methods_With_One_Should_Return_One()
         {
             // Act & Assert
-            NumberFormatter.ByteToBinaryString(1).Should().Be("1");
-            NumberFormatter.Int16ToBinaryString(1).Should().Be("1");
-            NumberFormatter.UInt16ToBinaryString(1).Should().Be("1");
-            NumberFormatter.Int32ToBinaryString(1).Should().Be("1");
-            NumberFormatter.UInt32ToBinaryString(1).Should().Be("1");
-            NumberFormatter.Int64ToBinaryString(1).Should().Be("1");
-            NumberFormatter.UInt64ToBinaryString(1).Should().Be("1");
+            NumberFormatter.ToBinaryString((byte)1).Should().Be("1");
+            NumberFormatter.ToBinaryString((short)1).Should().Be("1");
+            NumberFormatter.ToBinaryString((ushort)1).Should().Be("1");
+            NumberFormatter.ToBinaryString((int)1).Should().Be("1");
+            NumberFormatter.ToBinaryString((uint)1).Should().Be("1");
+            NumberFormatter.ToBinaryString((long)1).Should().Be("1");
+            NumberFormatter.ToBinaryString((ulong)1).Should().Be("1");
         }
 
         [Fact]
         public void TestCase062_All_Hex_Methods_With_Zero_Should_Return_Zero()
         {
             // Act & Assert
-            NumberFormatter.Int16ToHexString(0).Should().Be("0");
-            NumberFormatter.Int32ToHexString(0).Should().Be("0");
-            NumberFormatter.Int64ToHexString(0).Should().Be("0");
+            NumberFormatter.ToHexString((short)0).Should().Be("0");
+            NumberFormatter.ToHexString((int)0).Should().Be("0");
+            NumberFormatter.ToHexString((long)0).Should().Be("0");
         }
 
         [Fact]
         public void TestCase063_All_Hex_Methods_With_One_Should_Return_One()
         {
             // Act & Assert
-            NumberFormatter.Int16ToHexString(1).Should().Be("1");
-            NumberFormatter.Int32ToHexString(1).Should().Be("1");
-            NumberFormatter.Int64ToHexString(1).Should().Be("1");
+            NumberFormatter.ToHexString((short)1).Should().Be("1");
+            NumberFormatter.ToHexString((int)1).Should().Be("1");
+            NumberFormatter.ToHexString((long)1).Should().Be("1");
         }
 
         [Fact]
         public void TestCase064_Hex_Methods_With_Fifteen_Should_Return_f()
         {
             // Act & Assert
-            NumberFormatter.Int16ToHexString(15).Should().Be("f");
-            NumberFormatter.Int32ToHexString(15).Should().Be("f");
-            NumberFormatter.Int64ToHexString(15).Should().Be("f");
+            NumberFormatter.ToHexString((short)15).Should().Be("f");
+            NumberFormatter.ToHexString((int)15).Should().Be("f");
+            NumberFormatter.ToHexString((long)15).Should().Be("f");
         }
 
         [Fact]
         public void TestCase065_Hex_Methods_With_Sixteen_Should_Return_10()
         {
             // Act & Assert
-            NumberFormatter.Int16ToHexString(16).Should().Be("10");
-            NumberFormatter.Int32ToHexString(16).Should().Be("10");
-            NumberFormatter.Int64ToHexString(16).Should().Be("10");
+            NumberFormatter.ToHexString((short)16).Should().Be("10");
+            NumberFormatter.ToHexString((int)16).Should().Be("10");
+            NumberFormatter.ToHexString((long)16).Should().Be("10");
         }
 
         [Fact]
         public void TestCase066_Binary_Methods_With_Two_Should_Return_10()
         {
             // Act & Assert
-            NumberFormatter.ByteToBinaryString(2).Should().Be("10");
-            NumberFormatter.Int16ToBinaryString(2).Should().Be("10");
-            NumberFormatter.UInt16ToBinaryString(2).Should().Be("10");
-            NumberFormatter.Int32ToBinaryString(2).Should().Be("10");
-            NumberFormatter.UInt32ToBinaryString(2).Should().Be("10");
-            NumberFormatter.Int64ToBinaryString(2).Should().Be("10");
-            NumberFormatter.UInt64ToBinaryString(2).Should().Be("10");
+            NumberFormatter.ToBinaryString((byte)2).Should().Be("10");
+            NumberFormatter.ToBinaryString((short)2).Should().Be("10");
+            NumberFormatter.ToBinaryString((ushort)2).Should().Be("10");
+            NumberFormatter.ToBinaryString((int)2).Should().Be("10");
+            NumberFormatter.ToBinaryString((uint)2).Should().Be("10");
+            NumberFormatter.ToBinaryString((long)2).Should().Be("10");
+            NumberFormatter.ToBinaryString((ulong)2).Should().Be("10");
         }
 
         [Fact]
         public void TestCase067_Hex_Methods_With_Prefix_And_Zero_Should_Add_Prefix()
         {
             // Act & Assert
-            NumberFormatter.Int16ToHexString(0, true).Should().Be("0x0");
-            NumberFormatter.Int32ToHexString(0, true).Should().Be("0x0");
-            NumberFormatter.Int64ToHexString(0, true).Should().Be("0x0");
+            NumberFormatter.ToHexString<Int16>(value: 0, addZeroXPrefix: true).Should().Be("0x0");
+            NumberFormatter.ToHexString<Int32>(value: 0, addZeroXPrefix: true).Should().Be("0x0");
+            NumberFormatter.ToHexString<Int64>(value: 0, addZeroXPrefix: true).Should().Be("0x0");
         }
 
         [Fact]
         public void TestCase068_Hex_Methods_With_Large_MinHexDigits_Should_Pad_Correctly()
         {
             // Act & Assert
-            NumberFormatter.Int16ToHexString(1, 4).Should().Be("0001");
-            NumberFormatter.Int32ToHexString(1, 8).Should().Be("00000001");
-            NumberFormatter.Int64ToHexString(1, 16).Should().Be("0000000000000001");
+            NumberFormatter.ToHexString<Int16>(1, 4).Should().Be("0001");
+            NumberFormatter.ToHexString<Int32>(1, 8).Should().Be("00000001");
+            NumberFormatter.ToHexString<Int64>(1, 16).Should().Be("0000000000000001");
         }
+
+        #endregion
+
+        #region Test Cases for Invalid Inputs
+
+        [Fact]
+        public void TestCase069_ToBinaryString_Called_With_Int128_Should_Thow_ArgException()
+        {   // Arrange
+            Int128 i128 = 0;
+            // Act & Assert
+            var action = () => NumberFormatter.ToBinaryString(i128);
+            action.Should().Throw<ArgException<Int128>>()
+                .WithMessage("Value must be a byte, short, int, long, ushort, uint, ulong type.");
+        }
+
 
         #endregion
     }

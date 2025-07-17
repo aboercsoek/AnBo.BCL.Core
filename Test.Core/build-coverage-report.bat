@@ -1,0 +1,1 @@
+reportgenerator "-reports:.\TestResults\*\coverage.cobertura.xml" "-targetdir:..\..\test\coveragereport" "-reporttypes:Html"

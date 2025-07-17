@@ -37,8 +37,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsInt16String(string str)
         {
-            Int16 trash;
-            return Int16.TryParse(str, out trash);
+            return Int16.TryParse(str, out _);
         }
 
         /// <summary>
@@ -50,8 +49,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsInt32String(string str)
         {
-            Int32 trash;
-            return Int32.TryParse(str, out trash);
+            return Int32.TryParse(str, out _);
         }
 
         /// <summary>
@@ -63,8 +61,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsInt64String(string str)
         {
-            Int64 trash;
-            return Int64.TryParse(str, out trash);
+            return Int64.TryParse(str, out _);
         }
 
         /// <summary>
@@ -76,8 +73,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsDoubleString(string str)
         {
-            double trash;
-            return double.TryParse(str, out trash);
+            return double.TryParse(str, out _);
         }
 
         /// <summary>
@@ -89,8 +85,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsDecimalString(string str)
         {
-            decimal trash;
-            return decimal.TryParse(str, out trash);
+            return decimal.TryParse(str, out _);
         }
 
         /// <summary>
@@ -102,8 +97,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsFloatString(string str)
         {
-            float trash;
-            return float.TryParse(str, out trash);
+            return float.TryParse(str, out _);
         }
 
         /// <summary>
@@ -115,8 +109,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsBooleanString(string str)
         {
-            bool trash;
-            return bool.TryParse(str, out trash);
+            return bool.TryParse(str, out _);
         }
 
         /// <summary>
@@ -128,8 +121,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsByteString(string str)
         {
-            byte trash;
-            return byte.TryParse(str, out trash);
+            return byte.TryParse(str, out _);
         }
 
         /// <summary>
@@ -141,8 +133,7 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsTimeSpanString(string str)
         {
-            TimeSpan trash;
-            return DateTimeHelper.TryParseTimeSpan(str, out trash);
+            return DateTimeHelper.TryParseTimeSpan(str, out _);
         }
 
 
@@ -151,46 +142,26 @@ namespace AnBo.Core
         #region ToString-Methods
 
         /// <summary>
-        /// Int32 to binary string format.
+        /// Convert an integer number to binary string.
         /// </summary>
-        /// <param name="number">The number.</param>
+        /// <typeparam name="T">The type of the number to convert. Must be a numeric type (byte, short, int, long, ushort, uint, ulong).</typeparam>
+        /// <param name="value">The number to convert.</param>
         /// <returns>The binary string representation of the specified number.</returns>
-        public static string ToBinaryString(int number)
+        public static string ToBinaryString<T>(T value) where T : struct, IConvertible
         {
-            return Convert.ToString(number, 2);
+            return NumberFormatter.ToBinaryString(value);
         }
 
         /// <summary>
-        /// Int32 to hex string format.
+        /// Convert an integer value to hex string with format option.
         /// </summary>
-        /// <param name="number">The number.</param>
-        /// <returns>The hex string representation of the specified number.</returns>
-        public static string ToHexString(int number)
-        {
-            return ToHexString(number, false);
-        }
-
-        /// <summary>
-        /// Int32 to hex string format.
-        /// </summary>
-        /// <param name="number">The number.</param>
+        /// <param name="value">The number to convert.</param>
+        /// <param name="minHexDigits">The minimum length.</param>
         /// <param name="addZeroXPrefix">if set to <see langword="true"/> add 0x prefix.</param>
-        /// <returns>The hex string representation of the specified number.</returns>
-        public static string ToHexString(int number, bool addZeroXPrefix)
+        /// <returns>The hex string representation of the specified number  with at least the given length (minHexDigits).</returns>
+        public static string ToHexString<T>(T value, int minHexDigits = 1, bool addZeroXPrefix = false) where T : struct, IConvertible
         {
-            string result = addZeroXPrefix ? "0x" : "";
-            result += Convert.ToString(number, 16);
-            return result;
-        }
-
-        /// <summary>
-        /// Converts the value into a string by using a TypeConverter for type of val, if available.
-        /// </summary>
-        /// <param name="val">Value to convert into an string</param>
-        /// <returns>Converted object string.</returns>
-        public static string ToInvariantString(this object? val)
-        {
-            return ToInvariantString(val, "<null>");
+            return NumberFormatter.ToHexString(value, minHexDigits, addZeroXPrefix);
         }
 
         /// <summary>
@@ -199,7 +170,7 @@ namespace AnBo.Core
         /// <param name="val">Value to convert into an string</param>
         /// <param name="nullString">null value string result.</param>
         /// <returns>Converted object string.</returns>
-        public static string ToInvariantString(this object? val, string nullString)
+        public static string ToInvariantString(this object? val, string nullString = "<null>")
         {
             if (val == null)
                 return nullString.SafeString();
@@ -231,32 +202,6 @@ namespace AnBo.Core
         /// <summary>
         /// Converts the value to string using a TypeConverter for Type T if available.
         /// </summary>
-        //public static string? ToString<T>(T val)
-        //{
-        //    if (val is string s)
-        //    {
-        //        return string.IsNullOrEmpty(s) ? "<null>" : s;
-        //    }
-        //    try
-        //    {
-        //        TypeConverter c = TypeDescriptor.GetConverter(typeof(T));
-        //        string? str = c.ConvertToInvariantString(val);
-        //        //return string.IsNullOrEmpty(str) ? val.ToString() : str;
-        //        return str ?? val?.ToString() ?? string.Empty;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        if (ex.IsFatal())
-        //            throw;
-        //    }
-        //    // If no TypeConverter is available, just return the ToString() result
-        //    return val.ToString();
-
-        //}
-
-        /// <summary>
-        /// Converts the value to string using a TypeConverter for Type T if available.
-        /// </summary>
         public static string ToString<T>(T? val)
         {
             if (val is null)
@@ -268,8 +213,13 @@ namespace AnBo.Core
             // Für häufige Typen optimierte Pfade
             return val switch
             {
+                byte b => b.ToString(CultureInfo.InvariantCulture),
+                short si => si.ToString(CultureInfo.InvariantCulture),
                 int i => i.ToString(CultureInfo.InvariantCulture),
                 long l => l.ToString(CultureInfo.InvariantCulture),
+                ushort usi => usi.ToString(CultureInfo.InvariantCulture),
+                uint ui => ui.ToString(CultureInfo.InvariantCulture),
+                ulong ul => ul.ToString(CultureInfo.InvariantCulture),
                 double d => d.ToString(CultureInfo.InvariantCulture),
                 float f => f.ToString(CultureInfo.InvariantCulture),
                 bool b => b.ToString(CultureInfo.InvariantCulture),
@@ -280,13 +230,17 @@ namespace AnBo.Core
         }
 
         // Hilfsmethode für primitive Typen
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool TryConvertPrimitive<T>(T val, [NotNullWhen(true)] out string? result)
         {
             result = val switch
             {
+                byte b => b.ToString(CultureInfo.InvariantCulture),
+                short si => si.ToString(CultureInfo.InvariantCulture),
                 int i => i.ToString(CultureInfo.InvariantCulture),
                 long l => l.ToString(CultureInfo.InvariantCulture),
+                ushort usi => usi.ToString(CultureInfo.InvariantCulture),
+                uint ui => ui.ToString(CultureInfo.InvariantCulture),
+                ulong ul => ul.ToString(CultureInfo.InvariantCulture),
                 double d => d.ToString(CultureInfo.InvariantCulture),
                 float f => f.ToString(CultureInfo.InvariantCulture),
                 bool b => b.ToString(CultureInfo.InvariantCulture),

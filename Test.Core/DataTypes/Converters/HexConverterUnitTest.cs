@@ -1,9 +1,6 @@
 using FluentAssertions;
-using Xunit;
 using AnBo.Core;
-using System;
-using System.Globalization;
-using System.Text;
+using System.Numerics;
 
 namespace AnBo.Test
 {
@@ -263,10 +260,10 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = 0;
-            int hexDigits = 1;
+            int minHexDigits = 1;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("0");
@@ -277,10 +274,10 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = 255;
-            int hexDigits = 2;
+            int minHexDigits = 2;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("ff");
@@ -291,10 +288,10 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = 15;
-            int hexDigits = 4;
+            int minHexDigits = 4;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("000f");
@@ -305,10 +302,10 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = 15;
-            int hexDigits = -5;
+            int minHexDigits = -5;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("f");
@@ -319,10 +316,10 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = 15;
-            int hexDigits = 10;
+            int minHexDigits = 10;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("000f");
@@ -333,10 +330,10 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = Int16.MaxValue;
-            int hexDigits = 4;
+            int minHexDigits = 4;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("7fff");
@@ -347,10 +344,10 @@ namespace AnBo.Test
         {
             // Arrange
             Int16 value = -1;
-            int hexDigits = 4;
+            int minHexDigits = 4;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("ffff");
@@ -365,10 +362,10 @@ namespace AnBo.Test
         {
             // Arrange
             int value = 0;
-            int hexDigits = 1;
+            int minHexDigits = 1;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("0");
@@ -379,10 +376,10 @@ namespace AnBo.Test
         {
             // Arrange
             int value = 4095;
-            int hexDigits = 3;
+            int minHexDigits = 3;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("fff");
@@ -393,10 +390,10 @@ namespace AnBo.Test
         {
             // Arrange
             int value = 255;
-            int hexDigits = 8;
+            int minHexDigits = 8;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("000000ff");
@@ -407,10 +404,10 @@ namespace AnBo.Test
         {
             // Arrange
             int value = 255;
-            int hexDigits = -3;
+            int minHexDigits = -3;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("ff");
@@ -421,10 +418,10 @@ namespace AnBo.Test
         {
             // Arrange
             int value = 255;
-            int hexDigits = 15;
+            int minHexDigits = 15;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("000000ff");
@@ -435,10 +432,10 @@ namespace AnBo.Test
         {
             // Arrange
             int value = int.MaxValue;
-            int hexDigits = 8;
+            int minHexDigits = 8;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("7fffffff");
@@ -449,10 +446,10 @@ namespace AnBo.Test
         {
             // Arrange
             int value = -1;
-            int hexDigits = 8;
+            int minHexDigits = 8;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("ffffffff");
@@ -467,10 +464,10 @@ namespace AnBo.Test
         {
             // Arrange
             long value = 0L;
-            int hexDigits = 1;
+            int minHexDigits = 1;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("0");
@@ -481,10 +478,10 @@ namespace AnBo.Test
         {
             // Arrange
             long value = 1048575L;
-            int hexDigits = 5;
+            int minHexDigits = 5;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("fffff");
@@ -495,10 +492,10 @@ namespace AnBo.Test
         {
             // Arrange
             long value = 255L;
-            int hexDigits = 16;
+            int minHexDigits = 16;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("00000000000000ff");
@@ -509,10 +506,10 @@ namespace AnBo.Test
         {
             // Arrange
             long value = 255L;
-            int hexDigits = -10;
+            int minHexDigits = -10;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("ff");
@@ -523,10 +520,10 @@ namespace AnBo.Test
         {
             // Arrange
             long value = 255L;
-            int hexDigits = 25;
+            int minHexDigits = 25;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("00000000000000ff");
@@ -537,10 +534,10 @@ namespace AnBo.Test
         {
             // Arrange
             long value = long.MaxValue;
-            int hexDigits = 16;
+            int minHexDigits = 16;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("7fffffffffffffff");
@@ -551,10 +548,10 @@ namespace AnBo.Test
         {
             // Arrange
             long value = -1L;
-            int hexDigits = 16;
+            int minHexDigits = 16;
 
             // Act
-            var result = HexConverter.ToHexString(value, hexDigits);
+            var result = HexConverter.ToHexString(value, minHexDigits);
 
             // Assert
             result.Should().Be("ffffffffffffffff");
@@ -950,5 +947,434 @@ namespace AnBo.Test
         }
 
         #endregion
+
+        #region Failed ToHexString Method Tests
+
+        [Fact]
+        public void TestCase066_ToHexString_Bool_Should_Throw_ArgException()
+        {
+            // Arrange
+            bool value = false;
+
+            // Act & Assert
+            var action = () => HexConverter.ToHexString(value);
+            action.Should().Throw<ArgException<bool>>()
+                .WithMessage("Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.");
+        }
+
+        [Fact]
+        public void TestCase067_ToHexString_BigInteger_Should_Throw_ArgException()
+        {
+            // Arrange
+            BigInteger value = 42;
+
+            // Act & Assert
+            var action = () => HexConverter.ToHexString(value);
+            action.Should().Throw<ArgException<BigInteger>>()
+                .WithMessage("Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.");
+        }
+
+        #endregion
+
+        #region ToHexString Int128 Method Tests
+
+        [Fact]
+        public void TestCase068_ToHexString_Int128_With_Zero_Should_Return_Single_Zero()
+        {
+            // Arrange
+            Int128 value = 0L;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("0");
+        }
+
+        [Fact]
+        public void TestCase069_ToHexString_Int128_With_Positive_Value_Should_Return_Hex_String()
+        {
+            // Arrange
+            Int128 value = 1048575L;
+            int minHexDigits = 5;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("fffff");
+        }
+
+        [Fact]
+        public void TestCase070_ToHexString_Int128_With_Padding_Should_Add_Leading_Zeros()
+        {
+            // Arrange
+            Int128 value = 255L;
+            int minHexDigits = 16;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("00000000000000ff");
+        }
+
+        [Fact]
+        public void TestCase071_ToHexString_Int128_With_Negative_Digits_Should_Use_Minimum_One()
+        {
+            // Arrange
+            Int128 value = 255L;
+            int minHexDigits = -10;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ff");
+        }
+
+        [Fact]
+        public void TestCase072_ToHexString_Int128_With_Excessive_Digits_Should_Cap_At_32()
+        {
+            // Arrange
+            Int128 value = 255L;
+            int minHexDigits = 54;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("000000000000000000000000000000ff");
+        }
+
+        [Fact]
+        public void TestCase073_ToHexString_Int128_With_Max_Value_Should_Return_Correct_Hex()
+        {
+            // Arrange
+            Int128 value = Int128.MaxValue;
+            int minHexDigits = 32;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("7fffffffffffffffffffffffffffffff");
+        }
+
+        [Fact]
+        public void TestCase074_ToHexString_Int128_With_Negative_Value_Should_Return_Two_Complement()
+        {
+            // Arrange
+            Int128 value = -1L;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ffffffffffffffffffffffffffffffff");
+        }
+
+        #endregion
+
+        #region ToHexString UInt64 Method Tests
+
+        [Fact]
+        public void TestCase075_ToHexString_UInt64_With_Max_Value_Should_Return_Correct_Hex()
+        {
+            // Arrange
+            ulong value = UInt64.MaxValue;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ffffffffffffffff");
+        }
+
+
+        [Fact]
+        public void TestCase076_ToHexString_UInt64_With_Max_Value_And_HexPrefix_Should_Return_Correct_Hex()
+        {
+            // Arrange
+            ulong value = UInt64.MaxValue;
+            int minHexDigits = 1;
+            bool addZeroXPrefix = true;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits, addZeroXPrefix);
+
+            // Assert
+            result.Should().Be("0xffffffffffffffff");
+        }
+
+        #endregion
+
+        #region ToHexString UInt16 Method Tests
+
+        [Fact]
+        public void TestCase077_ToHexString_UInt16_With_Zero_Should_Return_Single_Zero()
+        {
+            // Arrange
+            UInt16 value = 0;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("0");
+        }
+
+        [Fact]
+        public void TestCase078_ToHexString_UInt16_With_Positive_Value_Should_Return_Hex_String()
+        {
+            // Arrange
+            UInt16 value = 255;
+            int minHexDigits = 2;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ff");
+        }
+
+        [Fact]
+        public void TestCase079_ToHexString_UInt16_With_Padding_Should_Add_Leading_Zeros()
+        {
+            // Arrange
+            UInt16 value = 15;
+            int minHexDigits = 4;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("000f");
+        }
+
+        [Fact]
+        public void TestCase080_ToHexString_UInt16_With_Negative_Digits_Should_Use_Minimum_One()
+        {
+            // Arrange
+            UInt16 value = 15;
+            int minHexDigits = -5;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("f");
+        }
+
+        [Fact]
+        public void TestCase081_ToHexString_UInt16_With_Excessive_Digits_Should_Cap_At_Four()
+        {
+            // Arrange
+            UInt16 value = 15;
+            int minHexDigits = 10;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("000f");
+        }
+
+        [Fact]
+        public void TestCase082_ToHexString_UInt16_With_Max_Value_Should_Return_Correct_Hex()
+        {
+            // Arrange
+            UInt16 value = UInt16.MaxValue;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ffff");
+        }
+
+        #endregion
+
+        #region ToHexString UInt32 Method Tests
+
+        [Fact]
+        public void TestCase083_ToHexString_UInt32_With_Zero_Should_Return_Single_Zero()
+        {
+            // Arrange
+            uint value = 0;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("0");
+        }
+
+        [Fact]
+        public void TestCase084_ToHexString_UInt32_With_Positive_Value_Should_Return_Hex_String()
+        {
+            // Arrange
+            uint value = 4095;
+            int minHexDigits = 3;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("fff");
+        }
+
+        [Fact]
+        public void TestCase085_ToHexString_UInt32_With_Padding_Should_Add_Leading_Zeros()
+        {
+            // Arrange
+            uint value = 255;
+            int minHexDigits = 8;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("000000ff");
+        }
+
+        [Fact]
+        public void TestCase086_ToHexString_UInt32_With_Negative_Digits_Should_Use_Minimum_One()
+        {
+            // Arrange
+            uint value = 255;
+            int minHexDigits = -3;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ff");
+        }
+
+        [Fact]
+        public void TestCase087_ToHexString_UInt32_With_Excessive_Digits_Should_Cap_At_Eight()
+        {
+            // Arrange
+            uint value = 255;
+            int minHexDigits = 15;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("000000ff");
+        }
+
+        [Fact]
+        public void TestCase088_ToHexString_UInt32_With_Max_Value_Should_Return_Correct_Hex()
+        {
+            // Arrange
+            uint value = uint.MaxValue;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ffffffff");
+        }
+
+        #endregion
+
+        #region ToHexString byte Method Tests
+
+        [Fact]
+        public void TestCase089_ToHexString_Byte_With_Zero_Should_Return_Single_Zero()
+        {
+            // Arrange
+            byte value = 0;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("0");
+        }
+
+        [Fact]
+        public void TestCase090_ToHexString_Byte_With_Positive_Value_Should_Return_Hex_String()
+        {
+            // Arrange
+            byte value = 15;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("f");
+        }
+
+        [Fact]
+        public void TestCase091_ToHexString_Byte_With_Padding_Should_Add_Leading_Zeros()
+        {
+            // Arrange
+            byte value = 15;
+            int minHexDigits = 2;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("0f");
+        }
+
+        [Fact]
+        public void TestCase092_ToHexString_Byte_With_Negative_Digits_Should_Use_Minimum_One()
+        {
+            // Arrange
+            byte value = 255;
+            int minHexDigits = -3;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ff");
+        }
+
+        [Fact]
+        public void TestCase093_ToHexString_Byte_With_Excessive_Digits_Should_Cap_At_Eight()
+        {
+            // Arrange
+            byte value = 255;
+            int minHexDigits = 15;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ff");
+        }
+
+        [Fact]
+        public void TestCase094_ToHexString_Byte_With_Max_Value_Should_Return_Correct_Hex()
+        {
+            // Arrange
+            byte value = byte.MaxValue;
+            int minHexDigits = 1;
+
+            // Act
+            var result = HexConverter.ToHexString(value, minHexDigits);
+
+            // Assert
+            result.Should().Be("ff");
+        }
+
+        #endregion
+
     }
 }

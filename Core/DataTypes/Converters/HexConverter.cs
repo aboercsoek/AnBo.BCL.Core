@@ -19,30 +19,7 @@ namespace AnBo.Core
 	/// </summary>
 	public static class HexConverter
     {
-        // private static readonly string[] CachedInt32Strings;
-
-        static HexConverter()
-        {
-            //var strArray = new string[0x100];
-            //for (int i = 0; i < strArray.Length; i++)
-            //{
-            //    strArray[i] = i.ToString(CultureInfo.InvariantCulture);
-            //}
-            //CachedInt32Strings = strArray;
-
-        }
-
         #region HexString- & HexDigit-Methods
-
-        // /// <summary>
-        // /// Turns an integer into a string; independent of current culture, and more efficient (may cache strings)
-        // /// </summary>
-        // /// <param name="value"></param>
-        // /// <returns></returns>
-        //internal static string Int32ToString(int value)
-        //{
-        //    return (value < CachedInt32Strings.Length) ? CachedInt32Strings[value] : value.ToString(CultureInfo.InvariantCulture);
-        //}
 
         /// <summary>
         /// Converts a hex digit.
@@ -73,13 +50,13 @@ namespace AnBo.Core
         /// <param name="hexString">The hex string.</param>
         /// <returns>The converted byte buffer.</returns>
         /// <exception cref="ArgException{TValue}">Is thrown if <paramref name="hexString"/> is not properly formatted.</exception>"
-        public static byte[] FromHexString(string hexString) 
+        public static byte[] FromHexString(string hexString)
         {
             try
             {
                 if (hexString.IsNullOrEmptyWithTrim())
                 {
-                    return new byte[0];
+                    return [];
                 }
 
                 hexString = hexString.Replace(" ", "");
@@ -97,82 +74,65 @@ namespace AnBo.Core
             {
                 throw new ArgException<string>(hexString, "hexString", "Inproperly formatted hex string");
             }
-            
-        }
 
-        private static char GetHexValue(int i)
-        {
-            if (i < 10)
-            {
-                return (char)(0x30 + i);
-            }
-            return (char)(0x61 + (i - 10));
-        }
-
-        /// <summary>
-        /// Returns a hexadecimal representation of an Int16 with at least the given length.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="hexDigits">The minimum length. Range[1..4].</param>
-        /// <returns>
-        /// A hexadecimal representation of an Int16 value with at least the given length (hexDigits).
-        /// </returns>
-        public static string ToHexString(Int16 value, int hexDigits)
-        {
-            const int maxDigits = 4;
-
-            if (hexDigits < 1)
-                hexDigits = 1;
-
-            if (hexDigits > maxDigits)
-                hexDigits = maxDigits;
-
-            // For minimal digits combine with PadLeft
-            return Convert.ToString(value, 16).PadLeft(hexDigits, '0');
-        }
-
-        /// <summary>
-        /// Returns a hexadecimal representation of an integer with at least the given length.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="hexDigits">The minimum length. Range[1..8].</param>
-        /// <returns>
-        /// a hexadecimal representation of an integer with at least the given length (hexDigits).
-        /// </returns>
-        public static string ToHexString(int value, int hexDigits)
-        {
-            const int maxDigits = 8;
-
-            if (hexDigits < 1)
-                hexDigits = 1;
-
-            if (hexDigits > maxDigits)
-                hexDigits = maxDigits;
-
-            // For minimal digits combine with PadLeft
-            return Convert.ToString(value, 16).PadLeft(hexDigits, '0');
         }
 
         /// <summary>
         /// Returns a hexadecimal representation of an long with at least the given length.
         /// </summary>
+        /// <typeparam name="T">Source type, must be byte, short, int, long, ushort or uint.</typeparam>
         /// <param name="value">The value.</param>
-        /// <param name="hexDigits">The minimum length. Range[1..16].</param>
+        /// <param name="minHexDigits">The minimum length.</param>
+        /// <param name="addZeroXPrefix">Whether to add a "0x" prefix.</param>
         /// <returns>
         /// A hexadecimal representation of an long with at least the given length (hexDigits).
         /// </returns>
-        public static string ToHexString(long value, int hexDigits)
+        public static string ToHexString<T>(T value, int minHexDigits=1, bool addZeroXPrefix = false) where T : struct //, IConvertible
         {
-            const int maxDigits = 16;
+            if (minHexDigits < 1)
+                minHexDigits = 1;
 
-            if (hexDigits < 1)
-                hexDigits = 1;
+            string prefix = addZeroXPrefix ? "0x" : string.Empty;
 
-            if (hexDigits > maxDigits)
-                hexDigits = maxDigits;
-
-            // For minimal digits combine with PadLeft
-            return Convert.ToString(value, 16).PadLeft(hexDigits, '0');
+            int maxDigits;
+            switch (value)
+            {
+                case short s:
+                    maxDigits = 4;
+                    minHexDigits = Math.Min(minHexDigits, maxDigits);
+                    return prefix + Convert.ToString(s, 16).PadLeft(minHexDigits, '0');
+                case int i:
+                    maxDigits = 8;
+                    minHexDigits = Math.Min(minHexDigits, maxDigits);
+                    return prefix + Convert.ToString(i, 16).PadLeft(minHexDigits, '0');
+                case long l:
+                    maxDigits = 16;
+                    minHexDigits = Math.Min(minHexDigits, maxDigits);
+                    return prefix + Convert.ToString(l, 16).PadLeft(minHexDigits, '0');
+                case Int128 i128:
+                    maxDigits = 32;
+                    minHexDigits = Math.Min(minHexDigits, maxDigits);
+                    return prefix + i128.ToString("x").PadLeft(minHexDigits, '0');
+                case byte b:
+                    maxDigits = 2;
+                    minHexDigits = Math.Min(minHexDigits, maxDigits);
+                    return prefix + Convert.ToString(b, 16).PadLeft(minHexDigits, '0');
+                case ushort us:
+                    maxDigits = 4;
+                    minHexDigits = Math.Min(minHexDigits, maxDigits);
+                    return prefix + Convert.ToString(us, 16).PadLeft(minHexDigits, '0');
+                case uint ui:
+                    maxDigits = 8;
+                    minHexDigits = Math.Min(minHexDigits, maxDigits);
+                    return prefix + Convert.ToString(ui, 16).PadLeft(minHexDigits, '0');
+                case ulong ul:
+                    maxDigits = 16;
+                    Int128 tempI128 = ul;
+                    minHexDigits = Math.Min(minHexDigits, maxDigits);
+                    return prefix + tempI128.ToString("x").PadLeft(minHexDigits, '0');
+                default:
+                    throw new ArgException<T>(value, "value", "Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.");
+            }
         }
 
         /// <summary>
@@ -182,26 +142,7 @@ namespace AnBo.Core
         /// <returns>The hex string.</returns>
         public static string ToHexString(byte[] buffer)
         {
-            if (buffer == null)
-                return string.Empty;
-            if (buffer.Length == 0)
-                return string.Empty;
-
-            int capacity = buffer.Length * 0x2;
-
-            var sb = new StringBuilder(capacity);
-            int bufferIndex = 0x0;
-
-            while (bufferIndex < buffer.Length)
-            {
-                int num = (buffer[bufferIndex] & 0xf0) >> 0x4;
-                sb.Append(HexDigit(num));
-                num = buffer[bufferIndex] & 0xf;
-                sb.Append(HexDigit(num));
-                bufferIndex++;
-            }
-
-            return sb.ToString();
+            return ToHexString(buffer, HexStringFormatOptions.None);
         }
 
         /// <summary>
