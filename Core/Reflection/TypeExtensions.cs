@@ -176,7 +176,8 @@ namespace AnBo.Core
                 return false;
 
             return type.GetCustomAttribute<RequiredMemberAttribute>() != null;
-        }
+        }
+
 
         #endregion
 
@@ -211,137 +212,7 @@ namespace AnBo.Core
         }
 
         #endregion
-
-        #region Type Attribute extension methods
-
-        /// <summary>
-        /// Checks if the type has an attribute of the specified type <typeparamref name="TAttribute"/> defined on it.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
-        /// <param name="type">The type to check</param>
-        /// <returns>true if the attribute exists, false otherwise</returns>
-        public static bool HasAttribute<TAttribute>(this Type? type) where TAttribute : Attribute
-        {
-            if (type == null)
-                return false;
-
-            return type.IsDefined(typeof(TAttribute), inherit: false);
-        }
-
-        /// <summary>
-        /// Tries to get an attribute of the specified type <typeparamref name="TAttribute"/> from the type.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
-        /// <param name="type">The type to check</param>
-        /// <param name="attribute">The found attribute (null if not present)</param>
-        /// <returns>true if the attribute exists, false otherwise</returns>
-        public static bool TryGetAttribute<TAttribute>(this Type? type, out TAttribute? attribute)
-            where TAttribute : Attribute
-        {
-            if (type == null)
-            {
-                attribute = default;
-                return false;
-            }
-
-            attribute = type.GetCustomAttribute<TAttribute>(inherit: false);
-            return attribute != null;
-        }
-
-        /// <summary>
-        /// Gets all attributes of the specified type <typeparamref name="TAttribute"/> from the type.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
-        /// <param name="type">The type to check</param>
-        /// <param name="inherit">true to search this member's inheritance chain to find the attributes; otherwise, false. This parameter is ignored for properties and events</param>
-        /// <returns>An enumerable collection of attributes of type <typeparamref name="TAttribute"/>, or an empty collection if no attributes are found</returns>
-        public static IEnumerable<TAttribute> GetAllAttributes<TAttribute>(this Type? type, bool inherit = true)
-            where TAttribute : Attribute
-        {
-            if (type == null)
-                return Enumerable.Empty<TAttribute>();
-
-            var attributes = new List<TAttribute>();
-
-            // Wie ein Aufzug: Etage für Etage nach oben
-            while (type != null)
-            {
-                attributes.AddRange(type.GetCustomAttributes<TAttribute>(inherit: false));
-                if (inherit == false)
-                    break;
-                type = type.BaseType;
-            }
-
-            return attributes;
-        }
-
-        /// <summary>
-        /// Finds the first attribute of the specified type <typeparamref name="TAttribute"/> that matches the given predicate.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
-        /// <param name="type">The type to check for attributes</param>
-        /// <param name="predicate">A function to test each attribute for a condition</param>
-        /// <returns>The first attribute that matches the predicate, or null if no matching attribute is found or if type is null</returns>
-        public static TAttribute? FindAttribute<TAttribute>(this Type? type, Func<TAttribute, bool> predicate)
-            where TAttribute : Attribute
-        {
-            if (type == null)
-                return null;
-
-            return type.GetAllAttributes<TAttribute>().FirstOrDefault(predicate);
-        }
-
-        #endregion
-
-        #region Type Member Attribute extension methods
-
-        /// <summary>
-        /// Checks if a type member (property, field, method, etc.) has a specific attribute.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
-        /// <param name="type">The type to check</param>
-        /// <returns>true if the attribute exists, false otherwise</returns>
-        public static bool HasMemberAttribute<TAttribute>(this Type type, string memberName) where TAttribute : Attribute
-        {
-            if (type == null)
-                return false;
-
-            var memberInfo = type.GetMember(memberName).FirstOrDefault();
-
-            return memberInfo == null ? false : memberInfo.IsDefined(typeof(TAttribute), inherit: false);
-        }
-
-        /// <summary>
-        /// Checks if a type member (property, field, method, etc.) has a specific attribute and tries to get it.
-        /// </summary>
-        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
-        /// <param name="type">The type to check</param>
-        /// <param name="attribute">The found attribute (null if not found)</param>
-        /// <returns>true if the attribute exists, false otherwise</returns>
-        public static bool TryGetMemberAttribute<TAttribute>(this Type type, string memberName, out TAttribute? attribute)
-            where TAttribute : Attribute
-        {
-            if (type == null)
-            {
-                attribute = default!;
-                return false;
-            }
-
-            var memberInfo = type.GetMember(memberName).FirstOrDefault();
-
-            if (memberInfo == null)
-            {
-                attribute = default!;
-                return false;
-            }
-
-            attribute = memberInfo.GetCustomAttribute<TAttribute>(inherit: false);
-
-            return attribute != null;
-        }
-
-        #endregion
-
+        
         #region Default value methods
 
         /// <summary>
