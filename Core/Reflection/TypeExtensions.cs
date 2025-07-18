@@ -286,20 +286,15 @@ namespace AnBo.Core
             return (type == null) ? false : type.HasAttribute<XmlAttributeAttribute>(false);
         }
 
-        // ...
-
+        /// <summary>
+        /// Creates a deep copy of an object using JSON serialization
+        /// </summary>
+        /// <typeparam name="T">The type of object to be cloned</typeparam>
+        /// <param name="original">The object to be cloned</param>
+        /// <returns>A deep copy of the original object</returns>
         public static T? DeepClone<T>(this T original)
         {
-            if (typeof(T).IsValueType == false)
-            {
-                if (Equals(original, default(T))) return default;
-            }
-
-            // Serialize the object to JSON
-            string jsonString = JsonSerializer.Serialize(original);
-
-            // Deserialize the JSON back to a new object
-            return JsonSerializer.Deserialize<T>(jsonString);
+            return TypeHelper.DeepClone(original);
         }
     }
 }

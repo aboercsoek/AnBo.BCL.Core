@@ -45,7 +45,7 @@ namespace AnBo.Test
             object original = "test string";
 
             // Act
-            var result = TypeHelper.DeepClone(original);
+            var result = TypeHelper.DeepClone(original, original.GetType());
 
             // Assert
             result.Should().Be("test string");
@@ -78,7 +78,7 @@ namespace AnBo.Test
             };
 
             // Act
-            var result = TypeHelper.DeepClone((object)original) as TestClass;
+            var result = TypeHelper.DeepClone(original, typeof(TestClass)) as TestClass;
 
             // Assert
             result.Should().NotBeNull();
@@ -154,7 +154,7 @@ namespace AnBo.Test
             var original = new NonSerializableClass();
 
             // Act & Assert
-            var exception = Assert.Throws<InvalidOperationException>(() => TypeHelper.DeepClone((object)original));
+            var exception = Assert.Throws<InvalidOperationException>(() => TypeHelper.DeepClone(original, typeof(NonSerializableClass)));
             exception.Message.Should().Contain("Fehler beim Deep Clone von Typ NonSerializableClass");
         }
 

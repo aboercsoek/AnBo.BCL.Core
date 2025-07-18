@@ -284,10 +284,6 @@ namespace AnBo.Core
         // Bonus: Mehrdimensionale Arrays
         private static string FormatMultidimensionalArray(Array array, ToStringOptions options, int currentDepth = 0)
         {
-            // Depth-Check vor der Verarbeitung
-            //if (currentDepth >= options.MaxNestingDepth)
-            //    return "<max nesting depth reached>";
-
             var dimensions = new int[array.Rank];
             for (int i = 0; i < array.Rank; i++)
             {
@@ -503,8 +499,11 @@ namespace AnBo.Core
             }
 
             // For Nullable value types
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (type.IsNullableType())
+            {
+                // Nullable<T> types are handled separately
                 return ParseNullable(value, type);
+            }
 
             // Priorität 1: Prüfe auf ISpanParsable<T> (wo T == type)
             var spanParsableInterface = typeof(ISpanParsable<>).MakeGenericType(type);

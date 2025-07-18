@@ -53,23 +53,25 @@ namespace AnBo.Core
         };
 
         /// <summary>
-        /// Erstellt eine tiefe Kopie eines Objekts (Object-Version für Kompatibilität)
+        /// Creates a deep copy of an object using JSON serialization
         /// </summary>
-        /// <param name="original">Das zu klonende Objekt</param>
-        /// <returns>Eine tiefe Kopie des ursprünglichen Objekts</returns>
-        public static object? DeepClone(object? original)
+        /// <param name="original">The object to be cloned</param>
+        /// <param name="type">The type of object to be cloned</param>
+        /// <returns>A deep copy of the original object</returns>
+        public static object? DeepClone(object? original, Type type)
         {
             if (original == null)
                 return null;
 
-            Type originalType = original.GetType();
+            //Type originalType = original.GetType();
+            Type originalType = type ?? original.GetType();
 
             try
             {
-                // Serialisiere das Objekt zu JSON
+                // Serialize the object to JSON
                 string jsonString = JsonSerializer.Serialize(original, originalType, _jsonOptions);
 
-                // Deserialisiere zurück zum ursprünglichen Typ
+                // Deserialize back to the original type
                 return JsonSerializer.Deserialize(jsonString, originalType, _jsonOptions);
             }
             catch (Exception ex)
@@ -79,28 +81,32 @@ namespace AnBo.Core
         }
 
         /// <summary>
-        /// Erstellt eine tiefe Kopie eines Objekts mittels JSON-Serialisierung
+        /// Creates a deep copy of an object using JSON serialization
         /// </summary>
-        /// <typeparam name="T">Der Typ des zu klonenden Objekts</typeparam>
-        /// <param name="original">Das zu klonende Objekt</param>
-        /// <returns>Eine tiefe Kopie des ursprünglichen Objekts</returns>
+        /// <typeparam name="T">The type of object to be cloned</typeparam>
+        /// <param name="original">The object to be cloned</param>
+        /// <returns>A deep copy of the original object</returns>
         public static T? DeepClone<T>(T? original)
         {
-            if (original == null)
-                return default(T);
+            return (T?)DeepClone(original, typeof(T));
 
-            try
-            {
-                // Serialisiere das Objekt zu JSON
-                string jsonString = JsonSerializer.Serialize(original, _jsonOptions);
+            //if (typeof(T).IsValueType == false)
+            //{
+            //    if (Equals(original, default(T))) return default;
+            //}
 
-                // Deserialisiere zurück zum ursprünglichen Typ
-                return JsonSerializer.Deserialize<T>(jsonString, _jsonOptions);
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException($"Fehler beim Deep Clone von Typ {typeof(T).Name}: {ex.Message}", ex);
-            }
+            //try
+            //{
+            //    // Serialisiere das Objekt zu JSON
+            //    string jsonString = JsonSerializer.Serialize(original, _jsonOptions);
+
+            //    // Deserialisiere zurück zum ursprünglichen Typ
+            //    return JsonSerializer.Deserialize<T>(jsonString, _jsonOptions);
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new InvalidOperationException($"Fehler beim Deep Clone von Typ {typeof(T).Name}: {ex.Message}", ex);
+            //}
         }
 
         #endregion
