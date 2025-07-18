@@ -145,7 +145,7 @@ namespace AnBo.Core
                     {
                         throw new InvalidOperationRequestException("GetCustomAttributeFromHierarchy",
                             "Type {0} from hierarchy has multiple attributes of type {1}, which is not allowed.".SafeFormatWith(
-                            type.ToString().QuoteIfNeeded(), typeof(TAttribute).QuoteIfNeeded()));
+                            type.ToString().QuoteIfNeeded(), typeof(TAttribute).QuoteAssemblyQualifiedNameIfNeeded()));
                     }
                     return new Tuple<TAttribute?, Type?>((TAttribute)customAttributes[0], type);
                 }

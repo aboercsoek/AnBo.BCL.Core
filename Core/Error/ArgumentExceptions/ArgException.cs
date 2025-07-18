@@ -15,6 +15,7 @@ namespace AnBo.Core
 	/// <typeparam name="TValue">The Argument type.</typeparam>
     public class ArgException<TValue> : TechException
     {
+        public string ParamName { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ArgException{TValue}"/> class.
@@ -24,6 +25,7 @@ namespace AnBo.Core
             : base(StringResources.ErrorArgumentTemplate1Arg.SafeFormatWith(argName))
         {
             ErrorCode = 1001;
+            ParamName = argName;
         }
 
         /// <summary>
@@ -35,6 +37,7 @@ namespace AnBo.Core
             : base(StringResources.ErrorArgumentValidationFailedTemplate2Args.SafeFormatWith(argName, argValue))
         {
             ErrorCode = 1001;
+            ParamName = argName;
         }
 
         /// <summary>
@@ -47,7 +50,7 @@ namespace AnBo.Core
             : base(message.IsFormatString() ? message.SafeFormatWith(argName, argValue) : message)
         {
             ErrorCode = 1001;
+            ParamName = argName;
         }
-
     }
 }

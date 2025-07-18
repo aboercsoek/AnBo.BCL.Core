@@ -17,12 +17,15 @@ namespace AnBo.Core
     ///<summary>Argument is null validation exception class.</summary>
     public class ArgNullException : TechException
     {
+        public string ParamName { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ArgNullException"/> class.
         /// </summary>
         public ArgNullException()
         {
             ErrorCode = 1002;
+            ParamName = string.Empty;
         }
 
         /// <summary>
@@ -33,6 +36,7 @@ namespace AnBo.Core
             : base(StringResources.ErrorShouldNotBeNullValidationTemplate1Arg.SafeFormatWith(argName))
         {
             ErrorCode = 1002;
+            ParamName = argName ?? string.Empty;
         }
 
         /// <summary>
@@ -44,6 +48,7 @@ namespace AnBo.Core
             : base(message.IsFormatString() ? message.SafeFormatWith(argName) : message)
         {
             ErrorCode = 1002;
+            ParamName = argName;
         }
 
         /// <summary>
@@ -55,6 +60,7 @@ namespace AnBo.Core
             : base((formatParameters != null && formatParameters.Length > 0 && message.IsFormatString()) ? message.SafeFormatWith(formatParameters) : message)
         {
             ErrorCode = 1002;
+            ParamName = string.Empty;
         }
 
         /// <summary>
@@ -68,6 +74,7 @@ namespace AnBo.Core
                 formatParameters != null && formatParameters.Length > 0 ? message.SafeFormatWith(formatParameters) : message, inner)
         {
             ErrorCode = 1002;
+            ParamName = string.Empty;
         }
 
         /// <summary>Throws an <see cref="ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>

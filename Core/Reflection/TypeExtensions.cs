@@ -7,10 +7,10 @@
 //--------------------------------------------------------------------------
 #region Using directives
 
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text.Json;
-using System.Xml.Serialization;
+using System.Runtime.CompilerServices;
 
 #endregion
 
@@ -19,18 +19,17 @@ namespace AnBo.Core
     ///<summary>Provides extension methods for <see cref="Type"/>.</summary>
 	public static class TypeExtensions
     {
-        /// <summary>
-        /// Determines whether <paramref name="type"/> is a <see cref="Nullable{type}"/> type.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if <paramref name="type"/> is a <see cref="Nullable{type}"/> type; otherwise, <see langword="false"/>.
-        /// </returns>
-        public static bool IsNullableType(this Type type)
-        {
-            //http://msdn.microsoft.com/en-us/library/ms366789.aspx
-            return (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
+        
+        #region Type name methods
 
+        /// <summary>
+        /// Takes the type presentation, surrounds it with quotes if it contains spaces.
+        /// </summary>
+        public static string QuoteAssemblyQualifiedNameIfNeeded(this Type type)
+        {
+            ArgChecker.ShouldNotBeNull(type);
+
+            return type.AssemblyQualifiedName.QuoteIfNeeded();
         }
 
         /// <summary>
@@ -64,6 +63,10 @@ namespace AnBo.Core
             return type.Name;
         }
 
+        #endregion
+
+        #region Field methods
+
         /// <summary>
         /// Gets the the first field that meet the fieldName condition.
         /// </summary>
@@ -72,7 +75,7 @@ namespace AnBo.Core
         /// <returns>
         /// Returns the field info witch first match the fieldname condition.
         /// </returns>
-        public static FieldInfo? GetAnyField(this Type type, string fieldName)
+        public static FieldInfo? GetAnyField(this Type type, string? fieldName)
         {
             ArgChecker.ShouldNotBeNull(type, "type");
             ArgChecker.ShouldNotBeNullOrEmpty(fieldName, "fieldName");
@@ -92,31 +95,21 @@ namespace AnBo.Core
             Type? currentType = type;
             while (currentType != null)
             {
-                FieldInfo[] fields =
-                    currentType.GetFields(BindingFlags.Public |
-                                            BindingFlags.NonPublic |
-                                            BindingFlags.Instance |
-                                            BindingFlags.Static |
-                                            BindingFlags.IgnoreCase |
-                                            BindingFlags.DeclaredOnly);
-                foreach (FieldInfo fieldInfo in fields)
+                var fields = currentType.GetFields(
+                    BindingFlags.Public |
+                    BindingFlags.NonPublic |
+                    BindingFlags.Instance |
+                    BindingFlags.Static |
+                    BindingFlags.IgnoreCase |
+                    BindingFlags.DeclaredOnly);
+
+                foreach (var fieldInfo in fields)
                 {
                     yield return fieldInfo;
                 }
+
                 currentType = currentType.BaseType;
             }
-        }
-
-        /// <summary>
-        /// Is this type an open generic type
-        /// </summary>
-        /// <returns><see langword="true"/> if the specified type is an open generic type, otherwise <see langword="false"/></returns>
-        public static bool IsOpenGenericType(this Type type)
-        {
-            if (type == null)
-                return false;
-
-            return (type.IsGenericType && type.ContainsGenericParameters);
         }
 
         /// <summary>
@@ -134,24 +127,222 @@ namespace AnBo.Core
             if (type == null)
                 return null;
 
-            if (fieldName.IsNullOrEmptyWithTrim())
-                return null;
+            var fields = type.GetFields(
+                BindingFlags.Public |
+                BindingFlags.NonPublic |
+                BindingFlags.Instance |
+                BindingFlags.Static |
+                BindingFlags.IgnoreCase |
+                BindingFlags.DeclaredOnly);
 
-            var allFields = from f in type.GetFields(BindingFlags.Public |
-                                                     BindingFlags.NonPublic |
-                                                     BindingFlags.Instance |
-                                                     BindingFlags.Static |
-                                                     BindingFlags.IgnoreCase |
-                                                     BindingFlags.DeclaredOnly)
-                            where f.Name.ToLowerInvariant() == fieldName!.ToLowerInvariant()
-                            select f;
+            foreach(var field in fields)
+            {
+                if (field.Name.AsSpan().Equals(fieldName.AsSpan(), StringComparison.OrdinalIgnoreCase))
+                {
+                    return field;
+                }
+            }
 
-            FieldInfo? field = allFields.FirstOrDefault();
-            if (field != null)
-                return field;
-
+            // If not found in the current type, check the base type
             return GetFieldInfo(type.BaseType, fieldName);
         }
+
+        #endregion
+
+        #region Reflection extension methods
+
+        /// <summary>
+        /// Checks if the type implements the specified interface.
+        /// </summary>
+        /// <param name="type"> The type to check.</param>
+        /// <returns>true if the type implements the specified interface; otherwise, false.</returns>
+        /// <exception cref="ArgNullException">Is thrown if <paramref name="type"/> is <see langword="null"/></exception>
+        public static bool ImplementsInterface<TInterface>(this Type? type)
+        {
+            ArgChecker.ShouldNotBeNull(type, "type");
+            return typeof(TInterface).IsAssignableFrom(type);
+        }
+
+        /// <summary>
+        /// Determines whether the specified type has required members.
+        /// </summary>
+        /// <param name="type">The type to check for required members.</param>
+        /// <returns>
+        /// <see langword="true"/> if the type has the <see cref="RequiredMemberAttribute"/>; otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool HasRequiredMembers(this Type? type)
+        {
+            if (type == null)
+                return false;
+
+            return type.GetCustomAttribute<RequiredMemberAttribute>() != null;
+        }
+
+        #endregion
+
+        #region Generic type methods
+
+
+        private static readonly ConcurrentDictionary<Type, bool> _nullableTypeCache = new();
+
+        /// <summary>
+        /// Determines whether <paramref name="type"/> is a <see cref="Nullable{type}"/> type.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>
+        /// 	<see langword="true"/> if <paramref name="type"/> is a <see cref="Nullable{type}"/> type; otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool IsNullableType(this Type type)
+        {
+            return _nullableTypeCache.GetOrAdd(type, t =>
+                t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>));
+        }
+
+        /// <summary>
+        /// Is this type an open generic type
+        /// </summary>
+        /// <returns><see langword="true"/> if the specified type is an open generic type, otherwise <see langword="false"/></returns>
+        public static bool IsOpenGenericType(this Type type)
+        {
+            if (type == null)
+                return false;
+
+            return (type.IsGenericType && type.ContainsGenericParameters);
+        }
+
+        #endregion
+
+        #region Type Attribute extension methods
+
+        /// <summary>
+        /// Checks if the type has an attribute of the specified type <typeparamref name="TAttribute"/> defined on it.
+        /// </summary>
+        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
+        /// <param name="type">The type to check</param>
+        /// <returns>true if the attribute exists, false otherwise</returns>
+        public static bool HasAttribute<TAttribute>(this Type? type) where TAttribute : Attribute
+        {
+            if (type == null)
+                return false;
+
+            return type.IsDefined(typeof(TAttribute), inherit: false);
+        }
+
+        /// <summary>
+        /// Tries to get an attribute of the specified type <typeparamref name="TAttribute"/> from the type.
+        /// </summary>
+        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
+        /// <param name="type">The type to check</param>
+        /// <param name="attribute">The found attribute (null if not present)</param>
+        /// <returns>true if the attribute exists, false otherwise</returns>
+        public static bool TryGetAttribute<TAttribute>(this Type? type, out TAttribute? attribute)
+            where TAttribute : Attribute
+        {
+            if (type == null)
+            {
+                attribute = default;
+                return false;
+            }
+
+            attribute = type.GetCustomAttribute<TAttribute>(inherit: false);
+            return attribute != null;
+        }
+
+        /// <summary>
+        /// Gets all attributes of the specified type <typeparamref name="TAttribute"/> from the type.
+        /// </summary>
+        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
+        /// <param name="type">The type to check</param>
+        /// <param name="inherit">true to search this member's inheritance chain to find the attributes; otherwise, false. This parameter is ignored for properties and events</param>
+        /// <returns>An enumerable collection of attributes of type <typeparamref name="TAttribute"/>, or an empty collection if no attributes are found</returns>
+        public static IEnumerable<TAttribute> GetAllAttributes<TAttribute>(this Type? type, bool inherit = true)
+            where TAttribute : Attribute
+        {
+            if (type == null)
+                return Enumerable.Empty<TAttribute>();
+
+            var attributes = new List<TAttribute>();
+
+            // Wie ein Aufzug: Etage für Etage nach oben
+            while (type != null)
+            {
+                attributes.AddRange(type.GetCustomAttributes<TAttribute>(inherit: false));
+                if (inherit == false)
+                    break;
+                type = type.BaseType;
+            }
+
+            return attributes;
+        }
+
+        /// <summary>
+        /// Finds the first attribute of the specified type <typeparamref name="TAttribute"/> that matches the given predicate.
+        /// </summary>
+        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
+        /// <param name="type">The type to check for attributes</param>
+        /// <param name="predicate">A function to test each attribute for a condition</param>
+        /// <returns>The first attribute that matches the predicate, or null if no matching attribute is found or if type is null</returns>
+        public static TAttribute? FindAttribute<TAttribute>(this Type? type, Func<TAttribute, bool> predicate)
+            where TAttribute : Attribute
+        {
+            if (type == null)
+                return null;
+
+            return type.GetAllAttributes<TAttribute>().FirstOrDefault(predicate);
+        }
+
+        #endregion
+
+        #region Type Member Attribute extension methods
+
+        /// <summary>
+        /// Checks if a type member (property, field, method, etc.) has a specific attribute.
+        /// </summary>
+        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
+        /// <param name="type">The type to check</param>
+        /// <returns>true if the attribute exists, false otherwise</returns>
+        public static bool HasMemberAttribute<TAttribute>(this Type type, string memberName) where TAttribute : Attribute
+        {
+            if (type == null)
+                return false;
+
+            var memberInfo = type.GetMember(memberName).FirstOrDefault();
+
+            return memberInfo == null ? false : memberInfo.IsDefined(typeof(TAttribute), inherit: false);
+        }
+
+        /// <summary>
+        /// Checks if a type member (property, field, method, etc.) has a specific attribute and tries to get it.
+        /// </summary>
+        /// <typeparam name="TAttribute">The type of the attribute to search for</typeparam>
+        /// <param name="type">The type to check</param>
+        /// <param name="attribute">The found attribute (null if not found)</param>
+        /// <returns>true if the attribute exists, false otherwise</returns>
+        public static bool TryGetMemberAttribute<TAttribute>(this Type type, string memberName, out TAttribute? attribute)
+            where TAttribute : Attribute
+        {
+            if (type == null)
+            {
+                attribute = default!;
+                return false;
+            }
+
+            var memberInfo = type.GetMember(memberName).FirstOrDefault();
+
+            if (memberInfo == null)
+            {
+                attribute = default!;
+                return false;
+            }
+
+            attribute = memberInfo.GetCustomAttribute<TAttribute>(inherit: false);
+
+            return attribute != null;
+        }
+
+        #endregion
+
+        #region Default value methods
 
         /// <summary>
         /// Gets the default value for this reference or value type.
@@ -165,6 +356,7 @@ namespace AnBo.Core
         /// <summary>
         /// Gets whether the <paramref name="value" /> is the default value for this reference or value type.
         /// </summary>
+        /// <returns>true if the value is the default value, othewise false</returns>
         public static bool IsDefaultValue(this Type type, object value)
         {
             if (ReferenceEquals(value, null))
@@ -184,107 +376,51 @@ namespace AnBo.Core
                 return true;
             }
 
-            if (type.IsValueType.IsFalse())
+            if (value is string s)
             {
-                return ((value as string) == string.Empty);
+                return (s == string.Empty);
             }
             return Equals(Activator.CreateInstance(type), value);
         }
 
-        /// <summary>
-        /// Takes the type presentation, surrounds it with quotes if it contains spaces.
-        /// </summary>
-        public static string QuoteIfNeeded(this Type type)
-        {
-            ArgChecker.ShouldNotBeNull(type, "type");
+        #endregion
 
-            return type.AssemblyQualifiedName.QuoteIfNeeded();
-        }
-
+        #region Serialization methods
 
         /// <summary>
-        /// Determines whether the specified type is a data contract.
+        /// Checks if type is JSON serializable
         /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the specified type is a data contract; otherwise, <see langword="false"/>.
-        /// </returns>
-        public static bool IsDataContract(this Type type)
+        /// <param name="type">The type to check</param>
+        /// <returns>true if the type is JSON serializable, otherwise false</returns>
+        public static bool IsJsonSerializable(this Type type)
         {
-            return (type == null) ? false : type.HasAttribute<DataContractAttribute>(false);
+            // Basis-Ausschlüsse
+            if (type.IsPointer || type.IsByRef)
+                return false;
+
+            // Primitive Typen und Strings sind immer serialisierbar
+            if (type.IsPrimitive || type == typeof(string) || type == typeof(DateTime))
+                return true;
+
+            // Nullable-Typen
+            if (Nullable.GetUnderlyingType(type) != null)
+                return IsJsonSerializable(Nullable.GetUnderlyingType(type)!);
+
+            // Collections
+            if (type.IsArray || typeof(IEnumerable).IsAssignableFrom(type))
+                return true; // Vereinfacht - sollte Element-Typ prüfen
+
+            // Klassen brauchen parameterlosen Konstruktor
+            if (type.IsClass)
+                return type.GetConstructor(Type.EmptyTypes) != null;
+
+            // Structs sind meist serialisierbar
+            return type.IsValueType;
         }
 
-        /// <summary>
-        /// Determines whether the specified type has a XmlRoot attribute.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the specified type  has a XmlRoot attribute; otherwise, <see langword="false"/>.
-        /// </returns>
-        public static bool HasXmlRootAttribute(this Type type)
-        {
-            return (type == null) ? false : type.HasAttribute<XmlRootAttribute>(false);
-        }
+        #endregion
 
-        /// <summary>
-        /// Determines whether the specified type has a XmlElement attribute.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the specified type has a XmlElement attribute; otherwise, <see langword="false"/>.
-        /// </returns>
-        public static bool HasXmlElementAttribute(this Type type)
-        {
-            return (type == null) ? false : type.HasAttribute<XmlElementAttribute>(false);
-        }
-
-        /// <summary>
-        /// Determines whether the specified type has a XmlEnum attribute.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the specified type has a XmlEnum attribute; otherwise, <see langword="false"/>.
-        /// </returns>
-        public static bool HasXmlEnumAttribute(this Type type)
-        {
-            return (type == null) ? false : type.HasAttribute<XmlEnumAttribute>(false);
-        }
-
-        /// <summary>
-        /// Determines whether the specified type has a XmlArray attribute.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the specified type has a XmlArray attribute; otherwise, <see langword="false"/>.
-        /// </returns>
-        public static bool HasXmlArrayAttribute(this Type type)
-        {
-            return (type == null) ? false : type.HasAttribute<XmlArrayAttribute>(false);
-        }
-
-        /// <summary>
-        /// Determines whether the specified type has a XmlArrayItem attribute.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the specified type has a XmlArrayItem attribute; otherwise, <see langword="false"/>.
-        /// </returns>
-        public static bool HasXmlArrayItemAttribute(this Type type)
-        {
-            return (type == null) ? false : type.HasAttribute<XmlArrayItemAttribute>(false);
-        }
-
-        /// <summary>
-        /// Determines whether the specified type has a XmlAttribute attribute.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the specified type has a XmlAttribute attribute; otherwise, <see langword="false"/>.
-        /// </returns>
-        public static bool HasXmlAttributeAttribute(this Type type)
-        {
-            return (type == null) ? false : type.HasAttribute<XmlAttributeAttribute>(false);
-        }
+        #region Deep clone methods
 
         /// <summary>
         /// Creates a deep copy of an object using JSON serialization
@@ -296,5 +432,7 @@ namespace AnBo.Core
         {
             return TypeHelper.DeepClone(original);
         }
+
+        #endregion
     }
 }

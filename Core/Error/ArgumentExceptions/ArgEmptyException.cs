@@ -14,12 +14,14 @@ namespace AnBo.Core
     ///<summary>Argument is empty validation exception class.</summary>
     public class ArgEmptyException : TechException
     {
+        public string ParamName { get; private set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="ArgEmptyException"/> class.
         /// </summary>
         public ArgEmptyException()
         {
             ErrorCode = 1003;
+            ParamName = string.Empty;
         }
 
         /// <summary>
@@ -30,6 +32,7 @@ namespace AnBo.Core
             : base(StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg.SafeFormatWith(argName))
         {
             ErrorCode = 1003;
+            ParamName = argName ?? string.Empty;
         }
 
         /// <summary>
@@ -41,6 +44,7 @@ namespace AnBo.Core
             : base(message.IsFormatString() ? message.SafeFormatWith(argName) : message)
         {
             ErrorCode = 1003;
+            ParamName = argName ?? string.Empty;
         }
     }
 }

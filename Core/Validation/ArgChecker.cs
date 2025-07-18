@@ -32,7 +32,7 @@ namespace AnBo.Core
         /// <param name="argName">The name of the argument.</param>
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/></exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNull(object? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNull([NotNull] object? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             if (argValue == null)
                 throw new ArgNullException(argName!);
@@ -47,7 +47,7 @@ namespace AnBo.Core
         /// <param name="argName">The name of the argument.</param>
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/>.</exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNull(object? argValue, string? errorMessage, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNull([NotNull] object? argValue, string? errorMessage, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             if (argValue == null)
                 throw new ArgNullException(argName!, string.IsNullOrEmpty(errorMessage) ? StringResources.ErrorShouldNotBeNullValidationTemplate1Arg : errorMessage);
@@ -65,7 +65,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty string.</exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNullOrEmpty(string? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNullOrEmpty([NotNull] string? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             ShouldNotBeNull(argValue, argName);
 
@@ -82,7 +82,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="argValue"/> is an empty string.</exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNullOrEmpty(string? argValue, string? errorMessage, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNullOrEmpty([NotNull] string? argValue, string? errorMessage, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             ShouldNotBeNull(argValue, argName, errorMessage);
 
@@ -102,7 +102,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="argValue"/> is an empty Guid.</exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNullOrEmpty(Guid? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNullOrEmpty([NotNull] Guid? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             ShouldNotBeNull(argValue, argName);
 
@@ -121,7 +121,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="argValue"/> is an empty Guid.</exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNullOrEmpty(Guid? argValue, string? errorMessage, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNullOrEmpty([NotNull] Guid? argValue, string? errorMessage, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             ShouldNotBeNull(argValue, argName, errorMessage);
 
@@ -141,7 +141,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="argValue"/> is an empty StringBuilder.</exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNullOrEmpty(StringBuilder? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNullOrEmpty([NotNull] StringBuilder? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             ShouldNotBeNull(argValue, argName);
 
@@ -160,7 +160,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="argValue"/> is an empty StringBuilder.</exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNullOrEmpty(StringBuilder? argValue, string? errorMessage, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNullOrEmpty([NotNull] StringBuilder? argValue, string? errorMessage, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             ShouldNotBeNull(argValue, argName, errorMessage);
 
@@ -180,7 +180,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty collection.</exception>
         [DebuggerStepThrough]
-        public static void ShouldNotBeNullOrEmpty(IEnumerable? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+        public static void ShouldNotBeNullOrEmpty([NotNull] IEnumerable? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
         {
             ShouldNotBeNull(argValue, argName);
 
