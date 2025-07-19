@@ -11,82 +11,75 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
 
 #endregion
 
 namespace AnBo.Core
 {
     /// <summary>
-	/// String manipulation and generation methods, as well as string array manipulation.
-	/// </summary>
-	public static class StringHelper
+    /// String manipulation and generation methods, as well as string array manipulation.
+    /// Modernized for .NET 8+ with improved performance and nullable reference types.
+    /// </summary>
+	public static partial class StringHelper
     {
         #region Private and Public Static Members
 
         /// <summary>
         /// Char array with default quote char (").
         /// </summary>
-        public static readonly char[] DefaultQuoteSensitiveChars = new[] { '\"' };
-
-        private static Random m_Random;
-
-        #endregion
-
-        #region Static Ctor
+        public static readonly char[] DefaultQuoteSensitiveChars = ['"'];
 
         /// <summary>
-        /// Static ctor
+        /// Thread-safe random number generator for string generation.
         /// </summary>
-        static StringHelper()
-        {
-            m_Random = new Random(unchecked((int)DateTime.UtcNow.Ticks));
-        }
+        private static readonly ThreadLocal<Random> ThreadLocalRandom = new(() => new Random());
+
+        /// <summary>
+        /// Compiled regex for removing characters (performance optimization).
+        /// </summary>
+        //[GeneratedRegex(@"[\r\n]+")]
+        //private static partial Regex NewLineRegex();
 
         #endregion
 
         #region Safe ToString methods
 
         /// <summary>
-        /// Safe ToString-Operation.
+        /// Safe ToString-Operation that handles null values gracefully.
         /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns>If <paramref name="obj"/> is null String.Empty; otherwise obj.ToString().</returns>
+        /// <param name="obj">The object to convert to string. Can be null.</param>
+        /// <returns>If <paramref name="obj"/> is null returns String.Empty; otherwise obj.ToString().</returns>
+        [return: NotNull]
         [DebuggerStepThrough]
-        public static string SafeToString(object obj)
+        public static string SafeToString(object? obj)
         {
             try
             {
-                return (obj == null) ? String.Empty : obj.ToInvariantString();
+                return obj?.ToInvariantString() ?? string.Empty;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!ex.IsFatal())
             {
-                if (ex.IsFatal())
-                    throw;
+                return string.Empty;
             }
-            return String.Empty;
         }
 
         /// <summary>
-        /// Safe ToString-Operation.
+        /// Safe ToString-Operation with fallback value.
         /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <param name="defaultValue">The default value.</param>
-        /// <returns>If <paramref name="obj"/> is <see langword="null"/> the safe ToString value of <paramref name="defaultValue"/>; otherwise the value of obj.ToString().</returns>
+        /// <param name="obj">The object to convert to string. Can be null.</param>
+        /// <param name="defaultValue">The default value to use if obj is null or conversion fails.</param>
+        /// <returns>If <paramref name="obj"/> is null or conversion fails, returns the safe ToString value of <paramref name="defaultValue"/>; otherwise the value of obj.ToString().</returns>
         [DebuggerStepThrough]
         public static string SafeToString(object? obj, string defaultValue)
         {
             try
             {
-                return (obj == null) ? SafeToString(defaultValue) : obj.ToInvariantString();
+                return obj?.ToInvariantString() ?? SafeToString(defaultValue);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!ex.IsFatal())
             {
-                if (ex.IsFatal())
-                    throw;
+                return SafeToString(defaultValue);
             }
-
-            return SafeToString(defaultValue);
         }
 
         #endregion
@@ -94,53 +87,45 @@ namespace AnBo.Core
         #region Safe string formating methods
 
         /// <summary>
-        /// Formats the specified format.
+        /// Safely formats a string with the specified format and arguments.
+        /// Provides detailed error information if formatting fails.
         /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
-        /// <returns></returns>
+        /// <param name="format">The format string. Can be null.</param>
+        /// <param name="parameters">The parameter for formatting.</param>
+        /// <returns>The formatted string or error information if formatting fails.</returns>
         [return: NotNull]
         [DebuggerStepThrough]
-        public static string SafeFormat(string? format, params object?[] args)
+        public static string SafeFormat(string? format, params object?[] parameters)
         {
-            if (format == null)
-                return String.Empty;
-
-            if (args == null || args.Length == 0)
-                return format;
+            if (string.IsNullOrEmpty(format) || parameters.Length == 0)
+                return format ?? string.Empty;
 
             try
             {
-                //return String.Format(format, args);
-                return String.Format(format, args.Select(arg => arg.ToInvariantString()).ToArray());
+                // Use string interpolation-friendly approach
+                //var safeArgs = args.Select(arg => arg.ToInvariantString()).ToArray();
+                //return string.Format(CultureInfo.InvariantCulture, format, safeArgs);
+                return string.Format(format, parameters);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!ex.IsFatal())
             {
-                if (ex.IsFatal())
-                    throw;
-
-                StringBuilder sb = new StringBuilder();
-                FormatFallback(ex, sb, format, args);
-                return sb.ToString();
+                return CreateFormatFallback(ex, format, parameters);
             }
         }
 
         /// <summary>
-        /// Appends the format.
+        /// Safely appends formatted text to a StringBuilder.
         /// </summary>
-        /// <param name="sb">The sb.</param>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
+        /// <param name="sb">The StringBuilder to append to.</param>
+        /// <param name="format">The format string.</param>
+        /// <param name="args">The arguments for formatting.</param>
         [DebuggerStepThrough]
         public static void SafeAppendFormat(StringBuilder sb, string format, params object[] args)
         {
-            if (sb == null)
+            if (sb is null || string.IsNullOrEmpty(format))
                 return;
 
-            if (String.IsNullOrEmpty(format))
-                return;
-
-            if (args == null || args.Length == 0)
+            if (args.Length == 0)
             {
                 sb.Append(format);
                 return;
@@ -150,110 +135,81 @@ namespace AnBo.Core
             {
                 sb.Append(SafeFormat(format, args));
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!ex.IsFatal())
             {
-                if (ex.IsFatal())
-                    throw;
-
-                FormatFallback(ex, sb, format, args);
+                sb.Append(CreateFormatFallback(ex, format, args));
             }
         }
 
         /// <summary>
-        /// Format fallback method.
+        /// Creates fallback formatting information when string formatting fails.
         /// </summary>
-        /// <param name="ex">The exception.</param>
-        /// <param name="sb">The sb.</param>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
+        /// <param name="ex">The exception that occurred during formatting.</param>
+        /// <param name="format">The original format string.</param>
+        /// <param name="args">The original arguments.</param>
+        /// <returns>A detailed error message with format and argument information.</returns>
         [DebuggerStepThrough]
-        private static void FormatFallback(Exception ex, StringBuilder sb, string format, params object?[] args)
+        private static string CreateFormatFallback(Exception ex, string? format, params object?[] args)
         {
-            if (sb == null)
-                return;
+            var sb = new StringBuilder();
+            sb.AppendLine("*** Exception occurred during formatting:");
 
-            sb.Append("*** Exception occured during formatting: ");
-
-            if (ex != null)
+            if (ex is not null)
             {
-                sb.Append(ex.GetType().FullName).Append(": ")
-                  .Append(ex.Message).Append(Environment.NewLine);
-            }
-            else
-            {
-                sb.Append(Environment.NewLine);
+                sb.AppendLine($"{ex.GetType().FullName}: {ex.Message}");
             }
 
-            sb.Append("SafeFormat: '").Append(format.SafeString("<null>")).Append("'").Append(Environment.NewLine);
+            sb.AppendLine($"SafeFormat: '{format.SafeString("<null>")}'");
 
-            if (args == null)
-                sb.Append("args: <null>").Append(Environment.NewLine);
-            else
+            for (int i = 0; i < args.Length; ++i)
             {
-                for (int i = 0; i < args.Length; ++i)
-                    sb.Append("arg #")
-                      .Append(i).Append(": '")
-                      .Append(SafeToString(args[i], "<null>")).Append("'")
-                      .Append(Environment.NewLine);
+                sb.AppendLine($"arg #{i}: '{SafeToString(args[i], "<null>")}'");
             }
+
+            return sb.ToString();
         }
 
         #endregion
 
-        #region String List to Multiline String
+        #region String Collection to Multiline String
 
         /// <summary>
-        /// Converts a string list into a multi line string. Puts \n between the lines
+        /// Converts a string collection into a multi-line string with newlines between elements.
         /// </summary>
-        /// <param name="strList">The string list</param>
-        /// <returns>The multi line string</returns>
+        /// <param name="strCollection">The string collection to convert.</param>
+        /// <returns>The multi-line string representation.</returns>
         [DebuggerStepThrough]
-        public static string StringList2MultiLine(ICollection<string> strList)
+        public static string StringCollectionToMultiLine(IEnumerable<string> strCollection)
         {
-            if (strList == null)
+            if (strCollection is null)
                 return string.Empty;
-            if (strList.Count == 1)
-                return strList.First().SafeString();
 
-            StringBuilder sb = new StringBuilder();
-            int maxCount = strList.Count;
-            int currentCount = 1;
-            foreach (string item in strList)
+            var items = strCollection.ToArray();
+            return items.Length switch
             {
-                if (currentCount < maxCount)
-                    sb.AppendLine(item.SafeString());
-                else
-                    sb.Append(item.SafeString());
-                currentCount++;
-            }
-            return sb.ToString();
+                0 => string.Empty,
+                1 => items[0].SafeString(),
+                _ => string.Join(Environment.NewLine, items.Select(item => item.SafeString()))
+            };
         }
 
         /// <summary>
-        /// Converts a string array into a multi line string. Puts \n between the lines
+        /// Converts a string array into a multi-line string with newlines between elements.
         /// </summary>
-        /// <param name="strArray">The string array</param>
-        /// <returns>The multi line string</returns>
+        /// <param name="strArray">The string array to convert.</param>
+        /// <returns>The multi-line string representation.</returns>
         [DebuggerStepThrough]
-        public static string StringArray2MultiLine(string[] strArray)
+        public static string StringCollectionToMultiLine(string[]? strArray)
         {
-            if (strArray == null)
+            if (strArray is null)
                 return string.Empty;
-            if (strArray.Length == 1)
-                return strArray[0].SafeString();
 
-            StringBuilder sb = new StringBuilder();
-            int maxCount = strArray.Length;
-            int currentCount = 1;
-            foreach (string item in strArray)
+            return strArray.Length switch
             {
-                if (currentCount < maxCount)
-                    sb.AppendLine(item.SafeString());
-                else
-                    sb.Append(item.SafeString());
-                currentCount++;
-            }
-            return sb.ToString();
+                0 => string.Empty,
+                1 => strArray[0].SafeString(),
+                _ => string.Join(Environment.NewLine, strArray.Select(item => item.SafeString()))
+            };
         }
 
         #endregion
@@ -261,160 +217,37 @@ namespace AnBo.Core
         #region Join Methods
 
         /// <summary>
-        /// Concatenates a specified separator System.String between each element of
-        /// <paramref name="collection"/>, yielding a single concatenated string.
+        /// Joins items of type T using the default string representation.
         /// </summary>
-        /// <param name="collection">Collection of strings.</param>
-        /// <param name="separator">A System.String.</param>
-        /// <returns>A System.String consisting of the elements of value interspersed with the separator string.</returns>
-        public static string Join(this IEnumerable<string> collection, string separator)
+        /// <typeparam name="T">The type of items to join.</typeparam>
+        /// <param name="separator">The separator to use between items.</param>
+        /// <param name="items">The items to join.</param>
+        /// <returns>The joined string representation of all items.</returns>
+        /// <exception cref="ArgNullException">Thrown when separator is null.</exception>
+        public static string JoinParams(string separator, params object?[] items)
         {
-            #region PreConditions
-
-            ArgChecker.ShouldNotBeNull(collection);
             ArgChecker.ShouldNotBeNull(separator);
 
-            #endregion
-
-            return string.Join(separator, collection.ToArray());
+            return string.Join(separator, items.Select(item => item?.ToString() ?? string.Empty));
         }
 
         /// <summary>
-        /// Joins the variable char-array chars to a string. 
+        /// Joins items using a custom string converter function.
         /// </summary>
-        /// <param name="separator">The separator.</param>
-        /// <param name="chars">The chars.</param>
-        /// <returns></returns>
-        public static string? Join(string separator, params char[] chars)
+        /// <typeparam name="T">The type of items to join.</typeparam>
+        /// <param name="separator">The separator to use between items.</param>
+        /// <param name="items">The items to join.</param>
+        /// <param name="converter">Function to convert each item to its string representation.</param>
+        /// <returns>The joined string using the custom converter.</returns>
+        /// <exception cref="ArgNullException">Thrown when separator or items is null.</exception>
+        public static string Join<T>(string separator, IEnumerable<T>? items, Func<T, string>? converter = null)
         {
-            string? result = null;
+            ArgChecker.ShouldNotBeNull(separator);
+            ArgChecker.ShouldNotBeNull(items);
 
-            if (chars != null)
-            {
-                int l = chars.Length;
-                for (int i = 0; i < l; i++)
-                {
-                    if (i > 0)
-                    {
-                        result += separator;
-                    }
-                    result += chars[i];
-                }
-            }
-
-            return result;
-        }
-
-
-        /// <summary>
-        /// Joins the specified items using the default appender.
-        /// </summary>
-        /// <param name="separator">The separator.</param>
-        /// <param name="items">The items.</param>
-        /// <returns></returns>
-        public static string Join<T>(string separator, params T[] items)
-        {
-            return Join(separator, items, (sb, item) => sb.Append<T>(item));
-        }
-
-        /// <summary>
-        /// Joins array of Type T values using the specified separator.
-        /// </summary>
-        /// <param name="separator">The separator.</param>
-        /// <param name="items">The items.</param>
-        /// <param name="appender">The appender (Convert type T object to string an append the result to a given StringBuilder).</param>
-        /// <returns>The joined items.</returns>
-        public static string Join<T>(string separator, T[] items, Action<StringBuilder, T> appender)
-        {
-            if (items.Length == 0)
-            {
-                return string.Empty;
-            }
-            if (separator == null)
-            {
-                separator = string.Empty;
-            }
-            StringBuilder builder = new StringBuilder(items.Length * (separator.Length + 10));
-            bool flag = true;
-            foreach (T local in items)
-            {
-                if (flag)
-                {
-                    flag = false;
-                }
-                else
-                {
-                    builder.Append(separator);
-                }
-                appender(builder, local);
-            }
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// Joins the specified items using a custom
-        /// appender.
-        /// </summary>
-        /// <param name="separator">The separator.</param>
-        /// <param name="items">The items.</param>
-        /// <param name="appender">The appender.</param>
-        /// <returns></returns>
-        public static string Join<T>(string separator, ICollection<T> items, Action<StringBuilder, T> appender)
-        {
-            if (items.Count == 0)
-            {
-                return string.Empty;
-            }
-            if (separator == null)
-            {
-                separator = string.Empty;
-            }
-            StringBuilder builder = new StringBuilder(items.Count * (separator.Length + 10));
-            bool flag = true;
-            foreach (T local in items)
-            {
-                if (flag)
-                {
-                    flag = false;
-                }
-                else
-                {
-                    builder.Append(separator);
-                }
-                appender(builder, local);
-            }
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// Joins sequence of Type T items using the specified separator.
-        /// </summary>
-        /// <param name="separator">The separator.</param>
-        /// <param name="items">The items.</param>
-        /// <param name="appender">The appender (Convert type T object to string an append the result to a given StringBuilder).</param>
-        /// <returns>The joined items.</returns>
-        public static string Join<T>(string separator, IEnumerable<T> items, Action<StringBuilder, T> appender)
-        {
-            if (separator == null)
-            {
-                separator = string.Empty;
-            }
-            StringBuilder builder = new StringBuilder();
-            bool firstIteration = true;
-            foreach (T local in items)
-            {
-                if (firstIteration)
-                {
-                    firstIteration = false;
-                }
-                else
-                {
-                    builder.Append(separator);
-                }
-
-                appender(builder, local);
-            }
-            return builder.ToString();
+            return (converter is null) ?
+                string.Join(separator, items.Select(item => item?.ToString() ?? string.Empty)) :
+                string.Join(separator, items.Select(converter));
         }
 
         #endregion
@@ -422,298 +255,361 @@ namespace AnBo.Core
         #region Byte-Array convertion to and from string
 
         /// <summary>
-        /// Gets the bytes from string.
+        /// Converts a string to its UTF-16 byte representation.
         /// </summary>
-        /// <param name="str">The STR.</param>
-        /// <returns>The characters of the string as a sequence of bytes.</returns>
-        public static byte[] GetBytesFromString(string str)
+        /// <param name="str">The string to convert.</param>
+        /// <returns>The UTF-16 byte array representation of the string.</returns>
+        public static byte[] GetBytesFromString(string? str)
         {
             if (string.IsNullOrEmpty(str))
-                return new byte[0];
+                return [];
 
             // Strings in .NET are always UTF16
             return Encoding.Unicode.GetBytes(str);
         }
 
         /// <summary>
-        /// Gets the string from bytes.
+        /// Converts a UTF-16 byte array back to a string.
         /// </summary>
-        /// <param name="data">The data.</param>
-        /// <returns>The decoding string result.</returns>
+        /// <param name="data">The byte array to convert.</param>
+        /// <returns>The decoded string.</returns>
+        /// <exception cref="ArgNullException">Thrown when data is null.</exception>
         public static string GetStringFromBytes(byte[] data)
         {
-            // Strings in .NET are always UTF16
+            ArgChecker.ShouldNotBeNull(data);
+
+            // Strings in .NET are UTF-16
             return Encoding.Unicode.GetString(data);
         }
 
         #endregion
 
-        #region Padding Methods
+        #region Number Formatting
 
         /// <summary>
-        /// Returns a string of length <paramref name="length"/> with 0's padded to the left, if necessary.
+        /// Returns a string representation of an integer with leading zeros to reach the specified length.
         /// </summary>
-        /// <param name="val">The padding value.</param>
-        /// <param name="length">The padding length.</param>
-        /// <returns>Returns a string of length <paramref name="length"/> with 0's padded to the left, if necessary.</returns>
-        public static string PadIntegerLeft(int val, int length)
+        /// <param name="value">The integer value to format.</param>
+        /// <param name="length">The desired total length of the resulting string.</param>
+        /// <returns>A string with leading zeros if necessary to reach the specified length.</returns>
+        public static string PadIntegerZerosLeft(int value, int length)
         {
-            return PadIntegerLeft(val, length, '0');
+            //return PadIntegerLeft(val, length, '0');
+            return value.ToString($"D{Math.Max(length, 1)}");
         }
 
         /// <summary>
-        /// Pads the integer left.
+        /// Returns a string representation of an integer with the specified padding character on the left.
         /// </summary>
-        /// <param name="val">The padding value.</param>
-        /// <param name="length">The padding length.</param>
-        /// <param name="pad">The padding char.</param>
-        /// <returns>The the padding left string result.</returns>
-        public static string PadIntegerLeft(int val, int length, char pad)
+        /// <param name="value">The integer value to format.</param>
+        /// <param name="length">The desired total length of the resulting string.</param>
+        /// <param name="paddingChar">The character to use for padding. (default = ' ')</param>
+        /// <returns>A string with left padding to reach the specified length.</returns>
+        public static string PadIntegerLeft(int value, int length, char paddingChar = ' ')
         {
-            string result = val.ToString();
-            while (result.Length < length)
-            {
-                result = pad + result;
-            }
-            return result;
+            return value.ToString().PadLeft(length, paddingChar);
+        }
+
+        // <summary>
+        /// Returns a string representation of an integer with the specified padding character on the right.
+        /// </summary>
+        /// <param name="value">The integer value to format.</param>
+        /// <param name="length">The desired total length of the resulting string.</param>
+        /// <param name="paddingChar">The character to use for padding.</param>
+        /// <returns>A string with right padding to reach the specified length.</returns>
+        public static string PadIntegerRight(int value, int length, char paddingChar = ' ')
+        {
+            return value.ToString().PadRight(length, paddingChar);
         }
 
         /// <summary>
-        /// Returns a string of length <paramref name="length"/> with
-        /// 0's padded to the right, if necessary.
+        /// Formats an integer with leading zeros based on the maximum value's digit count.
         /// </summary>
-        /// <param name="val">The padding value.</param>
-        /// <param name="length">The padding length.</param>
-        /// <returns>The the padding right string result.</returns>
-        public static string PadIntegerRight(int val, int length)
+        /// <param name="value">The value to format.</param>
+        /// <param name="maxValue">The maximum value that determines the padding length.</param>
+        /// <param name="culture">The culture to use for formatting.</param>
+        /// <returns>The formatted string with appropriate leading zeros.</returns>
+        public static string ToStringWithLeading(int value, int maxValue, CultureInfo? culture = null)
         {
-            return PadIntegerRight(val, length, '0');
-        }
+            culture ??= CultureInfo.InvariantCulture;
 
-        /// <summary>
-        /// Pads the integer right.
-        /// </summary>
-        /// <param name="val">The value to pad.</param>
-        /// <param name="length">The padding length.</param>
-        /// <param name="pad">The padding char.</param>
-        /// <returns>The the padding right string result.</returns>
-        public static string PadIntegerRight(int val, int length, char pad)
-        {
-            string result = val.ToString();
-            while (result.Length < length)
-            {
-                result += pad;
-            }
-            return result;
+            if (value >= maxValue)
+                return value.ToString(culture);
+
+            int digits = (int)Math.Floor(Math.Log10(maxValue)) + 1;
+            return value.ToString($"D{digits}", culture);
         }
 
         #endregion
 
-        #region Remove Chars Methods
+        #region Character Removal Methods
 
         /// <summary>
-        /// Removes all characters passed in from the string.
+        /// Removes all specified characters from the input string.
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="chars"></param>
-        /// <returns></returns>
-        public static string RemoveCharacters(string str, params char[] chars)
+        /// <param name="str">The input string to process.</param>
+        /// <param name="chars">The characters to remove from the string.</param>
+        /// <returns>The string with all specified characters removed.</returns>
+        public static string RemoveCharacters(string? str, params char[] chars)
         {
-            if (chars != null)
+            if (string.IsNullOrEmpty(str) || chars.Length == 0)
+                return str ?? string.Empty;
+
+            // string.Create is used for performance optimization
+            // to avoid unnecessary allocations and copying.
+            // It allows us to create a new string directly in the target span.
+            //
+            // Create initializes a new string with the specified length, and then
+            // calls the callback function with a span to the new created string.
+            //
+            // The length of the new string is determined by counting all the characters
+            // in the original string that are not in the chars array.
+            return string.Create(str.Length, (str, chars), static (span, state) =>
             {
-                str = Regex.Replace(str, "[" + new string(chars) + "]+", "");
-            }
-            return str;
+                // Unpack the state tuple (source string and characters to remove)
+                var (source, charsToRemove) = state;
+                // Use a span to source string for efficient character iteration
+                var sourceSpan = source.AsSpan();
+                // Write index for the new string
+                int writeIndex = 0;
+
+                // Iterate through each character in the source span
+                foreach (char c in sourceSpan)
+                {
+                    if (!charsToRemove.Contains(c))
+                    {
+                        // If the character is not in the chars array, write it to the new span
+                        span[writeIndex++] = c;
+                    }
+                }
+
+                // Fill remaining positions (won't be used in final string)
+                span[writeIndex..].Clear();
+            })[..GetLengthAfterRemoval(str, chars)]; // Range operator is used to slice the string to the correct length after removal.
         }
 
         /// <summary>
-        /// Remove all characters that are not in the passed in array from the string.
+        /// Removes all characters that are NOT in the specified array from the string.
         /// </summary>
-        /// <param name="str"></param>
-        /// <param name="chars"></param>
-        /// <returns></returns>
-        public static string RemoveCharactersInverse(string str, params char[] chars)
+        /// <param name="str">The input string to process.</param>
+        /// <param name="chars">The characters to keep in the string.</param>
+        /// <returns>The string with only the specified characters remaining.</returns>
+        public static string RemoveCharactersInverse(string? str, params char[] chars)
         {
-            if (chars != null)
+            if (string.IsNullOrEmpty(str))
+                return str ?? string.Empty;
+
+            if (chars.Length == 0)
+                return string.Empty;
+
+            // string.Create is used for performance optimization
+            // to avoid unnecessary allocations and copying.
+            // It allows us to create a new string directly in the target span.
+            //
+            // Create initializes a new string with the specified length, and then
+            // calls the callback function with a span to the new created string.
+            //
+            // The length of the new string is determined by counting all the characters
+            // in the original string that are in the chars array.
+            return string.Create(str.Length, (str, chars), static (span, state) =>
             {
-                str = Regex.Replace(str, "[^" + new string(chars) + "]+", "");
-            }
-            return str;
+                // Unpack the state tuple (source string and characters to remove)
+                var (source, charsToKeep) = state;
+                // Use a span to source string for efficient character iteration
+                var sourceSpan = source.AsSpan();
+                // Write index for the new string
+                int writeIndex = 0;
+
+                // Iterate through each character in the source span
+                foreach (char c in sourceSpan)
+                {
+                    if (charsToKeep.Contains(c))
+                    {
+                        // If the character is in the chars array, write it to the new span
+                        span[writeIndex++] = c;
+                    }
+                }
+
+                // Fill remaining positions (won't be used in final string)
+                span[writeIndex..].Clear();
+            })[..GetLengthAfterInverseRemoval(str, chars)]; // Range operator is used to slice the string to the correct length after inverse removal.
+        }
+
+        /// <summary>
+        /// Helper method to calculate the length after character removal.
+        /// </summary>
+        /// <param name="str">The source string.</param>
+        /// <param name="chars">Characters to remove.</param>
+        /// <returns>The length of the string after removal.</returns>
+        private static int GetLengthAfterRemoval(string str, char[] chars)
+        {
+            return str.AsSpan().Count(c => !chars.Contains(c));
+        }
+
+        /// <summary>
+        /// Helper method to calculate the length after inverse character removal.
+        /// </summary>
+        /// <param name="str">The source string.</param>
+        /// <param name="chars">Characters to keep.</param>
+        /// <returns>The length of the string after inverse removal.</returns>
+        private static int GetLengthAfterInverseRemoval(string str, char[] chars)
+        {
+            return str.AsSpan().Count(c => chars.Contains(c));
         }
 
         #endregion
 
+        #region Random String Generation
 
         /// <summary>
-        /// Returns a string of length <paramref name="size"/> filled
-        /// with random ASCII characters in the range A-Z, a-z. If <paramref name="lowerCase"/>
-        /// is <see langword="true"/>, then the range is only a-z.
+        /// Generates a random string of the specified size using ASCII characters.
         /// </summary>
-        /// <param name="size">The size.</param>
-        /// <param name="lowerCase">if set to <see langword="true"/> [lower case].</param>
-        /// <returns>The generated random string.</returns>
-        /// <exception cref="ArgOutOfRangeException{TValue}">Is thrown if <paramref name="size"/> is less than 0 or greater than 4096.</exception>
-        public static string RandomString(int size, bool lowerCase)
+        /// <param name="size">The length of the string to generate.</param>
+        /// <param name="lowerCase">If true, uses only lowercase letters (a-z); otherwise uses both upper and lowercase (A-Z, a-z).</param>
+        /// <returns>A randomly generated string of the specified length.</returns>
+        /// <exception cref="ArgOutOfRangeException">Thrown when size is less than 0 or greater than 4096.</exception>
+        public static string RandomString(int size, bool lowerCase = false)
         {
             ArgChecker.ShouldBeInRange(size, 0, 4096);
 
-            StringBuilder builder = new StringBuilder(size);
-            int low = 65; // 'A'
-            int high = 91; // 'Z' + 1
-            if (lowerCase)
+            if (size == 0)
+                return string.Empty;
+
+            var random = ThreadLocalRandom.Value!; // Thread-safe random instance
+
+            // Use string.Create for performance optimization
+            // This method allows us to create a new string directly in the target span
+            // and fill it with random characters based on the specified size and case.
+            // Callback function is executed with a span of the new string,
+            // and a state tuple containing the random instance and case preference.
+            return string.Create(size, (random, lowerCase), static (span, state) =>
             {
-                low = 97; // 'a';
-                high = 123; // 'z' + 1
-            }
-            for (int i = 0; i < size; i++)
-            {
-                char ch = Convert.ToChar(m_Random.Next(low, high));
-                builder.Append(ch);
-            }
-            return builder.ToString();
+                // Unpack the state tuple
+                var (rng, useLowerCase) = state;
+                const string upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                const string lowerChars = "abcdefghijklmnopqrstuvwxyz";
+
+                var chars = useLowerCase ? lowerChars : upperChars + lowerChars;
+
+                for (int i = 0; i < span.Length; i++)
+                {
+                    // Fill the span with random characters from the selected character set
+                    span[i] = chars[rng.Next(chars.Length)];
+                }
+            });
         }
 
-        /// <summary>
-        /// Calculates the CRC32.
+        #endregion
+
+        #region CRC32 Calculation
+
+        // <summary>
+        /// Calculates the CRC32 checksum for the specified string.
         /// </summary>
-        /// <param name="str">The STR.</param>
-        /// <returns>CRC32 value of the string.</returns>
+        /// <param name="str">The string to calculate CRC32 for.</param>
+        /// <returns>The CRC32 checksum value.</returns>
         public static uint CalculateCrc32(string str)
         {
+            if (string.IsNullOrEmpty(str))
+                return 0;
+
             return Crc32Helper.Compute(str);
         }
 
+        #endregion
+
+        #region HTML Utilities
+
         /// <summary>
-        /// Replaces NewLine character with HTML br element.
+        /// Replaces newline characters with HTML &lt;br /&gt; elements.
         /// </summary>
-        /// <param name="text">String to convert.</param>
-        /// <returns>Converted string</returns>
+        /// <param name="text">The text to convert.</param>
+        /// <returns>The text with newlines replaced by HTML break elements.</returns>
         public static string ReplaceNewLineWithHtmlBr(string text)
         {
-            string result = text;
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
 
-            if (!string.IsNullOrEmpty(text))
-            {
-                result = text.Replace("\r\n", "<br />").Replace("\n", "<br />");
-            }
-            return result;
+            return text.Replace("\r\n", "<br />", StringComparison.Ordinal)
+                      .Replace("\n", "<br />", StringComparison.Ordinal);
         }
 
+        #endregion
+
+        #region String Splitting
 
         /// <summary>
-        /// Formats the <paramref name="value" /> to a string, adding leading zeros so that all of the numbers up to <paramref name="maxvalue" />, inclusively, had the same number of characters in their string representation when formatted thru this function.
+        /// Splits a string at the specified index into two parts.
         /// </summary>
-        public static string ToStringWithLeading(int value, int maxvalue, CultureInfo culture)
+        /// <param name="str">The string to split.</param>
+        /// <param name="index">The index at which to split.</param>
+        /// <param name="includeIndexInFirstPortion">If true, includes the character at index in the first portion; otherwise in the second.</param>
+        /// <returns>An array with two elements: the left and right portions of the split.</returns>
+        public static string[] SplitOn(string? str, int index, bool includeIndexInFirstPortion)
         {
-            if (value >= maxvalue)
-            {
-                return value.ToString(culture);
-            }
-            return value.ToString(string.Format("D{0}", ((int)Math.Floor(Math.Log((double)maxvalue, 10.0))) + 1), culture);
-        }
+            if (string.IsNullOrEmpty(str))
+                return [string.Empty, string.Empty];
 
-        /// <summary>
-        /// Splits <paramref name="str"/> based on the index. The first element
-        /// is the left portion, and the second element
-        /// is the right portion. The character at index <paramref name="index"/>
-        /// is either included at the end of the left portion, or at the
-        /// beginning of the right portion, depending on <paramref name="isIndexInFirstPortion"/>
-        /// The return result is never null, and the elements
-        /// are never null, so one of the elements may be an empty string.
-        /// </summary>
-        /// <param name="str">The STR.</param>
-        /// <param name="index">The index.</param>
-        /// <param name="isIndexInFirstPortion">if set to <see langword="true"/> [is index in first portion].</param>
-        /// <returns>The Split-Operation string-Array result.</returns>
-        public static string[] SplitOn(string str, int index, bool isIndexInFirstPortion)
-        {
-            string one, two;
-            if (index == -1)
-            {
-                one = str;
-                two = "";
-            }
-            else
-            {
-                if (index == 0)
-                {
-                    if (isIndexInFirstPortion)
-                    {
-                        one = str[0].ToString();
-                        two = str.Substring(1);
-                    }
-                    else
-                    {
-                        one = "";
-                        two = str;
-                    }
-                }
-                else if (index == str.Length - 1)
-                {
-                    if (isIndexInFirstPortion)
-                    {
-                        one = str;
-                        two = "";
-                    }
-                    else
-                    {
-                        one = str.Substring(0, str.Length - 1);
-                        two = str[str.Length - 1].ToString();
-                    }
-                }
-                else
-                {
-                    one = str.Substring(0, isIndexInFirstPortion ? index + 1 : index);
-                    two = str.Substring(isIndexInFirstPortion ? index + 1 : index);
-                }
-            }
+            if (index < 0 || index >= str.Length)
+                return [str, string.Empty];
 
-            return new[] { one, two };
+            int splitPoint = includeIndexInFirstPortion ? index + 1 : index;
+
+            return [
+                str[..splitPoint],
+                str[splitPoint..]
+            ];
         }
 
         /// <summary>
-        /// Splits a string in order to create a square of lines
+        /// Splits a string into chunks to create a square-like arrangement based on separators.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="separators"></param>
-        /// <returns></returns>
-        public static string[] SquareChunk(string value, params char[] separators)
+        /// <param name="value">The string to split into chunks.</param>
+        /// <param name="separators">The separator characters to consider for splitting.</param>
+        /// <returns>An array of string chunks arranged in a square-like pattern.</returns>
+        public static string[] SquareChunk(string? value, params char[] separators)
         {
-            if (value.Length == 0)
-            {
-                return new string[] { string.Empty };
-            }
-            List<int> list = new List<int>();
-            int num2 = (int)Math.Sqrt((double)value.Length);
-            int num3 = 0;
+            if (string.IsNullOrEmpty(value))
+                return [string.Empty];
+
+            separators ??= [];
+
+            var separatorPositions = new List<int>();
+            int targetChunkSize = (int)Math.Sqrt(value.Length);
+            int lastSeparator = 0;
+
+            // Find separator positions and adjust target chunk size
             for (int i = 0; i < value.Length; i++)
             {
-                char ch = value[i];
-                if (separators.Contains<char>(ch))
+                if (separators.Contains(value[i]))
                 {
-                    num2 = Math.Max(num2, i - num3);
-                    list.Add(num3 = i);
+                    targetChunkSize = Math.Max(targetChunkSize, i - lastSeparator);
+                    separatorPositions.Add(lastSeparator = i);
                 }
             }
-            num2 = Math.Max(num2, 1);
-            list.Add(value.Length);
-            List<string> list2 = new List<string>();
+
+            targetChunkSize = Math.Max(targetChunkSize, 1);
+            separatorPositions.Add(value.Length);
+
+            var chunks = new List<string>();
             int startIndex = 0;
-            for (int j = 0; j < list.Count; j++)
+
+            foreach (int endIndex in separatorPositions)
             {
-                int num7 = list[j];
-                int length = num7 - startIndex;
-                if (length >= num2)
+                int length = endIndex - startIndex;
+                if (length >= targetChunkSize)
                 {
-                    list2.Add(value.Substring(startIndex, length));
-                    startIndex = num7;
+                    chunks.Add(value[startIndex..endIndex]);
+                    startIndex = endIndex;
                 }
             }
+
             if (startIndex < value.Length)
-            {
-                list2.Add(value.Substring(startIndex));
-            }
-            return list2.ToArray();
+                chunks.Add(value[startIndex..]);
+
+            return chunks.ToArray();
         }
+
+        #endregion
     }
 }

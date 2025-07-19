@@ -9,8 +9,8 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
-using System.Security;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -18,87 +18,100 @@ using System.Text.RegularExpressions;
 
 namespace AnBo.Core
 {
-    ///<summary>Represents extension methods for <see cref="String"/> type.</summary>
-	public static class StringExtensions
+    /// <summary>
+    /// Represents modern extension methods for <see cref="String"/> type optimized for .NET 8+.
+    /// </summary>
+    public static partial class StringExtensions
     {
+        #region Cached Regex Patterns
+
+        [GeneratedRegex(@"\{0", RegexOptions.Compiled)]
+        private static partial Regex FormatStringRegex();
+
+        [GeneratedRegex(@"[a-zA-Z0-9]", RegexOptions.Compiled)]
+        private static partial Regex AlphaNumericRegex();
+
+        [GeneratedRegex(@"[a-zA-Z]", RegexOptions.Compiled)]
+        private static partial Regex AlphaCharactersRegex();
+
+        [GeneratedRegex(@"[0-9,\.]", RegexOptions.Compiled)]
+        private static partial Regex NumericWithPunctuationRegex();
+
+        [GeneratedRegex(@"[0-9]", RegexOptions.Compiled)]
+        private static partial Regex NumericOnlyRegex();
+
+        #endregion
 
         #region Is... string extensions
 
-        /// <summary>
-        /// Determines whether a string is a format string.
+        // <summary>
+        /// Determines whether a string is a format string by checking for format placeholders.
         /// </summary>
-        /// <param name="text">The source string.</param>
+        /// <param name="text">The source string to check.</param>
         /// <returns>
-        /// Returns <see langword="true"/> if the string is a format string; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the string contains format placeholders; otherwise, <see langword="false"/>.
         /// </returns>
-        [DebuggerStepThrough]
-        public static bool IsFormatString(this string? text)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsFormatString([NotNullWhen(true)] this string? text)
         {
-            return !string.IsNullOrEmpty(text) && text.Contains("{0");
+            return !string.IsNullOrEmpty(text) && FormatStringRegex().IsMatch(text);
+        }
+
+        // <summary>
+        /// Determines whether a string is null, empty, or contains only whitespace characters.
+        /// </summary>
+        /// <param name="text">The source string to check.</param>
+        /// <returns>
+        /// <see langword="true"/> if the string is <see langword="null"/>, empty, or whitespace; otherwise, <see langword="false"/>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNullOrEmptyWithTrim([NotNullWhen(false)] this string? text)
+        {
+            return string.IsNullOrWhiteSpace(text);
         }
 
         /// <summary>
-        /// Determines whether a string is null or empty after trimming.
+        /// Determines whether the string is empty (but not null).
         /// </summary>
-        /// <param name="text">The source string.</param>
+        /// <param name="text">The source string to check.</param>
         /// <returns>
-        /// Returns <see langword="true"/> if the string is <see langword="null"/> or empty after applying <see cref="M:System.String.Trim"/>; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the string is empty; otherwise <see langword="false"/>.
         /// </returns>
-        [DebuggerStepThrough]
-        public static bool IsNullOrEmptyWithTrim(this string? text)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsEmpty([NotNullWhen(false)] this string? text)
         {
-            if (string.IsNullOrEmpty(text))
-                return true;
-
-            return text.Trim().Length == 0;
+            // Check if the string ist empty (but not null).
+            // If text ist null, the condition is null == 0, which is false.
+            // Length ist checked only if text is not null.
+            return text?.Length == 0;
         }
 
         /// <summary>
-        /// Determines whether the string is empty.
-        /// </summary>
-        /// <param name="text">The source string.</param>
-        /// <returns>
-        /// Returns <see langword="true"/> if the string is empty; otherwise (including string is <see langword="null"/>) <see langword="false"/>.
-        /// </returns>
-        [DebuggerStepThrough]
-        public static bool IsEmpty(this string text)
-        {
-            if (text == null)
-                return false;
-
-            return (text.Length == 0);
-        }
-
-        /// <summary>
-        /// Determines whether the two strings are equal irgnoring the case.
+        /// Determines whether two strings are equal, ignoring case.
         /// </summary>
         /// <param name="sourceText">The source text.</param>
         /// <param name="targetText">The target text.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the two strings are equal irgnoring the case; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the strings are equal (case-insensitive); otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool IsEqualIgnoreCase(this string sourceText, string targetText)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsEqualIgnoreCase(this string? sourceText, string? targetText)
         {
-            return IsEqual(sourceText, targetText, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(sourceText, targetText, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
-        /// Determines whether the two strings are equal using the provided compare mode.
+        /// Determines whether two strings are equal using the specified comparison mode.
         /// </summary>
         /// <param name="sourceText">The source text.</param>
         /// <param name="targetText">The target text.</param>
-        /// <param name="compareMode">The string compare mode to use.</param>
+        /// <param name="compareMode">The string comparison mode.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the two strings are equal using the provided compare mode; otherwise, <see langword="false"/>.
+        /// <see langword="true"/> if the strings are equal; otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool IsEqual(this string sourceText, string targetText, StringComparison compareMode)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsEqual(this string? sourceText, string? targetText, StringComparison compareMode)
         {
-            if (sourceText.IsNull() && targetText.IsNull())
-                return true;
-
-            if (sourceText.IsEmpty() && targetText.IsEmpty())
-                return true;
-
             return string.Equals(sourceText, targetText, compareMode);
         }
 
@@ -108,42 +121,23 @@ namespace AnBo.Core
         #region Safe string extensions
 
         /// <summary>
-        /// Safe Length operation.
+        /// Gets the length of a string safely, returning -1 for null strings.
         /// </summary>
         /// <param name="text">The source string.</param>
-        /// <returns>The string length, or -1 if string value is <see langword="null"/>.</returns>
-        [DebuggerStepThrough]
-        public static int SafeLength(this string text)
-        {
-            return (text == null) ? -1 : text.Length;
-        }
+        /// <returns>The string length, or -1 if the string is <see langword="null"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int SafeLength(this string? text) => text?.Length ?? -1;
 
         /// <summary>
-        /// Safe ToString operation.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <returns>If string is <see langword="null"/> <see cref="F:System.String.Empty"/>; otherwise the string value.</returns>
-        [return: NotNull]
-        [DebuggerStepThrough]
-        public static string SafeString(this string text)
-        {
-            return text ?? String.Empty;
-        }
-
-        /// <summary>
-        /// Safe ToString operation.
+        /// Returns a safe string representation, using a default value for null strings.
         /// </summary>
         /// <param name="text">The source string.</param>
-        /// <param name="defaultValue">The default value.</param>
-        /// <returns>
-        /// Returns the <see cref="SafeString(string)"/> value of <paramref name="defaultValue"/>, if the string is <see langword="null"/>; otherwise the string value.
-        /// </returns>
+        /// <param name="defaultValue">The default value to use if the string is null.</param>
+        /// <returns>The string value or the default value if null.</returns>
         [return: NotNull]
-        [DebuggerStepThrough]
-        public static string SafeString(this string text, string defaultValue)
-        {
-            return text ?? defaultValue.SafeString();
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string SafeString(this string? text, string defaultValue = "")
+            => text ?? defaultValue;
 
         /// <summary>
         /// Formats the string value with the <paramref name="parameters"/> and returns the result.
@@ -164,79 +158,123 @@ namespace AnBo.Core
         #region SubString extensions (Right, Left, ...)
 
         /// <summary>
-        /// Gets the first x number of characters from the left hand side
+        /// Gets the leftmost characters from a string.
         /// </summary>
-        /// <param name="input">Input string</param>
-        /// <param name="length">x number of characters to return</param>
-        /// <returns>The resulting string</returns>
-        public static string? Left(string input, int length)
+        /// <param name="input">The input string.</param>
+        /// <param name="length">The number of characters to return.</param>
+        /// <returns>The leftmost characters or the entire string if shorter than requested length.</returns>
+        public static string? Left(this string? input, int length)
         {
-            if (input.IsNull())
-                return null;
-            if (input.Length <= length)
-                return input;
-            if (length <= 0)
-                return string.Empty;
+            if (input is null) return null;
+            if (length <= 0) return string.Empty;
+            if (length >= input.Length) return input;
 
-            return input[length..];
+            return input[..length];
         }
 
         /// <summary>
-        /// Gets the last x number of characters from the right hand side
+        /// Gets the rightmost characters from a string.
         /// </summary>
-        /// <param name="input">Input string</param>
-        /// <param name="length">x number of characters to return</param>
-        /// <returns>The resulting string</returns>
-        public static string? Right(string input, int length)
+        /// <param name="input">The input string.</param>
+        /// <param name="length">The number of characters to return.</param>
+        /// <returns>The rightmost characters or the entire string if shorter than requested length.</returns>
+        public static string? Right(this string? input, int length)
         {
-            if (input.IsNull())
-                return null;
-            if (input.Length <= length)
-                return input;
-            if (length <= 0)
-                return string.Empty;
+            if (input is null) return null;
+            if (length <= 0) return string.Empty;
+            if (length >= input.Length) return input;
 
-            return input.Substring(input.Length - length, length);
+            return input[^length..];
         }
 
         /// <summary>
-        /// Returns a string at most <paramref name="maxCount"/> long. If <paramref name="maxCount"/> is reached, ... is appended. 
+        /// Gets the leftmost grapheme clusters (user-perceived characters) from a string.
+        /// This method properly handles complex Unicode scenarios like emoji and combining characters.
         /// </summary>
-        /// <param name="text">The text to clip.</param>
-        /// <param name="maxCount">Max string length.</param>
-        /// <returns>A string at most <paramref name="maxCount"/> long. If <paramref name="maxCount"/> is reached, ... is appended.</returns>
-        [DebuggerStepThrough]
-        public static string Clip(this string text, int maxCount)
+        /// <param name="input">The input string.</param>
+        /// <param name="length">The number of grapheme clusters to return.</param>
+        /// <returns>The leftmost grapheme clusters.</returns>
+        /// <example>
+        /// <code>
+        /// "Hello 👨‍👩‍👧‍👦 World".LeftGraphemes(7); // Returns "Hello 👨‍👩‍👧‍👦"
+        /// "café".LeftGraphemes(3); // Returns "caf" (regardless of é representation)
+        /// </code>
+        /// </example>
+        public static string? LeftGraphemes(this string? input, int length)
         {
-            return Clip(text, maxCount, "...");
-        }
+            if (input is null) return null;
+            if (length <= 0) return string.Empty;
 
-        /// <summary>
-        /// Returns a string at most <paramref name="maxCount"/> long. If <paramref name="maxCount"/> is reached, <paramref name="clipText"/> is appended. 
-        /// </summary>
-        /// <param name="text">The text to clip.</param>
-        /// <param name="maxCount">Max string length.</param>
-        /// <param name="clipText">The clipping text.</param>
-        /// <returns>A string at most <paramref name="maxCount"/> long. If <paramref name="maxCount"/> is reached, <paramref name="clipText"/> is appended.</returns>
-        [DebuggerStepThrough]
-        public static string Clip(this string text, int maxCount, string clipText)
-        {
-            if (string.IsNullOrEmpty(text))
-                return text;
+            var enumerator = StringInfo.GetTextElementEnumerator(input);
+            var count = 0;
+            var result = new StringBuilder();
 
-            string ellipseText = clipText ?? "...";
-
-            if (maxCount <= 0)
-                return string.Empty;
-
-            if (text.Length > maxCount)
+            while (enumerator.MoveNext() && count < length)
             {
-                if (maxCount <= ellipseText.Length)
-                    return text.Substring(0, maxCount);
-
-                return (text.Substring(0, maxCount - ellipseText.Length) + ellipseText);
+                result.Append(enumerator.GetTextElement());
+                count++;
             }
-            return text;
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Gets the rightmost grapheme clusters (user-perceived characters) from a string.
+        /// This method properly handles complex Unicode scenarios like emoji and combining characters.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="length">The number of grapheme clusters to return.</param>
+        /// <returns>The rightmost grapheme clusters.</returns>
+        /// <example>
+        /// <code>
+        /// "Hello 👨‍👩‍👧‍👦 World".RightGraphemes(6); // Returns "👨‍👩‍👧‍👦 World"
+        /// "café".RightGraphemes(2); // Returns "fé" (regardless of é representation)
+        /// </code>
+        /// </example>
+        public static string? RightGraphemes(this string? input, int length)
+        {
+            if (input is null) return null;
+            if (length <= 0) return string.Empty;
+
+            var textElements = new List<string>();
+            var enumerator = StringInfo.GetTextElementEnumerator(input);
+
+            while (enumerator.MoveNext())
+            {
+                textElements.Add(enumerator.GetTextElement());
+            }
+
+            if (length >= textElements.Count) return input;
+
+            var startIndex = textElements.Count - length;
+            return string.Concat(textElements.Skip(startIndex));
+        }
+
+        /// <summary>
+        /// Clips a string to a maximum length, appending an ellipsis if necessary.
+        /// </summary>
+        /// <param name="text">The text to clip.</param>
+        /// <param name="maxCount">The maximum string length.</param>
+        /// <param name="clipText">The text to append when clipping (default: "...").</param>
+        /// <returns>A string clipped to the maximum length.</returns>
+        public static string Clip(this string? text, int maxCount, string clipText = "...")
+        {
+            if (string.IsNullOrEmpty(text)) return text ?? string.Empty;
+            if (maxCount <= 0) return string.Empty;
+            if (text.Length <= maxCount) return text;
+
+            clipText ??= "...";
+
+            if (maxCount <= clipText.Length)
+                return text[..maxCount];
+
+            var targetLength = maxCount - clipText.Length;
+            return string.Create(maxCount, (text, targetLength, clipText),
+                static (span, state) =>
+                {
+                    state.text.AsSpan(0, state.targetLength).CopyTo(span); // copy the clipped part
+                    state.clipText.AsSpan().CopyTo(span[state.targetLength..]); // append clip text
+                });
         }
 
         #endregion
@@ -244,123 +282,66 @@ namespace AnBo.Core
         #region Join extensions
 
         /// <summary>
-        /// String array to text (retruns string.Empty if stringArray is null or contains no items).
+        /// Joins the elements of a sequence into a single string using the specified separator.
         /// </summary>
-        /// <param name="stringArray">The string array.</param>
-        /// <returns>Joined string array items separeted by ,</returns>
-        public static string Join(this string[] stringArray)
+        /// <typeparam name="T">The type of elements in the sequence.</typeparam>
+        /// <param name="items">The items to join.</param>
+        /// <param name="separator">The separator to use between items.</param>
+        /// <returns>A string containing all items separated by the separator.</returns>
+        public static string Join<T>(this IEnumerable<T>? items, string separator = ", " )
         {
-            if ((stringArray != null) && (stringArray.Length != 0))
-            {
-                return string.Join(",", stringArray);
-            }
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// String sequence to text (retruns string.Empty if stringSequence is null).
-        /// </summary>
-        /// <param name="stringSequence">The string sequence.</param>
-        /// <returns>Joined string sequence items separeted by ,</returns>
-        public static string Join(this IEnumerable<string> stringSequence)
-        {
-            if (stringSequence == null)
-                return string.Empty;
-
-            var stringArray = stringSequence.ToArray();
-
-            return stringArray.Length == 0 ? string.Empty : string.Join(",", stringArray);
-        }
-
-        /// <summary>
-        /// Joins the specified items using the default appender.
-        /// </summary>
-        /// <typeparam name="T">The item type of the <paramref name="items"/> collection.</typeparam>
-        /// <param name="separator">The separator.</param>
-        /// <param name="items">The items.</param>
-        /// <returns></returns>
-        public static string Join<T>(string separator, ICollection<T> items)
-        {
-            return StringHelper.Join(separator, items, (sb, item) => sb.Append<T>(item));
-        }
-
-        /// <summary>
-        /// Joins the specified items using the default appender.
-        /// </summary>
-        /// <typeparam name="T">The item type of the <paramref name="items"/> sequence.</typeparam>
-        /// <param name="separator">The separator.</param>
-        /// <param name="items">The items.</param>
-        /// <returns></returns>
-        public static string Join<T>(string separator, IEnumerable<T> items)
-        {
-            return StringHelper.Join(separator, items, (sb, item) => sb.Append<T>(item));
+            return StringHelper.Join(separator, items);
         }
 
 
         #endregion
 
-        #region IndexOf Extensions
+        #region IndexOf Extensions - Modern Approach
 
         /// <summary>
-        /// Returns the last index of the occurence of <paramref name="c"/>. -1 if not found; uses ordinal string comparison.
+        /// Finds the first occurrence of a substring starting from the specified index.
+        /// This method provides additional safety checks and consistent behavior.
         /// </summary>
         /// <param name="source">The string to search in.</param>
-        /// <param name="c">The char to search for.</param>
-        /// <param name="start">The start index of the search.</param>
-        /// <returns>Last index of the occurence of <paramref name="c"/>, or -1 if not found.</returns>
-        public static int IndexOf(this string source, char c, int start)
+        /// <param name="value">The substring to search for.</param>
+        /// <param name="startIndex">The start index of the search.</param>
+        /// <param name="comparisonType">The type of comparison to perform.</param>
+        /// <returns>The first index of the occurrence, or -1 if not found.</returns>
+        /// <example>
+        /// <code>
+        /// string text = "Hello World Hello";
+        /// int index = text.SafeIndexOf("Hello", 6); // Returns 12 (second "Hello")
+        /// </code>
+        /// </example>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int SafeIndexOf(this string? source, string? value, int startIndex = 0,
+            StringComparison comparisonType = StringComparison.Ordinal)
         {
-            for (int i = start; i < source.Length; i++)
-            {
-                if (source[i] == c)
-                {
-                    return i;
-                }
-            }
-            return -1;
+            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(value) ||
+                startIndex < 0 || startIndex >= source.Length)
+                return -1;
+
+            // Use native optimized method with proper comparison
+            return source.IndexOf(value, startIndex, comparisonType);
         }
 
         /// <summary>
-        /// Returns the last index of the occurence of <paramref name="sub"/>. -1 if not found; uses ordinal string comparison.
+        /// Finds the last occurrence of a substring in the string.
         /// </summary>
         /// <param name="source">The string to search in.</param>
-        /// <param name="sub">The string to search for.</param>
-        /// <param name="start">The start index of the search.</param>
-        /// <returns>Last index of the occurence of <paramref name="sub"/> or -1 if not found.</returns>
-        public static int IndexOf(this string source, string sub, int start)
+        /// <param name="value">The substring to search for.</param>
+        /// <param name="startIndex">The start index to search backwards from (optional).</param>
+        /// <param name="comparisonType">The type of comparison to perform.</param>
+        /// <returns>The last index of the occurrence, or -1 if not found.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int SafeLastIndexOf(this string? source, string? value, int? startIndex = null,
+            StringComparison comparisonType = StringComparison.Ordinal)
         {
-            if (source.IsNull() || sub.IsNull())
-                return -1;
+            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(value)) return -1;
 
-            if (sub.Length > source.Length)
-                return -1;
-
-            if (start < 0)
-                start = 0;
-
-            if (sub.Length == 0)
-                return start;
-
-            char ch = sub[0];
-            int end = source.Length - sub.Length;
-            for (int i = start; i <= end; i++)
-            {
-                if (source[i] != ch) continue;
-
-                bool foundOtherInValue = true;
-                for (var j = 1; j < sub.Length; j++)
-                {
-                    if (source[i + j] != sub[j])
-                    {
-                        foundOtherInValue = false;
-                        break;
-                    }
-                }
-
-                if (foundOtherInValue)
-                    return i;
-            }
-            return -1;
+            return startIndex.HasValue
+                ? source.LastIndexOf(value, startIndex.Value, comparisonType)
+                : source.LastIndexOf(value, comparisonType);
         }
 
         #endregion
@@ -368,255 +349,184 @@ namespace AnBo.Core
         #region Text formatting extensions
 
         /// <summary>
-        /// Appends the line.
+        /// Appends a line to the existing text with proper line ending handling.
         /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="line">The line.</param>
-        /// <returns>string where line was appended to text, adding Enviroment.NewLine before adding line string.</returns>
-        [DebuggerStepThrough]
-        public static string AppendLine(this string text, string line)
+        /// <param name="text">The existing text.</param>
+        /// <param name="line">The line to append.</param>
+        /// <returns>The text with the appended line.</returns>
+        public static string AppendLine(this string? text, string line)
         {
-            string s = text.SafeString();
-            return ((((s.Length == 0) || s.EndsWith(Environment.NewLine)) ? s : (s + Environment.NewLine)) + line);
+            var safeText = text ?? string.Empty;
+
+            if (safeText.Length == 0 || safeText.EndsWith(Environment.NewLine))
+                return safeText + line;
+
+            return safeText + Environment.NewLine + line;
         }
 
         /// <summary>
-        /// Convert the string value into a camel case formatted string (First letter is lower case).
-        /// </summary>
-        /// <param name="value">The source value.</param>
-        /// <returns>
-        /// Camel case formatted string.
-        /// </returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method ToCamelCase example" numberLines="true" outlining="true" >
-        /// string text1 = "Test";
-        /// string text2 = "\tTest";
-        /// string text3 = "   Test";
-        /// text1 = text1.ToCamelCase();
-        /// text2 = text2.ToCamelCase();
-        /// text3 = text3.ToCamelCase();</code>
-        /// <para>After code execution <c>text1</c> value is <c>"test"</c>, <c>text2</c> value is <c>"\ttest"</c>, <c>text3</c> value is <c>"   test"</c></para>
-        /// </example>
-        [DebuggerStepThrough]
-        public static string ToCamelCase(this string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                return value;
-
-            if (value.Length == 1)
-                return value.ToLower();
-
-            char[] inputChars = value.ToCharArray();
-            for (int x = 0; x < inputChars.Length; ++x)
-            {
-                if (inputChars[x] == ' ' || inputChars[x] == '\t') continue;
-                inputChars[x] = char.ToLowerInvariant(inputChars[x]);
-                break;
-            }
-            return new string(inputChars);
-        }
-
-        /// <summary>
-        /// Convert the string value into a pascal case formatted string (First letter is upper case).
+        /// Converts a string to camelCase (first letter lowercase).
         /// </summary>
         /// <param name="value">The source value.</param>
-        /// <returns>
-        /// Pascal case formatted string.
-        /// </returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method ToPascalCase example" numberLines="true" outlining="true" >
-        /// string text1 = "test";
-        /// string text2 = "\ttest";
-        /// string text3 = "   test";
-        /// text1 = text1.ToPascalCase();
-        /// text2 = text2.ToPascalCase();
-        /// text3 = text3.ToPascalCase();</code>
-        /// <para>After code execution <c>text1</c> value is <c>"Test"</c>, <c>text2</c> value is <c>"\tTest"</c>, <c>text3</c> value is <c>"   Test"</c></para>
-        /// </example>
-        [DebuggerStepThrough]
-        public static string ToPascalCase(this string value)
+        /// <returns>The camelCase formatted string.</returns>
+        public static string ToCamelCase(this string? value)
         {
-            if (string.IsNullOrEmpty(value))
-                return value;
+            if (string.IsNullOrEmpty(value)) return value ?? string.Empty;
+            if (value.Length == 1) return value.ToLowerInvariant();
 
-            if (value.Length == 1)
-                return value.ToUpper();
+            var span = value.AsSpan();
+            var firstNonWhitespace = 0;
 
-            char[] inputChars = value.ToCharArray();
-            for (int x = 0; x < inputChars.Length; ++x)
+            // Find first non-whitespace character
+            while (firstNonWhitespace < span.Length &&
+                   (span[firstNonWhitespace] == ' ' || span[firstNonWhitespace] == '\t'))
             {
-                if (inputChars[x] == ' ' || inputChars[x] == '\t') continue;
-                inputChars[x] = char.ToUpperInvariant(inputChars[x]);
-                break;
+                firstNonWhitespace++;
             }
-            return new string(inputChars);
 
+            if (firstNonWhitespace >= span.Length) return value;
+
+            return string.Create(value.Length, (value, firstNonWhitespace),
+                static (span, state) =>
+                {
+                    state.value.AsSpan().CopyTo(span);
+                    span[state.firstNonWhitespace] = char.ToLowerInvariant(span[state.firstNonWhitespace]);
+                });
         }
 
         /// <summary>
-        /// Convert a string from it's source encoding represantion to a Unicode encoded string.
+        /// Converts a string to PascalCase (first letter uppercase).
+        /// </summary>
+        /// <param name="value">The source value.</param>
+        /// <returns>The PascalCase formatted string.</returns>
+        public static string ToPascalCase(this string? value)
+        {
+            if (string.IsNullOrEmpty(value)) return value ?? string.Empty;
+            if (value.Length == 1) return value.ToUpperInvariant();
+
+            var span = value.AsSpan();
+            var firstNonWhitespace = 0;
+
+            // Find first non-whitespace character
+            while (firstNonWhitespace < span.Length &&
+                   (span[firstNonWhitespace] == ' ' || span[firstNonWhitespace] == '\t'))
+            {
+                firstNonWhitespace++;
+            }
+
+            if (firstNonWhitespace >= span.Length) return value;
+
+            return string.Create(value.Length, (value, firstNonWhitespace),
+                static (span, state) =>
+                {
+                    state.value.AsSpan().CopyTo(span);
+                    span[state.firstNonWhitespace] = char.ToUpperInvariant(span[state.firstNonWhitespace]);
+                });
+        }
+
+        /// <summary>
+        /// Converts a string from the source encoding to Unicode.
         /// </summary>
         /// <param name="sourceText">The source text.</param>
         /// <param name="sourceEncoding">The source encoding.</param>
-        /// <returns>
-        /// The Unicode encoded string.
-        /// </returns>
-        public static string ToUnicodeString(this string sourceText, Encoding sourceEncoding)
+        /// <returns>The Unicode-encoded string.</returns>
+        public static string ToUnicodeString(this string? sourceText, Encoding? sourceEncoding)
         {
-            if (String.IsNullOrEmpty(sourceText))
-                return sourceText;
-            if (sourceEncoding == null)
-                return sourceText;
-            if (sourceEncoding.EncodingName == Encoding.Unicode.EncodingName)
+            if (string.IsNullOrEmpty(sourceText) || sourceEncoding is null)
+                return sourceText ?? string.Empty;
+
+            if (sourceEncoding.Equals(Encoding.Unicode))
                 return sourceText;
 
-            Encoding unicodeEncoding = Encoding.Unicode;
-            byte[] sourceBytes = sourceEncoding.GetBytes(sourceText);
-            string unicodeString = unicodeEncoding.GetString(sourceBytes);
-            return unicodeString;
+            ReadOnlySpan<byte> sourceBytes = sourceEncoding.GetBytes(sourceText);
+            return Encoding.Unicode.GetString(sourceBytes);
         }
 
         /// <summary>
-        /// Ensures that a string starts with a given prefix.
+        /// Ensures that a string starts with the specified prefix.
         /// </summary>
-        /// <param name="value">The string value to check.</param>
-        /// <param name="prefix">The prefix value to check for.</param>
-        /// <returns>The string value including the prefix</returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method EnsureStartsWith example" numberLines="true" outlining="true" >
-        /// string extension1 = "txt";
-        /// string extension2 = ".txt";
-        /// string fileName = "Test";
-        /// 
-        /// string fileName1 = string.Concat(fileName, extension1.EnsureStartsWith("."));
-        /// string fileName2 = string.Concat(fileName, extension2.EnsureStartsWith("."));</code>
-        /// <para>After code execution <c>fileName1</c> value and <c>fileName2</c> value is <c>"Test.txt"</c></para>
-        /// </example>
-        [DebuggerStepThrough]
-        public static string EnsureStartsWith(this string value, string prefix)
+        /// <param name="value">The string to check.</param>
+        /// <param name="prefix">The required prefix.</param>
+        /// <returns>The string with the prefix ensured.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string EnsureStartsWith(this string? value, string prefix)
         {
-            if (value.StartsWith(prefix)) return value;
-            return string.Concat(prefix, value);
+            value ??= string.Empty;
+            return value.StartsWith(prefix) ? value : prefix + value;
         }
 
         /// <summary>
-        /// Ensures that a string ends with a given suffix.
+        /// Ensures that a string ends with the specified suffix.
         /// </summary>
-        /// <param name="value">The string value to check.</param>
-        /// <param name="suffix">The suffix value to check for.</param>
-        /// <returns>The string value including the suffix</returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method EnsureEndsWith example" numberLines="true" outlining="true" >
-        /// string url1 = "http://www.smartexpert.boercsoek.de";
-        /// string url2 = "http://www.smartexpert.boercsoek.de/";
-        /// url1 = url1.EnsureEndsWith("/");
-        /// url2 = url2.EnsureEndsWith("/");</code>
-        /// <para>After code execution <c>url1</c> value and <c>url2</c> value is <c>"http://www.smartexpert.boercsoek.de/"</c></para>
-        /// </example>
-        [DebuggerStepThrough]
-        public static string EnsureEndsWith(this string value, string suffix)
+        /// <param name="value">The string to check.</param>
+        /// <param name="suffix">The required suffix.</param>
+        /// <returns>The string with the suffix ensured.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string EnsureEndsWith(this string? value, string suffix)
         {
-            if (value.EndsWith(suffix)) return value;
-            return string.Concat(value, suffix);
+            value ??= string.Empty;
+            return value.EndsWith(suffix) ? value : value + suffix;
         }
 
         /// <summary>
-        /// If the string contains spaces, surrounds it with quotes.
+        /// Quotes a string if it contains spaces or is null/empty.
         /// </summary>
-        /// <returns>The quoted string if quoted is needed (containing spaces).</returns>
+        /// <param name="s">The string to potentially quote.</param>
+        /// <returns>The quoted string if necessary.</returns>
         public static string QuoteIfNeeded(this string? s)
         {
-            if (s == null)
+            if (s is null) return "<NULL>";
+            if (s.Length == 0 || s.Contains(' '))
             {
-                return "<NULL>";
+                if (s.Length > 1 && s[0] == '“' && s[^1] == '”')
+                    return s;
+                return $"“{s}”";
             }
-            if ((s.Length != 0) && !s.Contains(" "))
-            {
-                return s;
-            }
-            if (((s.Length > 0) && (s[0] == '“')) && (s[s.Length - 1] == '”'))
-            {
-                return s;
-            }
-            return ('“' + s + '”');
+            return s;
         }
 
-
-
         /// <summary>
-        /// Takes a capitalized word and turns it into a sequence of word:
-        /// MyName -&gt; my name
+        /// Formats a PascalCase string as a readable sentence.
         /// </summary>
-        /// <param name="value">The string that should be formatted as sentence.</param>
-        /// <returns>The formatted string result.</returns>
-        public static string FormatAsSentence(this string value)
+        /// <param name="value">The PascalCase string.</param>
+        /// <returns>A formatted sentence.</returns>
+        public static string FormatAsSentence(this string? value)
         {
-            if (value.Length == 0)
+            if (string.IsNullOrEmpty(value)) return string.Empty;
+
+            var estimatedLength = value.Length + (value.Length / 3); // Estimate for spaces
+            return string.Create(estimatedLength, value, static (span, input) =>
             {
-                return string.Empty;
-            }
-            char[] chArray = new char[value.Length * 2];
-            int length = 0;
-            for (int i = 0; i < value.Length; i++)
-            {
-                char c = value[i];
-                if (char.IsUpper(c))
+                var length = 0;
+                var inputSpan = input.AsSpan();
+
+                for (var i = 0; i < inputSpan.Length; i++)
                 {
-                    if (i > 0)
+                    var c = inputSpan[i];
+                    if (char.IsUpper(c) && i > 0)
                     {
-                        chArray[length++] = ' ';
+                        if (length < span.Length) span[length++] = ' ';
                     }
-                    chArray[length++] = char.ToLowerInvariant(c);
+                    if (length < span.Length)
+                        span[length++] = char.ToLowerInvariant(c);
+                        //span[length++] = i == 0 ? char.ToLowerInvariant(c) : c;
                 }
-                else
-                {
-                    chArray[length++] = c;
-                }
-            }
-            return new string(chArray, 0, length);
+            }).TrimEnd('\0');
         }
 
         /// <summary>
-        /// In a string, replaces null characters ('\0') with "\\0".
+        /// Replaces null characters with their escaped representation.
         /// </summary>
-        /// <returns>A string where all null characters are replaced.</returns>
-        public static string ReplaceNullChars(this string input)
+        /// <param name="input">The input string.</param>
+        /// <returns>A string with null characters escaped.</returns>
+        public static string ReplaceNullChars(this string? input)
         {
-            if (String.IsNullOrEmpty(input))
-            {
-                return input;
-            }
+            if (string.IsNullOrEmpty(input)) return input ?? string.Empty;
 
-            int length = input.Length;
-            bool foundNullChar = false;
-            for (int i = 0; i < length; i++)
-            {
-                if (input[i] == '\0')
-                {
-                    foundNullChar = true;
-                    break;
-                }
-            }
-            if (!foundNullChar)
-            {
-                return input;
-            }
+            var nullCharIndex = input.IndexOf('\0');
+            if (nullCharIndex == -1) return input;
 
-            char[] chArray = new char[length * 2];
-            int buildIndex = 0;
-            for (int j = 0; j < length; j++)
-            {
-                if (input[j] == '\0')
-                {
-                    chArray[buildIndex++] = '\\';
-                    chArray[buildIndex++] = '0';
-                }
-                else
-                {
-                    chArray[buildIndex++] = input[j];
-                }
-            }
-            return new string(chArray, 0, buildIndex);
+            return input.Replace("\0", "\\0");
         }
 
         #endregion
@@ -624,79 +534,36 @@ namespace AnBo.Core
         #region RegEx string extensions
 
         /// <summary>
-        /// Uses regular expressions to determine if the string matches to a given regex pattern.
+        /// Determines if a string matches the specified regular expression pattern.
         /// </summary>
         /// <param name="value">The input string.</param>
         /// <param name="regexPattern">The regular expression pattern.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the value is matching to the specified pattern; otherwise, <see langword="false"/>.
-        /// </returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method IsMathingTo example" numberLines="true" outlining="true" >
-        /// string s = "12345";
-        /// bool isMatching = s.IsMatchingTo(@"^\d+$");</code>
-        /// <para>Value of <c>isMatching</c> after execution = <c>true</c>.</para>
-        /// </example>
-        public static bool IsMatchingTo(this string value, string regexPattern)
+        /// <param name="options">The regex options (default: None).</param>
+        /// <returns><see langword="true"/> if the string matches; otherwise, <see langword="false"/>.</returns>
+        public static bool IsMatchingTo(this string? value,
+            [StringSyntax(StringSyntaxAttribute.Regex)] string regexPattern,
+            RegexOptions options = RegexOptions.None)
         {
-            return IsMatchingTo(value, regexPattern, RegexOptions.None);
-        }
-
-        /// <summary>
-        /// Uses regular expressions to determine if the string matches to a given regex pattern.
-        /// </summary>
-        /// <param name="value">The input string.</param>
-        /// <param name="regexPattern">The regular expression pattern.</param>
-        /// <param name="options">The regular expression options.</param>
-        /// <returns>
-        /// 	<see langword="true"/> if the value is matching to the specified pattern; otherwise, <see langword="false"/>.
-        /// </returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method IsMathingTo example" numberLines="true" outlining="true" >
-        /// string s = "12345";
-        /// bool isMatching = s.IsMatchingTo(@"^\d+$", RegexOptions.None);</code>
-        /// <para>Value of <c>isMatching</c> after execution = <c>true</c>.</para>
-        /// </example>
-        public static bool IsMatchingTo(this string value, string regexPattern, RegexOptions options)
-        {
+            if (string.IsNullOrEmpty(value)) return false;
             return Regex.IsMatch(value, regexPattern, options);
         }
 
         /// <summary>
-        /// Uses regular expressions to replace parts of a string.
+        /// Replaces parts of a string using regular expressions.
         /// </summary>
         /// <param name="value">The input string.</param>
         /// <param name="regexPattern">The regular expression pattern.</param>
         /// <param name="replaceValue">The replacement value.</param>
-        /// <returns>The newly created string</returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method ReplaceWith example" numberLines="true" outlining="true" >
-        /// string s = "12345";
-        /// string replaced = s.ReplaceWith(@"\d", "&lt;number&gt;"+s+"&lt;/number&gt;");</code>
-        /// <para>Value of <c>replaced</c> after execution = <c>"&lt;number&gt;12345&lt;/number&gt;"</c>.</para>
-        /// </example>
-        public static string ReplaceWith(this string value, string regexPattern, string replaceValue)
+        /// <param name="options">The regex options (default: None).</param>
+        /// <returns>The string with replacements applied.</returns>
+        public static string ReplaceWith(this string? value,
+            [StringSyntax(StringSyntaxAttribute.Regex)] string regexPattern,
+            string replaceValue,
+            RegexOptions options = RegexOptions.None)
         {
-            return ReplaceWith(value, regexPattern, regexPattern, RegexOptions.None);
-        }
+            if (string.IsNullOrEmpty(value)) 
+                return value ?? string.Empty;
 
-        /// <summary>
-        /// Uses regular expressions to replace parts of a string.
-        /// </summary>
-        /// <param name="value">The input string.</param>
-        /// <param name="regexPattern">The regular expression pattern.</param>
-        /// <param name="replaceValue">The replacement value.</param>
-        /// <param name="options">The regular expression options.</param>
-        /// <returns>The newly created string</returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method ReplaceWith example" numberLines="true" outlining="true" >
-        /// string s = "12345";
-        /// string replaced = s.ReplaceWith(@"\d", "&lt;number&gt;"+s+"&lt;/number&gt;", RegexOptions.None);</code>
-        /// <para>Value of <c>replaced</c> after execution = <c>"&lt;number&gt;12345&lt;/number&gt;"</c>.</para>
-        /// </example>
-        [DebuggerStepThrough]
-        public static string ReplaceWith(this string value, string regexPattern, string replaceValue, RegexOptions options)
-        {
             return Regex.Replace(value, regexPattern, replaceValue, options);
         }
 
@@ -706,6 +573,7 @@ namespace AnBo.Core
         /// <param name="value">The input string.</param>
         /// <param name="regexPattern">The regular expression pattern.</param>
         /// <param name="evaluator">The replacement method / lambda expression.</param>
+        /// <param name="options">The regex options (default: None).</param>
         /// <returns>The newly created string</returns>
         /// <example>
         /// <code lang="cs" title="String extension method ReplaceWith example" numberLines="true" outlining="true" >
@@ -714,89 +582,24 @@ namespace AnBo.Core
         /// <para>Value of <c>replaced</c> after execution = <c>" -12345- "</c>.</para>
         /// </example>
         [DebuggerStepThrough]
-        public static string ReplaceWith(this string value, string regexPattern, MatchEvaluator evaluator)
+        public static string ReplaceWith(this string? value, 
+            [StringSyntax(StringSyntaxAttribute.Regex)] string regexPattern,
+            MatchEvaluator evaluator,
+            RegexOptions options = RegexOptions.None)
         {
-            return ReplaceWith(value, regexPattern, RegexOptions.None, evaluator);
+            if (string.IsNullOrEmpty(value))
+                return value ?? string.Empty;
+
+            return  Regex.Replace(value, regexPattern, evaluator, options);
         }
 
         /// <summary>
-        /// Uses regular expressions to replace parts of a string.
+        /// Gets all matches of a regular expression pattern.
         /// </summary>
         /// <param name="value">The input string.</param>
         /// <param name="regexPattern">The regular expression pattern.</param>
-        /// <param name="options">The regular expression options.</param>
-        /// <param name="evaluator">The replacement method / lambda expression.</param>
-        /// <returns>The newly created string</returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method ReplaceWith example" numberLines="true" outlining="true" >
-        /// string s = "12345";
-        /// string replaced = s.ReplaceWith(@"\d", RegexOptions.None, m => string.Concat(" -", m.Value, "- "));</code>
-        /// <para>Value of <c>replaced</c> after execution = <c>" -12345- "</c>.</para>
-        /// </example>
-        [DebuggerStepThrough]
-        public static string ReplaceWith(this string value, string regexPattern, RegexOptions options, MatchEvaluator evaluator)
-        {
-            return Regex.Replace(value, regexPattern, evaluator, options);
-        }
-
-        /// <summary>
-        /// Uses regular expressions to determine all matches of a given regex pattern.
-        /// </summary>
-        /// <param name="value">The input string.</param>
-        /// <param name="regexPattern">The regular expression pattern.</param>
-        /// <returns>A collection of all matches</returns>
-        [DebuggerStepThrough]
-        public static MatchCollection GetMatches(this string value, string regexPattern)
-        {
-            return GetMatches(value, regexPattern, RegexOptions.None);
-        }
-
-        /// <summary>
-        /// Uses regular expressions to determine all matches of a given regex pattern.
-        /// </summary>
-        /// <param name="value">The input string.</param>
-        /// <param name="regexPattern">The regular expression pattern.</param>
-        /// <param name="options">The regular expression options.</param>
-        /// <returns>A collection of all matches</returns>
-        [DebuggerStepThrough]
-        public static MatchCollection GetMatches(this string value, string regexPattern, RegexOptions options)
-        {
-            return Regex.Matches(value, regexPattern, options);
-        }
-
-        /// <summary>
-        /// Uses regular expressions to determine all matches of a given regex pattern and returns them as string enumeration.
-        /// </summary>
-        /// <param name="value">The input string.</param>
-        /// <param name="regexPattern">The regular expression pattern.</param>
-        /// <returns>An enumeration of matching strings</returns>
-        /// <example>
-        /// <code lang="cs" title="String extension method GetMatchingValues example" numberLines="true" outlining="true" >
-        /// string s = "12345";
-        /// foreach(string number in s.GetMatchingValues(@"\d")) 
-        /// {
-        ///   Console.WriteLine(number);
-        /// }</code>
-        /// <code title="Console Output:" numberLines="false" outlining="false" >
-        /// 1
-        /// 2
-        /// 3
-        /// 4
-        /// 5</code>
-        /// </example>
-        [DebuggerStepThrough]
-        public static IEnumerable<string> GetMatchingValues(this string value, string regexPattern)
-        {
-            return GetMatchingValues(value, regexPattern, RegexOptions.None);
-        }
-
-        /// <summary>
-        /// Uses regular expressions to determine all matches of a given regex pattern and returns them as string enumeration.
-        /// </summary>
-        /// <param name="value">The input string.</param>
-        /// <param name="regexPattern">The regular expression pattern.</param>
-        /// <param name="options">The regular expression options.</param>
-        /// <returns>An enumeration of matching strings</returns>
+        /// <param name="options">The regex options (default: None).</param>
+        /// <returns>An enumerable of match values.</returns>
         /// <example>
         /// <code lang="cs" title="String extension method GetMatchingValues example" numberLines="true" outlining="true" >
         /// string s = "12345";
@@ -811,172 +614,154 @@ namespace AnBo.Core
         /// 4
         /// 5</code>
         /// </example>
-        [DebuggerStepThrough]
-        public static IEnumerable<string> GetMatchingValues(this string value, string regexPattern, RegexOptions options)
+        public static IEnumerable<string> GetMatchingValues(this string? value,
+            [StringSyntax(StringSyntaxAttribute.Regex)] string regexPattern,
+            RegexOptions options = RegexOptions.None)
         {
-            return from match in GetMatches(value, regexPattern, options).UnsafeToArray<Match>()
-                   where match.Success
-                   select match.Value;
-        }
+            if (string.IsNullOrEmpty(value)) yield break;
 
+            var matches = Regex.Matches(value, regexPattern, options);
+            foreach (Match match in matches)
+            {
+                if (match.Success)
+                    yield return match.Value;
+            }
+        }
 
         #endregion
 
         #region Text filter extensions
 
         /// <summary>
-        /// Removes the filter text from the input.
+        /// Removes text matching the specified filter pattern.
         /// </summary>
-        /// <param name="input">Input text</param>
-        /// <param name="filter">Regex expression of text to filter out</param>
-        /// <returns>The input text minus the filter text.</returns>
-        public static string? FilterOutText(this string input, string filter)
+        /// <param name="input">The input text.</param>
+        /// <param name="filter">The regex pattern to remove.</param>
+        /// <returns>The input text with filter matches removed.</returns>
+        public static string? FilterOutText(this string? input,
+            [StringSyntax(StringSyntaxAttribute.Regex)] string filter)
         {
-            if (input.IsNull())
-                return null;
-            if (filter.IsNull())
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(filter))
                 return input;
 
-            Regex tempRegex = new Regex(filter);
-            return tempRegex.Replace(input, "");
+            return Regex.Replace(input, filter, string.Empty);
         }
 
         /// <summary>
-        /// Removes everything that is not in the filter text from the input.
+        /// Keeps only text matching the specified filter pattern.
         /// </summary>
-        /// <param name="input">Input text</param>
-        /// <param name="filter">Regex expression of text to keep</param>
-        /// <returns>The input text minus everything not in the filter text.</returns>
-        public static string? KeepFilterText(this string input, string filter)
+        /// <param name="input">The input text.</param>
+        /// <param name="filter">The regex pattern to keep.</param>
+        /// <returns>A string containing only the matching text.</returns>
+        public static string? KeepFilterText(this string? input,
+            [StringSyntax(StringSyntaxAttribute.Regex)] string filter)
         {
-            if (input.IsNull())
-                return null;
-            if (filter.IsNull())
-                return input;
+            if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(filter))
+                return input ?? string.Empty;
 
-            Regex tempRegex = new Regex(filter);
-            MatchCollection collection = tempRegex.Matches(input);
-            StringBuilder builder = new StringBuilder();
-            foreach (Match match in collection)
+            var matches = Regex.Matches(input, filter);
+            if (matches.Count == 0) return string.Empty;
+
+            var totalLength = matches.Sum(m => m.Length);
+            return string.Create(totalLength, matches, static (span, matchList) =>
             {
-                builder.Append(match.Value);
-            }
-            return builder.ToString();
+                var position = 0;
+                foreach (Match match in matchList)
+                {
+                    match.ValueSpan.CopyTo(span[position..]);
+                    position += match.Length;
+                }
+            });
         }
 
         /// <summary>
-        /// Keeps only alphanumeric characters
+        /// Keeps only alphanumeric characters.
         /// </summary>
-        /// <param name="input">Input string</param>
-        /// <returns>the string only containing alphanumeric characters</returns>
-        public static string? AlphaNumericOnly(this string input)
+        /// <param name="input">The input string.</param>
+        /// <returns>A string containing only alphanumeric characters.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string AlphaNumericOnly(this string? input)
         {
-            if (input.IsNullOrEmptyWithTrim())
-                return string.Empty;
-
-            return KeepFilterText(input, "[a-zA-Z0-9]");
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+            return AlphaNumericRegex().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
+                .ToString();
         }
 
         /// <summary>
-        /// Keeps only alpha characters
+        /// Keeps only alphabetic characters.
         /// </summary>
-        /// <param name="input">Input string</param>
-        /// <returns>the string only containing alpha characters</returns>
-        public static string? AlphaCharactersOnly(this string input)
+        /// <param name="input">The input string.</param>
+        /// <returns>A string containing only alphabetic characters.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string AlphaCharactersOnly(this string? input)
         {
-            if (input.IsNullOrEmptyWithTrim())
-                return string.Empty;
-
-            return KeepFilterText(input, "[a-zA-Z]");
-
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+            return AlphaCharactersRegex().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
+                .ToString();
         }
 
         /// <summary>
-        /// Keeps only numeric characters
+        /// Keeps only numeric characters, optionally including decimal punctuation.
         /// </summary>
-        /// <param name="input">Input string</param>
-        /// <param name="keepNumericPunctuation">Determines if decimal places should be kept</param>
-        /// <returns>the string only containing numeric characters</returns>
-        public static string? NumericOnly(this string input, bool keepNumericPunctuation)
+        /// <param name="input">The input string.</param>
+        /// <param name="keepNumericPunctuation">Whether to keep decimal points and commas.</param>
+        /// <returns>A string containing only numeric characters.</returns>
+        public static string NumericOnly(this string? input, bool keepNumericPunctuation = false)
         {
-            if (input.IsNullOrEmptyWithTrim())
-                return string.Empty;
+            if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
-            return KeepFilterText(input, keepNumericPunctuation ? @"[0-9,\.]" : "[0-9]");
+            var regex = keepNumericPunctuation ? NumericWithPunctuationRegex() : NumericOnlyRegex();
+            return regex.Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
+                .ToString();
         }
 
         #endregion
 
         #region SecureString extensions
 
-        /// <summary>
-        /// Convert <see cref="String"/> to type <see cref="System.Security.SecureString"/>.
-        /// </summary>
-        /// <param name="source">The source string.</param>
-        /// <returns>
-        /// The convertion result (instance of target type <see cref="System.Security.SecureString"/>).
-        /// </returns>
-        public static SecureString? ToSecureString(this string source)
-        {
-            if (source == null)
-                return null;
-
-            SecureString secureString = new SecureString();
-
-            foreach (char key in source)
-                secureString.AppendChar(key);
-
-            secureString.MakeReadOnly();
-
-            return secureString;
-        }
-
-        /// <summary>
-        /// Convert <see cref="System.Security.SecureString"/> to <see cref="System.String"/>.
-        /// </summary>
-        /// <param name="secureString">The secure string to convert.</param>
-        /// <returns>
-        /// The converted string.
-        /// </returns>
-        public static string? ToUnsecureString(this SecureString secureString)
-        {
-            if (secureString == null)
-                return null;
-
-            IntPtr ptrBstr = Marshal.SecureStringToBSTR(secureString);
-            string str = Marshal.PtrToStringBSTR(ptrBstr);
-            Marshal.ZeroFreeBSTR(ptrBstr);
-            return str;
-        }
+        // Obsolete: SecureString is not recommended for new development.
 
         #endregion
 
         #region String to type conversion extensions
 
         /// <summary>
-        /// Gets the bytes from string.
+        /// Converts a string to a byte array using UTF-8 encoding.
         /// </summary>
-        /// <param name="str">The STR.</param>
-        /// <returns>The characters of the string as a sequence of bytes.</returns>
-        public static byte[] ToByteArray(this string str)
+        /// <param name="str">The source string.</param>
+        /// <returns>The UTF-8 encoded byte array.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static byte[] ToByteArray(this string? str)
         {
-            return StringHelper.GetBytesFromString(str);
+            return Encoding.UTF8.GetBytes(str ?? string.Empty);
         }
 
         /// <summary>
-        /// Convert the string value into a to type <see cref="System.IO.FileInfo"/> object.
+        /// Converts a string path to a FileInfo object if the file exists.
         /// </summary>
-        /// <param name="value">The current string value.</param>
-        /// <returns>
-        /// The convertion result (instance of target type <see cref="System.IO.FileInfo"/>, or <see langword="null"/> if file does not exist.).
-        /// </returns>
-        [DebuggerStepThrough]
-        public static FileInfo? ToFileInfo(this string value)
+        /// <param name="value">The file path string.</param>
+        /// <returns>A FileInfo object if the file exists; otherwise, null.</returns>
+        public static FileInfo? ToFileInfo(this string? value)
         {
-            if (string.IsNullOrEmpty(value) || File.Exists(value) == false)
-                return null;
+            if (string.IsNullOrEmpty(value)) return null;
 
-            return new FileInfo(value);
+            try
+            {
+                var fileInfo = new FileInfo(value);
+                return fileInfo.Exists ? fileInfo : null;
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
+            catch (PathTooLongException)
+            {
+                return null;
+            }
+            catch (NotSupportedException)
+            {
+                return null;
+            }
         }
 
         #endregion

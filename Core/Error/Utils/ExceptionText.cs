@@ -44,7 +44,6 @@ namespace AnBo.Core
             ArgChecker.ShouldNotBeNull(message);
             ArgChecker.ShouldNotBeNull(fullText);
 
-
             Message = message;
             FullText = fullText;
             UserFriendlyMessage = userFriendlyMessage ?? string.Empty;
