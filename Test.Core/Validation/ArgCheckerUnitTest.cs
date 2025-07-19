@@ -38,7 +38,7 @@ namespace AnBo.Test
             // Act & Assert
             var action = () => ArgChecker.ShouldNotBeNull(value);
             action.Should().Throw<ArgNullException>()
-                .WithMessage("*may not be null*");
+                .WithMessage("Argument value may not be null.");
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace AnBo.Test
             // Act & Assert
             var action = () => ArgChecker.ShouldNotBeEmpty(value);
             action.Should().Throw<ArgEmptyException>()
-                .WithMessage("*may not be empty*");
+                .WithMessage("Argument value may not be empty.");
         }
 
         [Fact]
@@ -151,7 +151,7 @@ namespace AnBo.Test
             // Act & Assert
             var action = () => ArgChecker.ShouldNotBeEmpty(value);
             action.Should().Throw<ArgEmptyException>()
-                .WithMessage("*may not be empty*");
+                .WithMessage("Argument value may not be empty.");
         }
 
         [Fact]
@@ -473,7 +473,7 @@ namespace AnBo.Test
             // Act & Assert
             var action = () => ArgChecker.ShouldBeTrue(condition);
             action.Should().Throw<ArgException<bool>>()
-                .WithMessage("*validation failed*");
+                .WithMessage("Argument validation failed (condition: False)");
         }
 
         [Fact]
@@ -1064,7 +1064,7 @@ namespace AnBo.Test
             // Act & Assert
             var action = () => ArgChecker.ShouldBeInstanceOfType(targetType, instance!, "testParam");
             action.Should().Throw<ArgNullException>()
-                .WithMessage("*assignmentInstance*");
+                .WithMessage("*instance*");
         }
 
         [Fact]

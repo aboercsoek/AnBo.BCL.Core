@@ -236,7 +236,8 @@ namespace AnBo.Core
         /// <param name="maxValue">The valid max value.</param>
         /// <exception cref="ArgOutOfRangeException{T}">Is thrown if <paramref name="argValue"/> is less than <paramref name="minValue"/> or greater than <paramref name="maxValue"</exception>
         [DebuggerStepThrough]
-        public static void ShouldBeInRange<T>(T argValue, T minValue, T maxValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null) where T : struct, IComparable<T>
+        public static void ShouldBeInRange<T>(T argValue, T minValue, T maxValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null) 
+            where T : struct, IComparable<T>
         {
             // Ensure min/max are in correct order
             var (actualMin, actualMax) = minValue.CompareTo(maxValue) <= 0 ? (minValue, maxValue) : (maxValue, minValue);
@@ -449,7 +450,7 @@ namespace AnBo.Core
         {
             if (instance == null)
             {
-                throw new ArgNullException("assignmentInstance", StringResources.ErrorShouldNotBeNullValidationTemplate1Arg);
+                throw new ArgNullException("instance", StringResources.ErrorShouldNotBeNullValidationTemplate1Arg);
             }
             if (targetType == null)
             {
@@ -473,7 +474,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="instance"/> is <see langword="null"</exception>
         /// <exception cref="InvalidTypeCastException">Is thrown if <paramref name="instance"/> is not an instance of <typeparamref name="TTarget"</exception>
         [DebuggerStepThrough]
-        public static void ShouldBeInstanceOfType<TTarget>(object instance, [CallerArgumentExpression(nameof(instance))] string? argName = null)
+        public static void ShouldBeInstanceOfType<TTarget>(object? instance, [CallerArgumentExpression(nameof(instance))] string? argName = null)
         {
             ShouldNotBeNull(argValue: instance, argName: argName);
 
