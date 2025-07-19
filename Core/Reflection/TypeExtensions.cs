@@ -42,7 +42,7 @@ namespace AnBo.Core
         /// <remarks>Supports generic type names in a user friendly way without the '-signs and also resolves nested generic type names.</remarks>
         public static string GetTypeName(this Type type)
         {
-            ArgChecker.ShouldNotBeNull(type, "type");
+            ArgChecker.ShouldNotBeNull(type);
 
             if (type.IsGenericType)
             {
@@ -77,8 +77,8 @@ namespace AnBo.Core
         /// </returns>
         public static FieldInfo? GetAnyField(this Type type, string? fieldName)
         {
-            ArgChecker.ShouldNotBeNull(type, "type");
-            ArgChecker.ShouldNotBeNullOrEmpty(fieldName, "fieldName");
+            ArgChecker.ShouldNotBeNull(type);
+            ArgChecker.ShouldNotBeNullOrEmpty(fieldName);
 
             return GetFieldInfo(type, fieldName);
         }
@@ -90,7 +90,7 @@ namespace AnBo.Core
         /// <returns>The fields of the specified type.</returns>
         public static IEnumerable<FieldInfo> GetAllFields(this Type type)
         {
-            ArgChecker.ShouldNotBeNull(type, "type");
+            ArgChecker.ShouldNotBeNull(type);
 
             Type? currentType = type;
             while (currentType != null)
@@ -159,7 +159,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="type"/> is <see langword="null"/></exception>
         public static bool ImplementsInterface<TInterface>(this Type? type)
         {
-            ArgChecker.ShouldNotBeNull(type, "type");
+            ArgChecker.ShouldNotBeNull(type);
             return typeof(TInterface).IsAssignableFrom(type);
         }
 

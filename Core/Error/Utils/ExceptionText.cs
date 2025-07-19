@@ -41,8 +41,8 @@ namespace AnBo.Core
         /// <param name="userFriendlyMessage">The user friendly exception message.</param>
         public ExceptionText(string message, string fullText, string userFriendlyMessage)
         {
-            ArgChecker.ShouldNotBeNull(message, "message");
-            ArgChecker.ShouldNotBeNull(fullText, "fullText");
+            ArgChecker.ShouldNotBeNull(message);
+            ArgChecker.ShouldNotBeNull(fullText);
 
 
             Message = message;

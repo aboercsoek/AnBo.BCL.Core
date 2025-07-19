@@ -131,7 +131,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="stream"/> is <see langword="null"/>.</exception>
         public static uint Compute(Stream stream)
         {
-            ArgChecker.ShouldNotBeNull(stream, "stream");
+            ArgChecker.ShouldNotBeNull(stream);
 
             uint oldCrc32 = 0xFFFFFFFF;
             int b;
@@ -155,8 +155,8 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if file does not exist at <paramref name="filePath"/>.</exception>
         public static uint ComputeFile(string filePath)
         {
-            ArgChecker.ShouldNotBeNull(filePath, "filePath");
-            ArgChecker.ShouldBeExistingFile(filePath, "filePath");
+            ArgChecker.ShouldNotBeNull(filePath);
+            ArgChecker.ShouldBeExistingFile(filePath);
 
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -172,7 +172,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="text"/> is <see langword="null"/>.</exception>
         public static uint Compute(string text)
         {
-            ArgChecker.ShouldNotBeNull(text, "text");
+            ArgChecker.ShouldNotBeNull(text);
 
             uint oldCrc32 = 0xFFFFFFFF;
             int len = text.Length;
@@ -203,7 +203,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="bytes"/> is <see langword="null"/>.</exception>
         public static uint Compute(byte[] bytes)
         {
-            ArgChecker.ShouldNotBeNull(bytes, "bytes");
+            ArgChecker.ShouldNotBeNull(bytes);
 
             uint oldCrc32 = 0xFFFFFFFF;
             int len = bytes.Length;

@@ -26,7 +26,7 @@ namespace AnBo.Core
         /// <param name="menuItemAction">The menu item action delegate.</param>
         public ActionBasedMenuItemCmd(Action menuItemAction)
         {
-            ArgChecker.ShouldNotBeNull(menuItemAction, "menuItemAction");
+            ArgChecker.ShouldNotBeNull(menuItemAction);
 
             m_MenuItemAction = menuItemAction;
             m_MenuItemText = GetDescriptionFromOptionCodeDelegate();

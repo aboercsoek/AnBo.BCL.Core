@@ -53,7 +53,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="input"/> is <see langword="null"/>.</exception>
         public static string AppendSlash(string input)
         {
-            ArgChecker.ShouldNotBeNull(input, "input");
+            ArgChecker.ShouldNotBeNull(input);
 
             if (input.EndsWith(@"\"))
                 return input;
@@ -69,7 +69,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="input"/> is <see langword="null"/>.</exception>
         public static string AppendFrontSlash(string input)
         {
-            ArgChecker.ShouldNotBeNull(input, "input");
+            ArgChecker.ShouldNotBeNull(input);
 
             if (input.StartsWith(@"\")) { return input; }
 
@@ -86,8 +86,8 @@ namespace AnBo.Core
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
         public static List<FileInfo> GetFileInfoList(string path, string mask)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(path, "path");
-            ArgChecker.ShouldNotBeNullOrEmpty(mask, "mask");
+            ArgChecker.ShouldNotBeNullOrEmpty(path);
+            ArgChecker.ShouldNotBeNullOrEmpty(mask);
 
             List<FileInfo> retVal = new List<FileInfo>();
             DirectoryInfo dirInfo = new DirectoryInfo(path);
@@ -107,8 +107,8 @@ namespace AnBo.Core
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
         public static List<FileInfo> GetFileInfoList(string path, string mask, bool subDir)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(path, "path");
-            ArgChecker.ShouldNotBeNullOrEmpty(mask, "mask");
+            ArgChecker.ShouldNotBeNullOrEmpty(path);
+            ArgChecker.ShouldNotBeNullOrEmpty(mask);
 
             List<FileInfo> retVal;
 
@@ -136,8 +136,8 @@ namespace AnBo.Core
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
         public static List<string> GetFiles(string path, string mask)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(path, "path");
-            ArgChecker.ShouldNotBeNullOrEmpty(mask, "mask");
+            ArgChecker.ShouldNotBeNullOrEmpty(path);
+            ArgChecker.ShouldNotBeNullOrEmpty(mask);
 
             DirectoryInfo dirInfo = new DirectoryInfo(path);
             FileInfo[] fInfoList = dirInfo.GetFiles(mask);
@@ -156,8 +156,8 @@ namespace AnBo.Core
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
         public static List<string> GetFiles(string path, string mask, bool subDir)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(path, "path");
-            ArgChecker.ShouldNotBeNullOrEmpty(mask, "mask");
+            ArgChecker.ShouldNotBeNullOrEmpty(path);
+            ArgChecker.ShouldNotBeNullOrEmpty(mask);
 
             List<string> retVal = new List<string>();
 
@@ -183,7 +183,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
         public static List<string> GetSubDirectories(string path, bool subDir)
         {
-            ArgChecker.ShouldNotBeNull(path, "path");
+            ArgChecker.ShouldNotBeNull(path);
 
             if (!Directory.Exists(path)) return new List<string>();
 
@@ -215,7 +215,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
         public static bool IsUrl(string path)
         {
-            ArgChecker.ShouldNotBeNull(path, "path");
+            ArgChecker.ShouldNotBeNull(path);
 
             return path.IndexOf("://", StringComparison.Ordinal) > 0;
         }
@@ -233,7 +233,7 @@ namespace AnBo.Core
         public static string CombinePath(string basePath, params string[] paths)
         {
             #region PreConditions
-            ArgChecker.ShouldNotBeNull(basePath, "basePath");
+            ArgChecker.ShouldNotBeNull(basePath);
 
             if (basePath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
                 throw new ArgException<string>(basePath, "basePath", "Argument {0} error: {0} contains invalid path characters (value = {1}");
@@ -241,7 +241,7 @@ namespace AnBo.Core
 
             paths.Foreach(path =>
             {
-                ArgChecker.ShouldNotBeNull(path, "paths");
+                ArgChecker.ShouldNotBeNull(path);
                 if (path.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
                 {
                     throw new ArgException<string>(path, "paths",
@@ -267,8 +267,8 @@ namespace AnBo.Core
         /// </exception>
         public static string GetRelativePath(string baseDirectoryPath, string absPath)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(baseDirectoryPath, "baseDirectoryPath");
-            ArgChecker.ShouldNotBeNullOrEmpty(absPath, "absPath");
+            ArgChecker.ShouldNotBeNullOrEmpty(baseDirectoryPath);
+            ArgChecker.ShouldNotBeNullOrEmpty(absPath);
 
             if (IsUrl(absPath) || IsUrl(baseDirectoryPath))
             {
@@ -321,8 +321,8 @@ namespace AnBo.Core
         /// </exception>
         public static string GetAbsolutePath(string baseDirectoryPath, string relPath)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(baseDirectoryPath, "baseDirectoryPath");
-            ArgChecker.ShouldNotBeNull(relPath, "relPath");
+            ArgChecker.ShouldNotBeNullOrEmpty(baseDirectoryPath);
+            ArgChecker.ShouldNotBeNull(relPath);
 
             return NormalizePath(Path.Combine(baseDirectoryPath, relPath));
         }
@@ -334,7 +334,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
         public static void CreateDirectory(string path)
         {
-            ArgChecker.ShouldNotBeNull(path, "path");
+            ArgChecker.ShouldNotBeNull(path);
 
             DirectoryInfo info = new DirectoryInfo(path);
             if (!info.Exists)
@@ -350,7 +350,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
         public static void DeleteDirectory(string path)
         {
-            ArgChecker.ShouldNotBeNull(path, "path");
+            ArgChecker.ShouldNotBeNull(path);
 
             DirectoryInfo info = new DirectoryInfo(path);
             if (info.Exists)
@@ -375,7 +375,7 @@ namespace AnBo.Core
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="pathName"/> is empty.</exception>
         public static void DeleteFile(string pathName)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(pathName, "pathName");
+            ArgChecker.ShouldNotBeNullOrEmpty(pathName);
 
             FileInfo info = new FileInfo(pathName);
 
@@ -396,7 +396,7 @@ namespace AnBo.Core
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="dirName"/> is empty.</exception>
         public static bool IsDirectoryEmpty(string dirName)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(dirName, "dirName");
+            ArgChecker.ShouldNotBeNullOrEmpty(dirName);
 
             FileSystemInfo[] fileSystemInfos = new DirectoryInfo(dirName).GetFileSystemInfos();
             // ReSharper disable ConditionIsAlwaysTrueOrFalse
@@ -420,8 +420,8 @@ namespace AnBo.Core
         ///		Is thrown if <paramref name="sourceDirectory"/> or <paramref name="destinationDirectory"/> is empty.</exception>
         public static void DeepCopy(string sourceDirectory, string destinationDirectory, bool overwrite)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(sourceDirectory, "sourceDirectory");
-            ArgChecker.ShouldNotBeNullOrEmpty(destinationDirectory, "destinationDirectory");
+            ArgChecker.ShouldNotBeNullOrEmpty(sourceDirectory);
+            ArgChecker.ShouldNotBeNullOrEmpty(destinationDirectory);
 
             if (sourceDirectory == destinationDirectory)
                 return;
@@ -669,7 +669,7 @@ namespace AnBo.Core
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="filename"/> is empty.</exception>
         public static string GetValidFilename(string filename)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(filename, "filename");
+            ArgChecker.ShouldNotBeNullOrEmpty(filename);
 
             List<char> list = new List<char>();
             list.AddRange(Path.GetInvalidPathChars());
@@ -698,7 +698,7 @@ namespace AnBo.Core
         /// <returns><paramref name="fileName" /> with any illegal characters hex-encoded.</returns>
         public static String EncodeIllegalFileNameChars(string fileName)
         {
-            ArgChecker.ShouldNotBeNull(fileName, "fileName");
+            ArgChecker.ShouldNotBeNull(fileName);
 
             String sEncodedFileName = Path.GetInvalidFileNameChars()
                 .Aggregate(fileName, (current, cInvalidFileNameChar) => current.Replace(cInvalidFileNameChar.ToString(), Uri.HexEscape(cInvalidFileNameChar)));
@@ -728,7 +728,7 @@ namespace AnBo.Core
         /// <exception cref="ArgEmptyException">Is thrown if <paramref name="baseFolder"/> is empty.</exception>
         public static void CreateDateFolder(string baseFolder, DateTime startDate, DateTime endDate)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(baseFolder, "baseFolder");
+            ArgChecker.ShouldNotBeNullOrEmpty(baseFolder);
 
             if (Directory.Exists(baseFolder))
             {

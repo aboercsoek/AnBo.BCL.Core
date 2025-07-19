@@ -27,7 +27,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException"><paramref name="array"/> is <see langword="null"/>.</exception>
         public static ReadOnlyCollection<T> ToReadOnly<T>(this T[] array)
         {
-            ArgChecker.ShouldNotBeNull(array, "array");
+            ArgChecker.ShouldNotBeNull(array);
 
             return new ReadOnlyCollection<T>(array);
         }
@@ -44,8 +44,8 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException"><paramref name="array"/> or <paramref name="converter"/> is <see langword="null"/>.</exception>
         public static TTarget[] ConvertAll<TSource, TTarget>(this TSource[] array, Converter<TSource, TTarget> converter)
         {
-            ArgChecker.ShouldNotBeNull(array, "array");
-            ArgChecker.ShouldNotBeNull(converter, "converter");
+            ArgChecker.ShouldNotBeNull(array);
+            ArgChecker.ShouldNotBeNull(converter);
 
             IEnumerable<TSource> enumerable = array;
             return enumerable.ConvertAll(converter).ToArray();
@@ -64,8 +64,8 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException"><paramref name="array"/> or <paramref name="match"/> is <see langword="null"/>.</exception>
         public static TSource[] SkipWhile<TSource>(this TSource[] array, Predicate<TSource> match)
         {
-            ArgChecker.ShouldNotBeNull(array, "array");
-            ArgChecker.ShouldNotBeNull(match, "match");
+            ArgChecker.ShouldNotBeNull(array);
+            ArgChecker.ShouldNotBeNull(match);
 
             Func<TSource, bool> func = t => match(t);
 
@@ -83,7 +83,7 @@ namespace AnBo.Core
         /// <exception cref="ArgOutOfRangeException{TValue}"><paramref name="count"/> is less than zero.</exception>
         public static TSource[] Take<TSource>(this TSource[] array, int count)
         {
-            ArgChecker.ShouldNotBeNull(array, "array");
+            ArgChecker.ShouldNotBeNull(array);
 
             //ArgChecker.ShouldBeInRange<int>(count, "count", 0, Int32.MaxValue);
             if (count <= 0)

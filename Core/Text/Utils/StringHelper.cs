@@ -8,6 +8,7 @@
 #region Using directives
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -98,8 +99,9 @@ namespace AnBo.Core
         /// <param name="format">The format.</param>
         /// <param name="args">The args.</param>
         /// <returns></returns>
+        [return: NotNull]
         [DebuggerStepThrough]
-        public static string SafeFormat(string format, params object?[] args)
+        public static string SafeFormat(string? format, params object?[] args)
         {
             if (format == null)
                 return String.Empty;
@@ -269,8 +271,8 @@ namespace AnBo.Core
         {
             #region PreConditions
 
-            ArgChecker.ShouldNotBeNull(collection, "collection");
-            ArgChecker.ShouldNotBeNull(separator, "separator");
+            ArgChecker.ShouldNotBeNull(collection);
+            ArgChecker.ShouldNotBeNull(separator);
 
             #endregion
 

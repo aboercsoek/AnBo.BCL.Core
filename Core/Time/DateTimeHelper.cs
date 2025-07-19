@@ -412,7 +412,7 @@ namespace AnBo.Core
         /// <exception cref="ArgOutOfRangeException{TValue}">Is thrown if <paramref name="value"/> has the wrong length.</exception>
         public static DateTime FromFileSortableDateTime(string value)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(value, "value");
+            ArgChecker.ShouldNotBeNullOrEmpty(value);
 
             string dateTimeString = value.Trim();
 
@@ -439,7 +439,7 @@ namespace AnBo.Core
         /// <exception cref="ArgOutOfRangeException{T}">Is thrown if <paramref name="value"/> has the wrong length.</exception>
         public static DateTime FromFileSortableDateTime(string value, bool hasMilliseconds)
         {
-            ArgChecker.ShouldNotBeNullOrEmpty(value, "value");
+            ArgChecker.ShouldNotBeNullOrEmpty(value);
 
             string dateTimeString = value.Trim();
 

@@ -412,7 +412,7 @@ namespace AnBo.Core
         public static TKey[] DictionaryKeysToArray<TKey, TValue>(IDictionary<TKey, TValue> dictionary)
         {
             //Contract.Requires<ArgNullException>(dictionary != null, "dictionary");
-            ArgChecker.ShouldNotBeNull(dictionary, "dictionary");
+            ArgChecker.ShouldNotBeNull(dictionary);
 
             return (dictionary.Keys.ToArray());
         }

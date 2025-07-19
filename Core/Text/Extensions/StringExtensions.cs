@@ -8,6 +8,7 @@
 #region Using directives
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
@@ -31,7 +32,7 @@ namespace AnBo.Core
         /// Returns <see langword="true"/> if the string is a format string; otherwise, <see langword="false"/>.
         /// </returns>
         [DebuggerStepThrough]
-        public static bool IsFormatString(this string text)
+        public static bool IsFormatString(this string? text)
         {
             return !string.IsNullOrEmpty(text) && text.Contains("{0");
         }
@@ -122,6 +123,7 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="text">The text.</param>
         /// <returns>If string is <see langword="null"/> <see cref="F:System.String.Empty"/>; otherwise the string value.</returns>
+        [return: NotNull]
         [DebuggerStepThrough]
         public static string SafeString(this string text)
         {
@@ -136,6 +138,7 @@ namespace AnBo.Core
         /// <returns>
         /// Returns the <see cref="SafeString(string)"/> value of <paramref name="defaultValue"/>, if the string is <see langword="null"/>; otherwise the string value.
         /// </returns>
+        [return: NotNull]
         [DebuggerStepThrough]
         public static string SafeString(this string text, string defaultValue)
         {
@@ -148,8 +151,9 @@ namespace AnBo.Core
         /// <param name="value">The source string.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns>The format string result.</returns>
+        [return: NotNull]
         [DebuggerStepThrough]
-        public static string SafeFormatWith(this string value, params object?[] parameters)
+        public static string SafeFormatWith(this string? value, params object?[] parameters)
         {
             return StringHelper.SafeFormat(value, parameters);
         }

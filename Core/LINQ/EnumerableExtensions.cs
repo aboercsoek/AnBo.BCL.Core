@@ -341,8 +341,8 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException"><paramref name="parentItems"/> or <paramref name="childItemsPredicate"/> is <see langword="null"/>.</exception>
         public static IEnumerable<Tuple<TParent, TChild>> SelectManyPairs<TParent, TChild>(this IEnumerable<TParent> parentItems, Func<TParent, IEnumerable<TChild>> childItemsPredicate)
         {
-            ArgChecker.ShouldNotBeNull(parentItems, "parentItems");
-            ArgChecker.ShouldNotBeNull(childItemsPredicate, "childItemsPredicate");
+            ArgChecker.ShouldNotBeNull(parentItems);
+            ArgChecker.ShouldNotBeNull(childItemsPredicate);
 
             return from parent in parentItems
                    from child in childItemsPredicate(parent)
@@ -362,9 +362,9 @@ namespace AnBo.Core
         public static bool IfThen<T>(this IEnumerable<T> items, Func<T, bool> ifPredicate, Action<T> thenAction)
         {
             bool result = true;
-            ArgChecker.ShouldNotBeNull(items, "items");
-            ArgChecker.ShouldNotBeNull(ifPredicate, "ifPredicate");
-            ArgChecker.ShouldNotBeNull(thenAction, "thenAction");
+            ArgChecker.ShouldNotBeNull(items);
+            ArgChecker.ShouldNotBeNull(ifPredicate);
+            ArgChecker.ShouldNotBeNull(thenAction);
 
             foreach (T element in items)
             {
@@ -403,9 +403,9 @@ namespace AnBo.Core
                                                             Action<TSourceItem> thenAction)
         {
             bool result = true;
-            ArgChecker.ShouldNotBeNull(items, "items");
-            ArgChecker.ShouldNotBeNull(ifPredicate, "ifPredicate");
-            ArgChecker.ShouldNotBeNull(thenAction, "thenAction");
+            ArgChecker.ShouldNotBeNull(items);
+            ArgChecker.ShouldNotBeNull(ifPredicate);
+            ArgChecker.ShouldNotBeNull(thenAction);
 
             foreach (TSourceItem element in items)
             {
@@ -440,10 +440,10 @@ namespace AnBo.Core
         public static bool IfThenElse<T>(this IEnumerable<T> items, Func<T, bool> ifPredicate, Action<T> thenAction, Action<T> elseAction)
         {
             bool result = true;
-            ArgChecker.ShouldNotBeNull(items, "items");
-            ArgChecker.ShouldNotBeNull(ifPredicate, "ifPredicate");
-            ArgChecker.ShouldNotBeNull(thenAction, "thenAction");
-            ArgChecker.ShouldNotBeNull(elseAction, "elseAction");
+            ArgChecker.ShouldNotBeNull(items);
+            ArgChecker.ShouldNotBeNull(ifPredicate);
+            ArgChecker.ShouldNotBeNull(thenAction);
+            ArgChecker.ShouldNotBeNull(elseAction);
 
             foreach (T element in items)
             {
@@ -484,10 +484,10 @@ namespace AnBo.Core
         public static bool IfThenElse<TSourceItem, TIfCondition>(this IEnumerable<TSourceItem> items, Func<TSourceItem, TIfCondition, bool> ifPredicate, TIfCondition ifCondition, Action<TSourceItem> thenAction, Action<TSourceItem> elseAction)
         {
             bool result = true;
-            ArgChecker.ShouldNotBeNull(items, "items");
-            ArgChecker.ShouldNotBeNull(ifPredicate, "ifPredicate");
-            ArgChecker.ShouldNotBeNull(thenAction, "thenAction");
-            ArgChecker.ShouldNotBeNull(elseAction, "elseAction");
+            ArgChecker.ShouldNotBeNull(items);
+            ArgChecker.ShouldNotBeNull(ifPredicate);
+            ArgChecker.ShouldNotBeNull(thenAction);
+            ArgChecker.ShouldNotBeNull(elseAction);
 
             foreach (TSourceItem element in items)
             {
@@ -521,7 +521,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> items)
         {
-            ArgChecker.ShouldNotBeNull(items, "items");
+            ArgChecker.ShouldNotBeNull(items);
 
             var s = new HashSet<T>(items);
             return s;
@@ -536,7 +536,7 @@ namespace AnBo.Core
         /// <exception cref="ArgNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
         public static IEnumerable<IndexValuePair<T>> EnumWithIndex<T>(this IEnumerable<T> items)
         {
-            ArgChecker.ShouldNotBeNull(items, "items");
+            ArgChecker.ShouldNotBeNull(items);
 
             int i = 0;
             foreach (T item in items)
@@ -560,7 +560,7 @@ namespace AnBo.Core
             if (items == null)
                 return; // Don't throw an error is source items are null. Just exit the method.
 
-            ArgChecker.ShouldNotBeNull(action, "action");
+            ArgChecker.ShouldNotBeNull(action);
 
             #endregion
 
@@ -584,7 +584,7 @@ namespace AnBo.Core
             if (items == null)
                 return; // Don't throw an error is source items are null. Just exit the method.
 
-            ArgChecker.ShouldNotBeNull(action, "action");
+            ArgChecker.ShouldNotBeNull(action);
 
             #endregion
 
@@ -713,8 +713,8 @@ namespace AnBo.Core
         {
             #region PreConditions
 
-            ArgChecker.ShouldNotBeNull(items1, "items1");
-            ArgChecker.ShouldNotBeNull(items2, "items2");
+            ArgChecker.ShouldNotBeNull(items1);
+            ArgChecker.ShouldNotBeNull(items2);
 
             #endregion
 
@@ -755,7 +755,7 @@ namespace AnBo.Core
         {
             #region PreConditions
 
-            ArgChecker.ShouldNotBeNull(items, "items");
+            ArgChecker.ShouldNotBeNull(items);
 
             #endregion
 
@@ -887,7 +887,7 @@ namespace AnBo.Core
             if (items == null)
                 return new TTarget[0];
 
-            ArgChecker.ShouldNotBeNull(converter, "converter");
+            ArgChecker.ShouldNotBeNull(converter);
 
             return Array.ConvertAll(items.UnsafeToArray<TSource>(), converter);
         }
