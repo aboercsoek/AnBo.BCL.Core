@@ -275,11 +275,9 @@ namespace AnBo.Test
             // Arrange
             object? item = null;
 
-            // Act
-            var result = item.Cast<string>();
-
-            // Assert
-            result.Should().BeNull();
+            // Act & Assert
+            var action = () => item!.Cast<string>();
+            action.Should().Throw<ArgNullException>();
         }
 
         [Fact]
@@ -344,13 +342,9 @@ namespace AnBo.Test
             // Arrange
             IEnumerable<object>? source = null;
 
-            // Act
-#pragma warning disable CS8604 // Possible null reference argument.
-            var result = source.CastSequence<object, string>().ToList();
-#pragma warning restore CS8604 // Possible null reference argument.
-
-            // Assert
-            result.Should().BeEmpty();
+            // Act & Assert
+            var action = () => source!.CastSequence<object, string>().ToList();
+            action.Should().Throw<ArgNullException>();
         }
 
         [Fact]
@@ -416,11 +410,9 @@ namespace AnBo.Test
             // Arrange
             Type? type = null;
 
-            // Act
-            var result = type.New();
-
-            // Assert
-            result.Should().BeNull();
+            // Act & Assert
+            var action = () => type!.New();
+            action.Should().Throw<ArgNullException>();
         }
 
         [Fact]
@@ -688,10 +680,8 @@ namespace AnBo.Test
             object? obj = null;
 
             // Act & Assert
-#pragma warning disable CS8604 // Possible null reference argument.
-            var action = () => obj.DisposeIfNecessary();
-#pragma warning restore CS8604 // Possible null reference argument.
-            action.Should().NotThrow();
+            var action = () => obj!.DisposeIfNecessary();
+            action.Should().Throw<ArgNullException>();
         }
 
         [Fact]
@@ -729,10 +719,8 @@ namespace AnBo.Test
             IEnumerable? sequence = null;
 
             // Act & Assert
-#pragma warning disable CS8604 // Possible null reference argument.
-            var action = () => sequence.DisposeElementsIfNecessary();
-#pragma warning restore CS8604 // Possible null reference argument.
-            action.Should().NotThrow();
+            var action = () => sequence!.DisposeElementsIfNecessary();
+            action.Should().Throw<ArgNullException>();
         }
 
         [Fact]

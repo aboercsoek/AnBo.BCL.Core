@@ -240,7 +240,7 @@ namespace AnBo.Core
         /// <param name="converter">Function to convert each item to its string representation.</param>
         /// <returns>The joined string using the custom converter.</returns>
         /// <exception cref="ArgNullException">Thrown when separator or items is null.</exception>
-        public static string Join<T>(string separator, IEnumerable<T>? items, Func<T, string>? converter = null)
+        public static string Join<T>(string separator, IEnumerable<T> items, Func<T, string>? converter = null)
         {
             ArgChecker.ShouldNotBeNull(separator);
             ArgChecker.ShouldNotBeNull(items);

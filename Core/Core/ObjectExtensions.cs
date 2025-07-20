@@ -7,7 +7,10 @@
 //--------------------------------------------------------------------------
 #region Using directives
 
+using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+using static System.Collections.Specialized.BitVector32;
 
 #endregion
 
@@ -26,7 +29,7 @@ namespace AnBo.Core
             }
             // Wenn die Umwandlung nicht möglich ist, gib den Standardwert zurück
             // (was 'null' für alle Referenztypen und nullable Wertetypen ist).
-            return null;
+            return default;
         }
         
 
@@ -47,7 +50,7 @@ namespace AnBo.Core
 
             // Wenn die Umwandlung nicht möglich ist, gib den Standardwert zurück
             // (was 'null' für alle Referenztypen und nullable Wertetypen ist).
-            return default(T);
+            return default;
         }
 
         /// <summary>
@@ -57,7 +60,7 @@ namespace AnBo.Core
         /// <typeparam name="TTarget">Target sequence item type to cast to</typeparam>
         /// <param name="source">The source sequence</param>
         /// <returns>The casted target sequence.</returns>
-        public static IEnumerable<TTarget> AsSequence<TSource, TTarget>(this IEnumerable<TSource> source)
+        public static IEnumerable<TTarget> AsSequence<TSource, TTarget>(this IEnumerable<TSource?>? source)
         {
             if (source == null)
                 yield break;
@@ -84,7 +87,7 @@ namespace AnBo.Core
         /// <typeparam name="TTarget">Target sequence item type to cast to</typeparam>
         /// <param name="source">The source sequence</param>
         /// <returns>The casted target sequence.</returns>
-        public static IEnumerable<TTarget> AsSequence<TTarget>(this IEnumerable source)
+        public static IEnumerable<TTarget> AsSequence<TTarget>(this IEnumerable? source)
         {
             if (source == null)
                 yield break;
@@ -110,10 +113,12 @@ namespace AnBo.Core
         /// <param name="item">value to be casted</param>
         /// <exception cref="InvalidCastException">Thrown when the item cannot be casted to the specified type.</exception>"
         /// <returns>casted value</returns>
-        public static T? Cast<T>(this object? item)
+        public static T? Cast<T>(this object item)
         {
-            if (item == null)
-                return default(T);
+            ArgChecker.ShouldNotBeNull(item);
+
+            //if (item == null)
+            //    return default;
 
             if (item is T result)
                 return result;
@@ -128,10 +133,11 @@ namespace AnBo.Core
         /// <typeparam name="TTarget">Target sequence item type to cast to</typeparam>
         /// <param name="source">The source sequence</param>
         /// <returns>The casted target sequence.</returns>
-        public static IEnumerable<TTarget?> CastSequence<TSource, TTarget>(this IEnumerable<TSource> source)
+        public static IEnumerable<TTarget?> CastSequence<TSource, TTarget>(this IEnumerable<TSource?> source)
         {
-            if (source == null)
-                yield break;
+            ArgChecker.ShouldNotBeNull(source);
+            //if (source == null)
+            //    yield break;
 
             foreach (var sourceItem in source)
             {
@@ -148,10 +154,11 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="type">Type to instantiate</param>
         /// <returns>Instance of the given Type</returns>
-        public static object? New(this Type? type)
+        public static object? New(this Type type)
         {
-            if (type == null)
-                return null;
+            ArgChecker.ShouldNotBeNull(type);
+            //if (type == null)
+            //    return null;
             
             if (type == typeof(string))
                 return string.Empty; // Special case for string to avoid Activator.CreateInstance throwing an exception
@@ -215,6 +222,9 @@ namespace AnBo.Core
         /// <returns>The control object after action(control) was called.</returns>
         public static T With<T>(this T control, Action<T> action)
         {
+            ArgChecker.ShouldNotBeNull(control);
+            ArgChecker.ShouldNotBeNull(action);
+
             action(control);
             return control;
         }
@@ -227,6 +237,9 @@ namespace AnBo.Core
         /// <param name="action">The action that should be applied to disposable object.</param>
         public static void WithDispose<T>(this T disposable, Action<T> action) where T : IDisposable
         {
+            ArgChecker.ShouldNotBeNull(disposable);
+            ArgChecker.ShouldNotBeNull(action);
+
             using (disposable)
             {
                 action(disposable);
@@ -241,6 +254,9 @@ namespace AnBo.Core
         /// <param name="action">The action that should be applied to each disposable item inside <paramref name="sequence"/>.</param>
         public static void WithDispose<T>(this IEnumerable<T> sequence, Action<T> action) where T : IDisposable
         {
+            ArgChecker.ShouldNotBeNull(sequence);
+            ArgChecker.ShouldNotBeNull(action);
+
             foreach (var item in sequence)
             {
                 using (item)
@@ -260,6 +276,9 @@ namespace AnBo.Core
         /// <returns>Returns the result of func(<paramref name="disposable"/>)</returns>
         public static TResult WithDispose<TDisposable, TResult>(this TDisposable disposable, Func<TDisposable, TResult> func) where TDisposable : IDisposable
         {
+            ArgChecker.ShouldNotBeNull(disposable);
+            ArgChecker.ShouldNotBeNull(func);
+
             using (disposable)
             {
                 return func(disposable);
@@ -276,8 +295,11 @@ namespace AnBo.Core
         /// <param name="funcParam2">The second func delegate argument.</param>
         /// <param name="func">The func delegate to apply.</param>
         /// <returns>Returns the result of func(<paramref name="disposable"/>, <paramref name="funcParam2"/>)</returns>
-        public static TResult WithDispose<TDisposable, TFunc2, TResult>(this TDisposable disposable, TFunc2 funcParam2, Func<TDisposable, TFunc2, TResult> func) where TDisposable : IDisposable
+        public static TResult WithDispose<TDisposable, TFunc2, TResult>(this TDisposable disposable, TFunc2? funcParam2, Func<TDisposable, TFunc2?, TResult> func) where TDisposable : IDisposable
         {
+            ArgChecker.ShouldNotBeNull(disposable);
+            ArgChecker.ShouldNotBeNull(func);
+
             using (disposable)
             {
                 return func(disposable, funcParam2);
@@ -292,6 +314,8 @@ namespace AnBo.Core
         /// <param name="obj">The obj.</param>
         public static void DisposeIfNecessary(this object obj)
         {
+            ArgChecker.ShouldNotBeNull(obj);
+
             TypeHelper.DisposeIfNecessary(obj);
         }
 
@@ -304,6 +328,8 @@ namespace AnBo.Core
         /// <param name="sequence">The sequence to dispose.</param>
         public static void DisposeElementsIfNecessary(this IEnumerable sequence)
         {
+            ArgChecker.ShouldNotBeNull(sequence);
+
             TypeHelper.DisposeElementsIfNecessary(sequence);
         }
 
@@ -315,7 +341,7 @@ namespace AnBo.Core
         /// <returns>
         /// 	<see langword="true"/> if the specified instance is null; or <see langword="false"/> if T is a value type or T is not null.
         /// </returns>
-        public static bool IsNull<T>(this T instance)
+        public static bool IsNull<T>([NotNullWhen(false)]this T? instance)
         {
             return instance is null;
         }
@@ -328,9 +354,9 @@ namespace AnBo.Core
         /// <returns>
         /// 	<see langword="true"/> if the specified instance is a value type or not null; or <see langword="false"/> if T is null.
         /// </returns>
-        public static bool IsNotNull<T>(this T instance)
+        public static bool IsNotNull<T>([NotNullWhen(true)] this T? instance)
         {
-            return (instance.IsNull() == false);
+            return (instance is not null);
         }
 
         /// <summary>
@@ -361,7 +387,7 @@ namespace AnBo.Core
         /// <returns>
         /// 	<see langword="true"/> if <paramref name="value" /> is the default value for this reference or value type, or an empty string; otherwise <see langword="false"/>.
         /// </returns>
-        public static bool IsDefaultValueOrEmptyString(this object value)
+        public static bool IsDefaultValueOrEmptyString(this object? value)
         {
             if (ReferenceEquals(value, null))
             {

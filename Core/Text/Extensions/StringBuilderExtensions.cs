@@ -7,41 +7,101 @@
 //--------------------------------------------------------------------------
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 
 #endregion
 
 namespace AnBo.Core
 {
-    ///<summary>Represents extension methods for <see cref="StringBuilder"/> type.</summary>
-	public static class StringBuilderExtensions
+    /// <summary>
+    /// Provides modern extension methods for <see cref="StringBuilder"/> optimized for .NET 8+.
+    /// </summary>
+    public static class StringBuilderExtensions
     {
         /// <summary>
-        /// Clears the content of the specified string builder.
+        /// Clears the content of the specified string builder efficiently.
         /// </summary>
-        /// <param name="stringBuilder">The string builder.</param>
-        public static void Clear(this StringBuilder stringBuilder)
+        /// <param name="builder">The string builder to clear. Cannot be null.</param>
+        /// <returns>The same StringBuilder instance for method chaining.</returns>
+        /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static StringBuilder Clear(this StringBuilder builder)
         {
-            if (stringBuilder != null)
-                stringBuilder.Length = 0;
+            ArgChecker.ShouldNotBeNull(builder);
+            builder.Length = 0;
+            return builder;
         }
 
         /// <summary>
-        /// Determines whether the specified string builder is empty.
+        /// Determines whether the specified string builder is null or empty.
         /// </summary>
-        /// <param name="builder">The string builder.</param>
+        /// <param name="builder">The string builder to check.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the specified builder is empty; otherwise, <see langword="false"/> (if builder is <see langword="null"/> <see langword="false"/> is returned).
+        /// <see langword="true"/> if the builder is null or has zero length; 
+        /// otherwise, <see langword="false"/>.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNullOrEmpty([NotNullWhen(false)] this StringBuilder? builder)
+            => builder is null || builder.Length == 0;
+
+        /// <summary>
+        /// Determines whether the specified string builder is empty (but not null).
+        /// </summary>
+        /// <param name="builder">The string builder to check. Cannot be null.</param>
+        /// <returns><see langword="true"/> if the builder has zero length; otherwise, <see langword="false"/>.</returns>
+        /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty(this StringBuilder builder)
         {
-            return (builder == null) ? false : (builder.Length == 0);
+            ArgChecker.ShouldNotBeNull(builder);
+            return builder.Length == 0;
         }
 
+        /// <summary>
+        /// Appends the string representation of the specified value using invariant culture.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to append.</typeparam>
+        /// <param name="builder">The string builder. Cannot be null.</param>
+        /// <param name="value">The value to append. Null values are ignored for reference types.</param>
+        /// <returns>The same StringBuilder instance for method chaining.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
+        public static StringBuilder AppendInvariant<T>(this StringBuilder builder, T? value)
+        {
+            ArgChecker.ShouldNotBeNull(builder);
+
+            return value switch
+            {
+                null => builder, // Skip null values
+                string str => builder.Append(str),
+                IFormattable formattable => builder.Append(formattable.ToString(null, CultureInfo.InvariantCulture)),
+                _ => builder.Append(value.ToString())
+            };
+        }
+
+        /// <summary>
+        /// Appends the string representation of the specified value using invariant culture if value is formattable.
+        /// or StringConversionHelper.ToInvariantString<T>.
+        /// </summary>
+        /// <typeparam name="T">The type of the value to append.</typeparam>
+        /// <param name="builder">The string builder. Cannot be null.</param>
+        /// <param name="value">The value to append. Null values are ignored for reference types.</param>
+        /// <returns>The same StringBuilder instance for method chaining.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
+        public static StringBuilder AppendUseToInvariantString<T>(this StringBuilder builder, T? value)
+        {
+            ArgChecker.ShouldNotBeNull(builder);
+
+            return value switch
+            {
+                null => builder, // Skip null values
+                string str => builder.Append(str),
+                IFormattable formattable => builder.Append(formattable.ToString(null, CultureInfo.InvariantCulture)),
+                _ => builder.Append(value.ToInvariantString())
+            };
+        }
 
         /// <summary>
         /// Appends the specified value to the string builder.

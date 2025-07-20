@@ -367,11 +367,9 @@ namespace AnBo.Test
             // Arrange
             Type? nullType = null;
 
-            // Act
-            var result = nullType.HasRequiredMembers();
-
-            // Assert
-            result.Should().BeFalse();
+            // Act & Assert
+            var action = () => nullType!.HasRequiredMembers();
+            action.Should().Throw<ArgNullException>();
         }
 
         [Fact]
@@ -479,11 +477,9 @@ namespace AnBo.Test
             // Arrange
             Type? nullType = null;
 
-            // Act
-            var result = nullType!.IsOpenGenericType();
-
-            // Assert
-            result.Should().BeFalse();
+            // Act & Assert
+            var action = () => nullType!.IsOpenGenericType();
+            action.Should().Throw<ArgNullException>();
         }
 
         [Fact]

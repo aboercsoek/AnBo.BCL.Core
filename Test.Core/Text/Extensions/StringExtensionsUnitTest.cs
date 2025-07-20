@@ -6,8 +6,9 @@
 // License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 
-using FluentAssertions;
 using AnBo.Core;
+using FluentAssertions;
+using Microsoft.VisualBasic;
 using System.Text;
 
 namespace AnBo.Test
@@ -606,7 +607,7 @@ namespace AnBo.Test
             IEnumerable<string>? items = null;
 
             // Act & Assert
-            Action action = () => items.Join();
+            Action action = () => items!.Join();
             action.Should().Throw<ArgNullException>();
         }
 
@@ -1106,11 +1107,10 @@ namespace AnBo.Test
             // Arrange
             string? s = null;
 
-            // Act
-            var result = s.QuoteIfNeeded();
+            // Act & Assert
+            var action = () => s!.QuoteIfNeeded();
+            action.Should().Throw<ArgNullException>();
 
-            // Assert
-            result.Should().Be("<NULL>");
         }
 
         [Fact]

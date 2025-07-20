@@ -29,7 +29,9 @@ namespace AnBo.Core
         {
             ArgChecker.ShouldNotBeNull(type);
 
-            return type.AssemblyQualifiedName.QuoteIfNeeded();
+            string? assemblyQualifiedName = type.AssemblyQualifiedName;
+
+            return assemblyQualifiedName == null ? String.Empty : type.AssemblyQualifiedName!.QuoteIfNeeded();
         }
 
         /// <summary>
@@ -157,7 +159,7 @@ namespace AnBo.Core
         /// <param name="type"> The type to check.</param>
         /// <returns>true if the type implements the specified interface; otherwise, false.</returns>
         /// <exception cref="ArgNullException">Is thrown if <paramref name="type"/> is <see langword="null"/></exception>
-        public static bool ImplementsInterface<TInterface>(this Type? type)
+        public static bool ImplementsInterface<TInterface>(this Type type)
         {
             ArgChecker.ShouldNotBeNull(type);
             return typeof(TInterface).IsAssignableFrom(type);
@@ -170,10 +172,12 @@ namespace AnBo.Core
         /// <returns>
         /// <see langword="true"/> if the type has the <see cref="RequiredMemberAttribute"/>; otherwise, <see langword="false"/>.
         /// </returns>
-        public static bool HasRequiredMembers(this Type? type)
+        public static bool HasRequiredMembers(this Type type)
         {
-            if (type == null)
-                return false;
+            ArgChecker.ShouldNotBeNull(type);
+
+            //if (type == null)
+            //    return false;
 
             return type.GetCustomAttribute<RequiredMemberAttribute>() != null;
         }
@@ -195,6 +199,8 @@ namespace AnBo.Core
         /// </returns>
         public static bool IsNullableType(this Type type)
         {
+            ArgChecker.ShouldNotBeNull(type);
+
             return _nullableTypeCache.GetOrAdd(type, t =>
                 t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>));
         }
@@ -205,8 +211,10 @@ namespace AnBo.Core
         /// <returns><see langword="true"/> if the specified type is an open generic type, otherwise <see langword="false"/></returns>
         public static bool IsOpenGenericType(this Type type)
         {
-            if (type == null)
-                return false;
+            ArgChecker.ShouldNotBeNull(type);
+
+            //if (type == null)
+            //    return false;
 
             return (type.IsGenericType && type.ContainsGenericParameters);
         }
@@ -220,6 +228,8 @@ namespace AnBo.Core
         /// </summary>
         public static object? GetDefaultValue(this Type type)
         {
+            ArgChecker.ShouldNotBeNull(type);
+
             return type.IsValueType.IsFalse() ? null : Activator.CreateInstance(type);
         }
 
@@ -228,8 +238,10 @@ namespace AnBo.Core
         /// Gets whether the <paramref name="value" /> is the default value for this reference or value type.
         /// </summary>
         /// <returns>true if the value is the default value, othewise false</returns>
-        public static bool IsDefaultValue(this Type type, object value)
+        public static bool IsDefaultValue(this Type type, object? value)
         {
+            ArgChecker.ShouldNotBeNull(type);
+
             if (ReferenceEquals(value, null))
             {
                 return true;
@@ -240,8 +252,10 @@ namespace AnBo.Core
         /// <summary>
         /// Gets whether the <paramref name="value" /> is the default value for this reference or value type, or an empty string.
         /// </summary>
-        public static bool IsDefaultValueOrEmptyString(this Type type, object value)
+        public static bool IsDefaultValueOrEmptyString(this Type type, object? value)
         {
+            ArgChecker.ShouldNotBeNull(type);
+
             if (ReferenceEquals(value, null))
             {
                 return true;
@@ -265,6 +279,8 @@ namespace AnBo.Core
         /// <returns>true if the type is JSON serializable, otherwise false</returns>
         public static bool IsJsonSerializable(this Type type)
         {
+            ArgChecker.ShouldNotBeNull(type);
+
             // Basis-Ausschlüsse
             if (type.IsPointer || type.IsByRef)
                 return false;
@@ -299,7 +315,7 @@ namespace AnBo.Core
         /// <typeparam name="T">The type of object to be cloned</typeparam>
         /// <param name="original">The object to be cloned</param>
         /// <returns>A deep copy of the original object</returns>
-        public static T? DeepClone<T>(this T original)
+        public static T? DeepClone<T>(this T? original)
         {
             return TypeHelper.DeepClone(original);
         }

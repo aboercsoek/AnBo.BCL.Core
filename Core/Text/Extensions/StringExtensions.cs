@@ -288,7 +288,7 @@ namespace AnBo.Core
         /// <param name="items">The items to join.</param>
         /// <param name="separator">The separator to use between items.</param>
         /// <returns>A string containing all items separated by the separator.</returns>
-        public static string Join<T>(this IEnumerable<T>? items, string separator = ", " )
+        public static string Join<T>(this IEnumerable<T> items, string separator = ", " )
         {
             return StringHelper.Join(separator, items);
         }
@@ -473,9 +473,11 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="s">The string to potentially quote.</param>
         /// <returns>The quoted string if necessary.</returns>
-        public static string QuoteIfNeeded(this string? s)
+        public static string QuoteIfNeeded(this string s)
         {
-            if (s is null) return "<NULL>";
+            ArgChecker.ShouldNotBeNull(s);
+            //if (s is null) return "<NULL>";
+
             if (s.Length == 0 || s.Contains(' '))
             {
                 if (s.Length > 1 && s[0] == '“' && s[^1] == '”')
