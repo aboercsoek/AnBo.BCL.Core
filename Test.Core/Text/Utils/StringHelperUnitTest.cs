@@ -18,7 +18,7 @@ namespace AnBo.Test
         #region SafeToString Method Tests
 
         [Fact]
-        public void TestCase001_SafeToString_With_Null_Object_Should_Return_Empty_String()
+        public void SafeToString_With_Null_Object_Should_Return_Empty_String()
         {
             // Arrange
             object? obj = null;
@@ -32,7 +32,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase002_SafeToString_With_Valid_Object_Should_Return_String_Representation()
+        public void SafeToString_With_Valid_Object_Should_Return_String_Representation()
         {
             // Arrange
             var obj = 42;
@@ -45,7 +45,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase003_SafeToString_With_String_Object_Should_Return_Same_String()
+        public void SafeToString_With_String_Object_Should_Return_Same_String()
         {
             // Arrange
             var obj = "test string";
@@ -58,7 +58,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase004_SafeToString_With_Complex_Object_Should_Return_String_Representation()
+        public void SafeToString_With_Complex_Object_Should_Return_String_Representation()
         {
             // Arrange
             var obj = new DateTime(2025, 1, 15);
@@ -71,7 +71,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase005_SafeToString_With_DefaultValue_And_Null_Should_Return_DefaultValue_String()
+        public void SafeToString_With_DefaultValue_And_Null_Should_Return_DefaultValue_String()
         {
             // Arrange
             object? obj = null;
@@ -85,7 +85,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase006_SafeToString_With_DefaultValue_And_Valid_Object_Should_Return_Object_String()
+        public void SafeToString_With_DefaultValue_And_Valid_Object_Should_Return_Object_String()
         {
             // Arrange
             var obj = 123;
@@ -99,7 +99,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase007_SafeToString_With_DefaultValue_Null_Should_Return_Empty_String()
+        public void SafeToString_With_DefaultValue_Null_Should_Return_Empty_String()
         {
             // Arrange
             object? obj = null;
@@ -117,7 +117,7 @@ namespace AnBo.Test
         #region SafeFormat Method Tests
 
         [Fact]
-        public void TestCase008_SafeFormat_With_Null_Format_Should_Return_Empty_String()
+        public void SafeFormat_With_Null_Format_Should_Return_Empty_String()
         {
             // Arrange
             string? format = null;
@@ -131,7 +131,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase009_SafeFormat_With_Empty_Format_Should_Return_Empty_String()
+        public void SafeFormat_With_Empty_Format_Should_Return_Empty_String()
         {
             // Arrange
             string format = string.Empty;
@@ -145,7 +145,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase010_SafeFormat_With_Valid_Format_And_Parameters_Should_Return_Formatted_String()
+        public void SafeFormat_With_Valid_Format_And_Parameters_Should_Return_Formatted_String()
         {
             // Arrange
             string format = "Value: {0}, Name: {1}";
@@ -159,7 +159,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase011_SafeFormat_With_No_Parameters_Should_Return_Original_Format()
+        public void SafeFormat_With_No_Parameters_Should_Return_Original_Format()
         {
             // Arrange
             string format = "No parameters here";
@@ -173,7 +173,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase012_SafeFormat_With_Invalid_Format_Should_Return_Error_Information()
+        public void SafeFormat_With_Invalid_Format_Should_Return_Error_Information()
         {
             // Arrange
             string format = "Invalid format {0} {1} {2}";
@@ -187,7 +187,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase013_SafeFormat_With_Null_Parameters_Should_Handle_Gracefully()
+        public void SafeFormat_With_Null_Parameters_Should_Handle_Gracefully()
         {
             // Arrange
             string format = "Test {0}";
@@ -205,7 +205,7 @@ namespace AnBo.Test
         #region SafeAppendFormat Method Tests
 
         [Fact]
-        public void TestCase014_SafeAppendFormat_With_Null_StringBuilder_Should_Not_Throw()
+        public void SafeAppendFormat_With_Null_StringBuilder_Should_Not_Throw()
         {
             // Arrange
             StringBuilder? sb = null;
@@ -220,7 +220,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase015_SafeAppendFormat_With_Valid_StringBuilder_Should_Append_Formatted_Text()
+        public void SafeAppendFormat_With_Valid_StringBuilder_Should_Append_Formatted_Text()
         {
             // Arrange
             var sb = new StringBuilder("Start: ");
@@ -235,7 +235,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase016_SafeAppendFormat_With_Empty_Format_Should_Not_Append()
+        public void SafeAppendFormat_With_Empty_Format_Should_Not_Append()
         {
             // Arrange
             var sb = new StringBuilder("Start");
@@ -250,7 +250,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase017_SafeAppendFormat_With_No_Args_Should_Append_Format_String()
+        public void SafeAppendFormat_With_No_Args_Should_Append_Format_String()
         {
             // Arrange
             var sb = new StringBuilder("Start: ");
@@ -269,7 +269,7 @@ namespace AnBo.Test
         #region StringCollectionToMultiLine Method Tests
 
         [Fact]
-        public void TestCase018_StringCollectionToMultiLine_With_Null_Collection_Should_Return_Empty_String()
+        public void StringCollectionToMultiLine_With_Null_Collection_Should_Return_Empty_String()
         {
             // Arrange
             IEnumerable<string>? collection = null;
@@ -282,7 +282,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase019_StringCollectionToMultiLine_With_Empty_Collection_Should_Return_Empty_String()
+        public void StringCollectionToMultiLine_With_Empty_Collection_Should_Return_Empty_String()
         {
             // Arrange
             var collection = new List<string>();
@@ -295,7 +295,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase020_StringCollectionToMultiLine_With_Single_Item_Should_Return_Item()
+        public void StringCollectionToMultiLine_With_Single_Item_Should_Return_Item()
         {
             // Arrange
             var collection = new List<string> { "single item" };
@@ -308,7 +308,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase021_StringCollectionToMultiLine_With_Multiple_Items_Should_Return_Joined_String()
+        public void StringCollectionToMultiLine_With_Multiple_Items_Should_Return_Joined_String()
         {
             // Arrange
             var collection = new List<string> { "line1", "line2", "line3" };
@@ -321,7 +321,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase022_StringCollectionToMultiLine_With_Null_Items_Should_Handle_Gracefully()
+        public void StringCollectionToMultiLine_With_Null_Items_Should_Handle_Gracefully()
         {
             // Arrange
             var collection = new List<string?> { "line1", null, "line3" };
@@ -335,7 +335,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase023_StringCollectionToMultiLine_Array_With_Null_Array_Should_Return_Empty_String()
+        public void StringCollectionToMultiLine_Array_With_Null_Array_Should_Return_Empty_String()
         {
             // Arrange
             string[]? array = null;
@@ -348,7 +348,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase024a_StringCollectionToMultiLine_Empty_Array_Should_Return_Empty_String()
+        public void StringCollectionToMultiLine_Empty_Array_Should_Return_Empty_String()
         {
             // Arrange
             string[] array = [];
@@ -361,7 +361,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase024b_StringCollectionToMultiLine_Array_With_Multiple_Items_Should_Return_Joined_String()
+        public void StringCollectionToMultiLine_Array_With_Multiple_Items_Should_Return_Joined_String()
         {
             // Arrange
             string[] array = ["item1", "item2", "item3"];
@@ -374,7 +374,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase024c_StringCollectionToMultiLine_Array_With_Single_Item_Should_Return_Item()
+        public void StringCollectionToMultiLine_Array_With_Single_Item_Should_Return_Item()
         {
             // Arrange
             string[] array = ["single item"];
@@ -391,7 +391,7 @@ namespace AnBo.Test
         #region Join Method Tests
 
         [Fact]
-        public void TestCase025_Join_With_Null_Separator_Should_Throw_ArgNullException()
+        public void Join_With_Null_Separator_Should_Throw_ArgNullException()
         {
             // Arrange
             string? separator = null;
@@ -403,7 +403,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase026_Join_With_Valid_Items_Should_Return_Joined_String()
+        public void Join_With_Valid_Items_Should_Return_Joined_String()
         {
             // Arrange
             string separator = ", ";
@@ -417,7 +417,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase027_Join_With_Empty_Items_Should_Return_Empty_String()
+        public void Join_With_Empty_Items_Should_Return_Empty_String()
         {
             // Arrange
             string separator = ", ";
@@ -431,7 +431,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase028_Join_With_IEnumerable_And_Null_Items_Should_Throw_ArgNullException()
+        public void Join_With_IEnumerable_And_Null_Items_Should_Throw_ArgNullException()
         {
             // Arrange
             string separator = ", ";
@@ -443,7 +443,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase029_Join_With_IEnumerable_And_Converter_Should_Use_Converter()
+        public void Join_With_IEnumerable_And_Converter_Should_Use_Converter()
         {
             // Arrange
             string separator = " | ";
@@ -458,7 +458,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase030_Join_With_Null_Converter_Should_Use_Default_ToString()
+        public void Join_With_Null_Converter_Should_Use_Default_ToString()
         {
             // Arrange
             string separator = "-";
@@ -476,7 +476,7 @@ namespace AnBo.Test
         #region Byte Array Conversion Method Tests
 
         [Fact]
-        public void TestCase031_GetBytesFromString_With_Null_String_Should_Return_Empty_Array()
+        public void GetBytesFromString_With_Null_String_Should_Return_Empty_Array()
         {
             // Arrange
             string? str = null;
@@ -490,7 +490,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase032_GetBytesFromString_With_Empty_String_Should_Return_Empty_Array()
+        public void GetBytesFromString_With_Empty_String_Should_Return_Empty_Array()
         {
             // Arrange
             string str = string.Empty;
@@ -504,7 +504,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase033_GetBytesFromString_With_Valid_String_Should_Return_Byte_Array()
+        public void GetBytesFromString_With_Valid_String_Should_Return_Byte_Array()
         {
             // Arrange
             string str = "Hello";
@@ -518,7 +518,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase034_GetStringFromBytes_With_Null_Array_Should_Throw_ArgNullException()
+        public void GetStringFromBytes_With_Null_Array_Should_Throw_ArgNullException()
         {
             // Arrange
             byte[]? data = null;
@@ -529,7 +529,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase035_GetStringFromBytes_With_Valid_Array_Should_Return_String()
+        public void GetStringFromBytes_With_Valid_Array_Should_Return_String()
         {
             // Arrange
             string original = "Test String";
@@ -543,7 +543,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase036_GetStringFromBytes_With_Empty_Array_Should_Return_Empty_String()
+        public void GetStringFromBytes_With_Empty_Array_Should_Return_Empty_String()
         {
             // Arrange
             byte[] data = { };
@@ -560,7 +560,7 @@ namespace AnBo.Test
         #region Number Formatting Method Tests
 
         [Fact]
-        public void TestCase037_PadIntegerZerosLeft_Should_Pad_With_Zeros()
+        public void PadIntegerZerosLeft_Should_Pad_With_Zeros()
         {
             // Arrange
             int value = 42;
@@ -574,7 +574,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase038_PadIntegerZerosLeft_With_Length_Less_Than_Value_Length_Should_Return_Value_String()
+        public void PadIntegerZerosLeft_With_Length_Less_Than_Value_Length_Should_Return_Value_String()
         {
             // Arrange
             int value = 12345;
@@ -588,7 +588,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase039_PadIntegerZerosLeft_With_Zero_Length_Should_Return_Single_Character()
+        public void PadIntegerZerosLeft_With_Zero_Length_Should_Return_Single_Character()
         {
             // Arrange
             int value = 5;
@@ -602,7 +602,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase040_PadIntegerLeft_Should_Pad_With_Specified_Character()
+        public void PadIntegerLeft_Should_Pad_With_Specified_Character()
         {
             // Arrange
             int value = 42;
@@ -617,7 +617,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase041_PadIntegerLeft_With_Default_Padding_Should_Use_Space()
+        public void PadIntegerLeft_With_Default_Padding_Should_Use_Space()
         {
             // Arrange
             int value = 123;
@@ -631,7 +631,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase042_PadIntegerRight_Should_Pad_With_Specified_Character()
+        public void PadIntegerRight_Should_Pad_With_Specified_Character()
         {
             // Arrange
             int value = 42;
@@ -646,7 +646,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase043_ToStringWithLeading_Should_Format_Based_On_Max_Value()
+        public void ToStringWithLeading_Should_Format_Based_On_Max_Value()
         {
             // Arrange
             int value = 5;
@@ -660,7 +660,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase044_ToStringWithLeading_With_Value_Greater_Than_Max_Should_Return_Value_String()
+        public void ToStringWithLeading_With_Value_Greater_Than_Max_Should_Return_Value_String()
         {
             // Arrange
             int value = 2000;
@@ -674,7 +674,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase045_ToStringWithLeading_With_Custom_Culture_Should_Use_Culture()
+        public void ToStringWithLeading_With_Custom_Culture_Should_Use_Culture()
         {
             // Arrange
             int value = 123;
@@ -693,7 +693,7 @@ namespace AnBo.Test
         #region Character Removal Method Tests
 
         [Fact]
-        public void TestCase046_RemoveCharacters_With_Null_String_Should_Return_Empty_String()
+        public void RemoveCharacters_With_Null_String_Should_Return_Empty_String()
         {
             // Arrange
             string? str = null;
@@ -707,7 +707,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase047_RemoveCharacters_With_Empty_String_Should_Return_Empty_String()
+        public void RemoveCharacters_With_Empty_String_Should_Return_Empty_String()
         {
             // Arrange
             string str = string.Empty;
@@ -721,7 +721,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase048_RemoveCharacters_With_Valid_String_Should_Remove_Specified_Characters()
+        public void RemoveCharacters_With_Valid_String_Should_Remove_Specified_Characters()
         {
             // Arrange
             string str = "hello world";
@@ -735,7 +735,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase049_RemoveCharacters_With_No_Characters_To_Remove_Should_Return_Original_String()
+        public void RemoveCharacters_With_No_Characters_To_Remove_Should_Return_Original_String()
         {
             // Arrange
             string str = "hello world";
@@ -749,7 +749,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase050_RemoveCharacters_With_Characters_Not_In_String_Should_Return_Original_String()
+        public void RemoveCharacters_With_Characters_Not_In_String_Should_Return_Original_String()
         {
             // Arrange
             string str = "hello";
@@ -763,7 +763,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase051_RemoveCharactersInverse_With_Null_String_Should_Return_Empty_String()
+        public void RemoveCharactersInverse_With_Null_String_Should_Return_Empty_String()
         {
             // Arrange
             string? str = null;
@@ -777,7 +777,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase052_RemoveCharactersInverse_With_Valid_String_Should_Keep_Only_Specified_Characters()
+        public void RemoveCharactersInverse_With_Valid_String_Should_Keep_Only_Specified_Characters()
         {
             // Arrange
             string str = "hello world 123";
@@ -791,7 +791,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase053_RemoveCharactersInverse_With_No_Characters_To_Keep_Should_Return_Empty_String()
+        public void RemoveCharactersInverse_With_No_Characters_To_Keep_Should_Return_Empty_String()
         {
             // Arrange
             string str = "hello world";
@@ -805,7 +805,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase054_RemoveCharactersInverse_With_Characters_Not_In_String_Should_Return_Empty_String()
+        public void RemoveCharactersInverse_With_Characters_Not_In_String_Should_Return_Empty_String()
         {
             // Arrange
             string str = "hello";
@@ -823,7 +823,7 @@ namespace AnBo.Test
         #region Random String Generation Method Tests
 
         [Fact]
-        public void TestCase055_RandomString_With_Zero_Size_Should_Return_Empty_String()
+        public void RandomString_With_Zero_Size_Should_Return_Empty_String()
         {
             // Act
             var result = StringHelper.RandomString(0);
@@ -833,7 +833,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase056_RandomString_With_Positive_Size_Should_Return_String_Of_Correct_Length()
+        public void RandomString_With_Positive_Size_Should_Return_String_Of_Correct_Length()
         {
             // Arrange
             int size = 10;
@@ -847,7 +847,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase057_RandomString_With_LowerCase_True_Should_Return_Lowercase_String()
+        public void RandomString_With_LowerCase_True_Should_Return_Lowercase_String()
         {
             // Arrange
             int size = 100;
@@ -861,7 +861,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase058_RandomString_With_LowerCase_False_Should_Return_Mixed_Case_String()
+        public void RandomString_With_LowerCase_False_Should_Return_Mixed_Case_String()
         {
             // Arrange
             int size = 100;
@@ -875,7 +875,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase059_RandomString_With_Negative_Size_Should_Throw_ArgOutOfRangeException()
+        public void RandomString_With_Negative_Size_Should_Throw_ArgOutOfRangeException()
         {
             // Arrange
             int size = -1;
@@ -886,7 +886,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase060_RandomString_With_Size_Too_Large_Should_Throw_ArgOutOfRangeException()
+        public void RandomString_With_Size_Too_Large_Should_Throw_ArgOutOfRangeException()
         {
             // Arrange
             int size = 5000; // Greater than 4096
@@ -897,7 +897,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase061_RandomString_Multiple_Calls_Should_Return_Different_Strings()
+        public void RandomString_Multiple_Calls_Should_Return_Different_Strings()
         {
             // Arrange
             int size = 20;
@@ -915,7 +915,7 @@ namespace AnBo.Test
         #region CRC32 Calculation Method Tests
 
         [Fact]
-        public void TestCase062_CalculateCrc32_With_Null_String_Should_Return_Zero()
+        public void CalculateCrc32_With_Null_String_Should_Return_Zero()
         {
             // Arrange
             string? str = null;
@@ -928,7 +928,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase063_CalculateCrc32_With_Empty_String_Should_Return_Zero()
+        public void CalculateCrc32_With_Empty_String_Should_Return_Zero()
         {
             // Arrange
             string str = string.Empty;
@@ -941,7 +941,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase064_CalculateCrc32_With_Valid_String_Should_Return_Non_Zero()
+        public void CalculateCrc32_With_Valid_String_Should_Return_Non_Zero()
         {
             // Arrange
             string str = "Hello World";
@@ -954,7 +954,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase065_CalculateCrc32_With_Same_String_Should_Return_Same_Value()
+        public void CalculateCrc32_With_Same_String_Should_Return_Same_Value()
         {
             // Arrange
             string str = "test string";
@@ -968,7 +968,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase066_CalculateCrc32_With_Different_Strings_Should_Return_Different_Values()
+        public void CalculateCrc32_With_Different_Strings_Should_Return_Different_Values()
         {
             // Arrange
             string str1 = "string1";
@@ -987,7 +987,7 @@ namespace AnBo.Test
         #region HTML Utilities Method Tests
 
         [Fact]
-        public void TestCase067_ReplaceNewLineWithHtmlBr_With_Null_String_Should_Return_Empty_String()
+        public void ReplaceNewLineWithHtmlBr_With_Null_String_Should_Return_Empty_String()
         {
             // Arrange
             string? text = null;
@@ -1000,7 +1000,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase068_ReplaceNewLineWithHtmlBr_With_Empty_String_Should_Return_Empty_String()
+        public void ReplaceNewLineWithHtmlBr_With_Empty_String_Should_Return_Empty_String()
         {
             // Arrange
             string text = string.Empty;
@@ -1013,7 +1013,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase069_ReplaceNewLineWithHtmlBr_With_CRLF_Should_Replace_With_Br()
+        public void ReplaceNewLineWithHtmlBr_With_CRLF_Should_Replace_With_Br()
         {
             // Arrange
             string text = "line1\r\nline2";
@@ -1026,7 +1026,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase070_ReplaceNewLineWithHtmlBr_With_LF_Should_Replace_With_Br()
+        public void ReplaceNewLineWithHtmlBr_With_LF_Should_Replace_With_Br()
         {
             // Arrange
             string text = "line1\nline2";
@@ -1039,7 +1039,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase071_ReplaceNewLineWithHtmlBr_With_Multiple_NewLines_Should_Replace_All()
+        public void ReplaceNewLineWithHtmlBr_With_Multiple_NewLines_Should_Replace_All()
         {
             // Arrange
             string text = "line1\r\nline2\nline3\r\nline4";
@@ -1056,7 +1056,7 @@ namespace AnBo.Test
         #region String Splitting Method Tests
 
         [Fact]
-        public void TestCase072_SplitOn_With_Null_String_Should_Return_Two_Empty_Strings()
+        public void SplitOn_With_Null_String_Should_Return_Two_Empty_Strings()
         {
             // Arrange
             string? str = null;
@@ -1073,7 +1073,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase073_SplitOn_With_Empty_String_Should_Return_Two_Empty_Strings()
+        public void SplitOn_With_Empty_String_Should_Return_Two_Empty_Strings()
         {
             // Arrange
             string str = string.Empty;
@@ -1090,7 +1090,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase074_SplitOn_With_Valid_String_And_Include_Index_True_Should_Split_Correctly()
+        public void SplitOn_With_Valid_String_And_Include_Index_True_Should_Split_Correctly()
         {
             // Arrange
             string str = "Hello World";
@@ -1107,7 +1107,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase075_SplitOn_With_Valid_String_And_Include_Index_False_Should_Split_Correctly()
+        public void SplitOn_With_Valid_String_And_Include_Index_False_Should_Split_Correctly()
         {
             // Arrange
             string str = "Hello World";
@@ -1124,7 +1124,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase076_SplitOn_With_Index_Out_Of_Range_Should_Return_Original_And_Empty()
+        public void SplitOn_With_Index_Out_Of_Range_Should_Return_Original_And_Empty()
         {
             // Arrange
             string str = "Hello";
@@ -1141,7 +1141,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase077_SplitOn_With_Negative_Index_Should_Return_Original_And_Empty()
+        public void SplitOn_With_Negative_Index_Should_Return_Original_And_Empty()
         {
             // Arrange
             string str = "Hello";
@@ -1158,7 +1158,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase078_SquareChunk_With_Null_String_Should_Return_Single_Empty_String()
+        public void SquareChunk_With_Null_String_Should_Return_Single_Empty_String()
         {
             // Arrange
             string? value = null;
@@ -1173,7 +1173,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase079_SquareChunk_With_Empty_String_Should_Return_Single_Empty_String()
+        public void SquareChunk_With_Empty_String_Should_Return_Single_Empty_String()
         {
             // Arrange
             string value = string.Empty;
@@ -1188,7 +1188,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase080_SquareChunk_With_Short_String_Should_Return_Single_Chunk()
+        public void SquareChunk_With_Short_String_Should_Return_Single_Chunk()
         {
             // Arrange
             string value = "short";
@@ -1203,7 +1203,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase081_SquareChunk_With_Long_String_And_Separators_Should_Return_Multiple_Chunks()
+        public void SquareChunk_With_Long_String_And_Separators_Should_Return_Multiple_Chunks()
         {
             // Arrange
             string value = "This is a long string with multiple words";
@@ -1218,7 +1218,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase082_SquareChunk_With_Null_Separators_Should_Handle_Gracefully()
+        public void SquareChunk_With_Null_Separators_Should_Handle_Gracefully()
         {
             // Arrange
             string value = "test string";
@@ -1236,7 +1236,7 @@ namespace AnBo.Test
         #region Static Members Tests
 
         [Fact]
-        public void TestCase083_DefaultQuoteSensitiveChars_Should_Contain_Quote_Character()
+        public void DefaultQuoteSensitiveChars_Should_Contain_Quote_Character()
         {
             // Act & Assert
             StringHelper.DefaultQuoteSensitiveChars.Should().Contain('"');
@@ -1248,7 +1248,7 @@ namespace AnBo.Test
         #region JoinParams Method Tests
 
         [Fact]
-        public void TestCase091_JoinParams_With_Null_Separator_Should_Throw_ArgNullException()
+        public void JoinParams_With_Null_Separator_Should_Throw_ArgNullException()
         {
             // Arrange
             string? separator = null;
@@ -1260,7 +1260,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase092_JoinParams_With_Valid_Items_Should_Return_Joined_String()
+        public void JoinParams_With_Valid_Items_Should_Return_Joined_String()
         {
             // Arrange
             string separator = ", ";
@@ -1273,7 +1273,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase093_JoinParams_With_No_Items_Should_Return_Empty_String()
+        public void JoinParams_With_No_Items_Should_Return_Empty_String()
         {
             // Arrange
             string separator = ", ";
@@ -1286,7 +1286,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase094_JoinParams_With_Single_Item_Should_Return_Item_String()
+        public void JoinParams_With_Single_Item_Should_Return_Item_String()
         {
             // Arrange
             string separator = ", ";
@@ -1299,7 +1299,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase095_JoinParams_With_Null_Items_Should_Handle_Gracefully()
+        public void JoinParams_With_Null_Items_Should_Handle_Gracefully()
         {
             // Arrange
             string separator = " | ";
@@ -1312,7 +1312,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase096_JoinParams_With_Different_Types_Should_Use_ToString()
+        public void JoinParams_With_Different_Types_Should_Use_ToString()
         {
             // Arrange
             string separator = " - ";
@@ -1329,7 +1329,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase097_JoinParams_With_Empty_Separator_Should_Concatenate_Items()
+        public void JoinParams_With_Empty_Separator_Should_Concatenate_Items()
         {
             // Arrange
             string separator = string.Empty;
@@ -1342,7 +1342,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase098_JoinParams_With_Complex_Objects_Should_Use_ToString()
+        public void JoinParams_With_Complex_Objects_Should_Use_ToString()
         {
             // Arrange
             string separator = " <> ";
@@ -1358,7 +1358,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase099_JoinParams_With_Large_Number_Of_Items_Should_Handle_Efficiently()
+        public void JoinParams_With_Large_Number_Of_Items_Should_Handle_Efficiently()
         {
             // Arrange
             string separator = ", ";
@@ -1374,7 +1374,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase100_JoinParams_With_Whitespace_Separator_Should_Format_Correctly()
+        public void JoinParams_With_Whitespace_Separator_Should_Format_Correctly()
         {
             // Arrange
             string separator = "   ";
@@ -1387,7 +1387,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase101_JoinParams_With_Special_Characters_Should_Handle_Correctly()
+        public void JoinParams_With_Special_Characters_Should_Handle_Correctly()
         {
             // Arrange
             string separator = " | ";
@@ -1403,7 +1403,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase102_JoinParams_Performance_Should_Be_Reasonable()
+        public void JoinParams_Performance_Should_Be_Reasonable()
         {
             // Arrange
             string separator = ",";
@@ -1424,7 +1424,7 @@ namespace AnBo.Test
         #region Edge Cases and Integration Tests
 
         [Fact]
-        public void TestCase084_SafeFormat_With_Complex_Scenario_Should_Handle_Gracefully()
+        public void SafeFormat_With_Complex_Scenario_Should_Handle_Gracefully()
         {
             // Arrange
             string format = "User: {0}, Age: {1}, Date: {2}";
@@ -1440,7 +1440,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase085_Multiple_Character_Operations_Should_Work_Together()
+        public void Multiple_Character_Operations_Should_Work_Together()
         {
             // Arrange
             string original = "Hello World! 123";
@@ -1457,7 +1457,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase086_ByteArray_Roundtrip_Should_Preserve_Original_String()
+        public void ByteArray_Roundtrip_Should_Preserve_Original_String()
         {
             // Arrange
             string original = "Test string with üñíçødé characters";
@@ -1471,7 +1471,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase087_Number_Formatting_With_Different_Values_Should_Work_Consistently()
+        public void Number_Formatting_With_Different_Values_Should_Work_Consistently()
         {
             // Arrange & Act
             var result1 = StringHelper.PadIntegerZerosLeft(1, 3);
@@ -1485,7 +1485,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase088_Join_Methods_Should_Handle_Various_Types()
+        public void Join_Methods_Should_Handle_Various_Types()
         {
             // Arrange
             var stringList = new List<string> { "a", "b", "c" };
@@ -1501,7 +1501,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase089_Random_String_Generation_Should_Be_Consistent_With_Parameters()
+        public void Random_String_Generation_Should_Be_Consistent_With_Parameters()
         {
             // Act
             var lowercase = StringHelper.RandomString(50, true);
@@ -1515,7 +1515,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase090_Class_Structure_Should_Be_Static_And_Partial()
+        public void Class_Structure_Should_Be_Static_And_Partial()
         {
             // Act & Assert
             typeof(StringHelper).IsAbstract.Should().BeTrue();

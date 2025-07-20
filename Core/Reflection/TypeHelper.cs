@@ -117,34 +117,46 @@ namespace AnBo.Core
         /// Disposes the specified obj if the object has implemented <see cref="IDisposable"/>.
         /// </summary>
         /// <param name="obj">The object that should be disposed.</param>
-        public static void DisposeIfNecessary(object? obj)
+        public static void SafeDispose(object? obj)
         {
-            if (obj == null)
-                return;
-
-            if (obj.GetType().IsCOMObject)
-#pragma warning disable CA1416 // Validate platform compatibility
-                Marshal.ReleaseComObject(obj);
-#pragma warning restore CA1416 // Validate platform compatibility
-            else
+            switch (obj)
             {
-                if (obj is IDisposable id)
-                    id.Dispose();
+                case null:
+                    return;
+                case IDisposable disposable:
+                    disposable.Dispose();
+                    break;
+                default:
+                    // Handle COM objects
+                    if (Marshal.IsComObject(obj))
+                    {
+                        try
+                        {
+#pragma warning disable CA1416 // Validate platform compatibility
+                            Marshal.ReleaseComObject(obj);
+#pragma warning restore CA1416 // Validate platform compatibility
+                        }
+                        catch
+                        {
+                            // Silently ignore COM release errors
+                        }
+                    }
+                    break;
             }
         }
 
         /// <summary>
-        /// Disposes the elements of the sequence if the elements implemented <see cref="IDisposable"/>.
+        /// Safely disposes all elements in a sequence that implement <see cref="IDisposable"/>.
         /// </summary>
-        /// <param name="enumerable">The sequence of elements that should be disposed.</param>
-        [DebuggerStepThrough]
-        public static void DisposeElementsIfNecessary(IEnumerable? enumerable)
+        /// <param name="sequence">The sequence containing potentially disposable objects</param>
+        public static void SafeDisposeAll(IEnumerable? sequence)
         {
-            if (enumerable == null)
-                return;
-            IEnumerator iter = enumerable.GetEnumerator();
-            while (iter.MoveNext())
-                DisposeIfNecessary(iter.Current);
+            if (sequence is null) return;
+
+            foreach (var item in sequence)
+            {
+                SafeDispose(item);
+            }
         }
 
         /// <summary>
@@ -152,15 +164,13 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="dict">The dictionary how's values should be disposed.</param>
         [DebuggerStepThrough]
-        public static void DisposeValuesIfNecessary(IDictionary? dict)
+        public static void SafeDisposeAllDictionaryValues(IDictionary? dict)
         {
-            if (dict == null)
-                return;
-            IDictionaryEnumerator iter = dict.GetEnumerator();
-            while (iter.MoveNext())
+            if (dict is null) return;
+
+            foreach (var item in dict.Values)
             {
-                if (iter.Value != null) // Ensure iter.Value is not null before passing it
-                    DisposeIfNecessary(iter.Value);
+                SafeDispose(item);
             }
         }
 

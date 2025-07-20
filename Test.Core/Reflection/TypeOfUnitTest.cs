@@ -8,37 +8,37 @@ namespace AnBo.Test
     public class TypeOfUnitTest
     {
         [Fact]
-        public void TestCase001_Boolean_Property_Should_Return_Bool_Type()
+        public void Boolean_Property_Should_Return_Bool_Type()
         {
             TypeOf.Boolean.Should().Be(typeof(bool));
         }
 
         [Fact]
-        public void TestCase002_Int32_Property_Should_Return_Int_Type()
+        public void Int32_Property_Should_Return_Int_Type()
         {
             TypeOf.Int32.Should().Be(typeof(int));
         }
 
         [Fact]
-        public void TestCase003_Int64_Property_Should_Return_Long_Type()
+        public void Int64_Property_Should_Return_Long_Type()
         {
             TypeOf.Int64.Should().Be(typeof(long));
         }
 
         [Fact]
-        public void TestCase004_Object_Property_Should_Return_Object_Type()
+        public void Object_Property_Should_Return_Object_Type()
         {
             TypeOf.Object.Should().Be(typeof(object));
         }
 
         [Fact]
-        public void TestCase005_String_Property_Should_Return_String_Type()
+        public void String_Property_Should_Return_String_Type()
         {
             TypeOf.String.Should().Be(typeof(string));
         }
 
         [Fact]
-        public void TestCase006_All_Properties_Should_Not_Be_Null()
+        public void All_Properties_Should_Not_Be_Null()
         {
             TypeOf.Boolean.Should().NotBeNull();
             TypeOf.Int32.Should().NotBeNull();
@@ -48,7 +48,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase007_Properties_Should_Have_Correct_Names()
+        public void Properties_Should_Have_Correct_Names()
         {
             TypeOf.Boolean.Name.Should().Be("Boolean");
             TypeOf.Int32.Name.Should().Be("Int32");
@@ -58,7 +58,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase008_Properties_Should_Have_Correct_Full_Names()
+        public void Properties_Should_Have_Correct_Full_Names()
         {
             TypeOf.Boolean.FullName.Should().Be("System.Boolean");
             TypeOf.Int32.FullName.Should().Be("System.Int32");
@@ -68,7 +68,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase009_Properties_Should_Be_Value_Types_Or_Reference_Types_As_Expected()
+        public void Properties_Should_Be_Value_Types_Or_Reference_Types_As_Expected()
         {
             TypeOf.Boolean.IsValueType.Should().BeTrue();
             TypeOf.Int32.IsValueType.Should().BeTrue();
@@ -78,7 +78,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase010_Properties_Should_Have_Consistent_Reference_Identity()
+        public void Properties_Should_Have_Consistent_Reference_Identity()
         {
             // Verify that multiple accesses return the same Type instance
             TypeOf.Boolean.Should().BeSameAs(TypeOf.Boolean);

@@ -19,7 +19,7 @@ namespace AnBo.Test
         #region QuoteAssemblyQualifiedNameIfNeeded Tests
 
         [Fact]
-        public void TestCase001_QuoteAssemblyQualifiedNameIfNeeded_With_Null_Type_Should_Throw_ArgumentNullException()
+        public void QuoteAssemblyQualifiedNameIfNeeded_With_Null_Type_Should_Throw_ArgumentNullException()
         {
             // Arrange
             Type? nullType = null;
@@ -30,7 +30,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase002_QuoteAssemblyQualifiedNameIfNeeded_With_Simple_Type_Should_Return_Unquoted_Name()
+        public void QuoteAssemblyQualifiedNameIfNeeded_With_Simple_Type_Should_Return_Unquoted_Name()
         {
             // Arrange
             var type = typeof(string);
@@ -45,7 +45,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase003_QuoteAssemblyQualifiedNameIfNeeded_With_Generic_Type_Should_Handle_Correctly()
+        public void QuoteAssemblyQualifiedNameIfNeeded_With_Generic_Type_Should_Handle_Correctly()
         {
             // Arrange
             var type = typeof(List<string>);
@@ -62,7 +62,7 @@ namespace AnBo.Test
         #region GetTypeName Tests
 
         [Fact]
-        public void TestCase004_GetTypeName_With_Null_Type_Should_Throw_ArgumentNullException()
+        public void GetTypeName_With_Null_Type_Should_Throw_ArgumentNullException()
         {
             // Arrange
             Type? nullType = null;
@@ -73,7 +73,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase005_GetTypeName_With_Simple_Type_Should_Return_Simple_Name()
+        public void GetTypeName_With_Simple_Type_Should_Return_Simple_Name()
         {
             // Arrange
             var type = typeof(string);
@@ -86,7 +86,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase006_GetTypeName_With_Generic_Type_Should_Return_Friendly_Name()
+        public void GetTypeName_With_Generic_Type_Should_Return_Friendly_Name()
         {
             // Arrange
             var type = typeof(List<string>);
@@ -99,7 +99,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase007_GetTypeName_With_Multiple_Generic_Arguments_Should_Return_Friendly_Name()
+        public void GetTypeName_With_Multiple_Generic_Arguments_Should_Return_Friendly_Name()
         {
             // Arrange
             var type = typeof(Dictionary<string, int>);
@@ -112,7 +112,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase008_GetTypeName_With_Nested_Generic_Type_Should_Return_Friendly_Name()
+        public void GetTypeName_With_Nested_Generic_Type_Should_Return_Friendly_Name()
         {
             // Arrange
             var type = typeof(List<Dictionary<string, int>>);
@@ -129,7 +129,7 @@ namespace AnBo.Test
         #region GetAnyField Tests
 
         [Fact]
-        public void TestCase009_GetAnyField_With_Null_Type_Should_Throw_ArgumentNullException()
+        public void GetAnyField_With_Null_Type_Should_Throw_ArgumentNullException()
         {
             // Arrange
             Type? nullType = null;
@@ -140,7 +140,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase010_GetAnyField_With_Null_FieldName_Should_Throw_ArgumentNullException()
+        public void GetAnyField_With_Null_FieldName_Should_Throw_ArgumentNullException()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -151,7 +151,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase011_GetAnyField_With_Empty_FieldName_Should_Throw_ArgumentException()
+        public void GetAnyField_With_Empty_FieldName_Should_Throw_ArgumentException()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -162,7 +162,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase012_GetAnyField_With_Existing_Public_Field_Should_Return_FieldInfo()
+        public void GetAnyField_With_Existing_Public_Field_Should_Return_FieldInfo()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -177,7 +177,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase013_GetAnyField_With_Existing_Private_Field_Should_Return_FieldInfo()
+        public void GetAnyField_With_Existing_Private_Field_Should_Return_FieldInfo()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -191,7 +191,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase014_GetAnyField_With_Non_Existing_Field_Should_Return_Null()
+        public void GetAnyField_With_Non_Existing_Field_Should_Return_Null()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -204,7 +204,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase015_GetAnyField_With_Case_Insensitive_Match_Should_Return_FieldInfo()
+        public void GetAnyField_With_Case_Insensitive_Match_Should_Return_FieldInfo()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -218,7 +218,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase016_GetAnyField_With_Inherited_Field_Should_Return_FieldInfo()
+        public void GetAnyField_With_Inherited_Field_Should_Return_FieldInfo()
         {
             // Arrange
             var type = typeof(DerivedTestClass);
@@ -236,7 +236,7 @@ namespace AnBo.Test
         #region GetAllFields Tests
 
         [Fact]
-        public void TestCase017_GetAllFields_With_Null_Type_Should_Throw_ArgumentNullException()
+        public void GetAllFields_With_Null_Type_Should_Throw_ArgumentNullException()
         {
             // Arrange
             Type? nullType = null;
@@ -247,7 +247,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase018_GetAllFields_With_Simple_Class_Should_Return_All_Fields()
+        public void GetAllFields_With_Simple_Class_Should_Return_All_Fields()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -263,7 +263,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase019_GetAllFields_With_Derived_Class_Should_Return_All_Fields_Including_Base()
+        public void GetAllFields_With_Derived_Class_Should_Return_All_Fields_Including_Base()
         {
             // Arrange
             var type = typeof(DerivedTestClass);
@@ -278,7 +278,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase020_GetAllFields_With_Object_Type_Should_Return_Empty()
+        public void GetAllFields_With_Object_Type_Should_Return_Empty()
         {
             // Arrange
             var type = typeof(object);
@@ -295,7 +295,7 @@ namespace AnBo.Test
         #region ImplementsInterface Tests
 
         [Fact]
-        public void TestCase021_ImplementsInterface_With_Null_Type_Should_Throw_ArgumentNullException()
+        public void ImplementsInterface_With_Null_Type_Should_Throw_ArgumentNullException()
         {
             // Arrange
             Type? nullType = null;
@@ -306,7 +306,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase022_ImplementsInterface_With_Type_Implementing_Interface_Should_Return_True()
+        public void ImplementsInterface_With_Type_Implementing_Interface_Should_Return_True()
         {
             // Arrange
             var type = typeof(TestClassImplementingIDisposable);
@@ -319,7 +319,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase023_ImplementsInterface_With_Type_Not_Implementing_Interface_Should_Return_False()
+        public void ImplementsInterface_With_Type_Not_Implementing_Interface_Should_Return_False()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -332,7 +332,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase024_ImplementsInterface_With_Interface_Type_Should_Return_True()
+        public void ImplementsInterface_With_Interface_Type_Should_Return_True()
         {
             // Arrange
             var type = typeof(IDisposable);
@@ -345,7 +345,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase025_ImplementsInterface_With_Generic_Interface_Should_Return_True()
+        public void ImplementsInterface_With_Generic_Interface_Should_Return_True()
         {
             // Arrange
             var type = typeof(List<string>);
@@ -362,7 +362,7 @@ namespace AnBo.Test
         #region HasRequiredMembers Tests
 
         [Fact]
-        public void TestCase026_HasRequiredMembers_With_Null_Type_Should_Return_False()
+        public void HasRequiredMembers_With_Null_Type_Should_Return_False()
         {
             // Arrange
             Type? nullType = null;
@@ -373,7 +373,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase027_HasRequiredMembers_With_Type_Having_Required_Members_Should_Return_True()
+        public void HasRequiredMembers_With_Type_Having_Required_Members_Should_Return_True()
         {
             // Arrange
             var type = typeof(TestClassWithRequiredMembers);
@@ -386,7 +386,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase028_HasRequiredMembers_With_Type_Without_Required_Members_Should_Return_False()
+        public void HasRequiredMembers_With_Type_Without_Required_Members_Should_Return_False()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -403,7 +403,7 @@ namespace AnBo.Test
         #region IsNullableType Tests
 
         [Fact]
-        public void TestCase029_IsNullableType_With_Nullable_Int_Should_Return_True()
+        public void IsNullableType_With_Nullable_Int_Should_Return_True()
         {
             // Arrange
             var type = typeof(int?);
@@ -416,7 +416,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase030_IsNullableType_With_Nullable_DateTime_Should_Return_True()
+        public void IsNullableType_With_Nullable_DateTime_Should_Return_True()
         {
             // Arrange
             var type = typeof(DateTime?);
@@ -429,7 +429,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase031_IsNullableType_With_Non_Nullable_Int_Should_Return_False()
+        public void IsNullableType_With_Non_Nullable_Int_Should_Return_False()
         {
             // Arrange
             var type = typeof(int);
@@ -442,7 +442,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase032_IsNullableType_With_Reference_Type_Should_Return_False()
+        public void IsNullableType_With_Reference_Type_Should_Return_False()
         {
             // Arrange
             var type = typeof(string);
@@ -455,7 +455,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase033_IsNullableType_With_Generic_List_Should_Return_False()
+        public void IsNullableType_With_Generic_List_Should_Return_False()
         {
             // Arrange
             var type = typeof(List<int>);
@@ -472,7 +472,7 @@ namespace AnBo.Test
         #region IsOpenGenericType Tests
 
         [Fact]
-        public void TestCase034_IsOpenGenericType_With_Null_Type_Should_Return_False()
+        public void IsOpenGenericType_With_Null_Type_Should_Return_False()
         {
             // Arrange
             Type? nullType = null;
@@ -483,7 +483,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase035_IsOpenGenericType_With_Open_Generic_List_Should_Return_True()
+        public void IsOpenGenericType_With_Open_Generic_List_Should_Return_True()
         {
             // Arrange
             var type = typeof(List<>);
@@ -496,7 +496,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase036_IsOpenGenericType_With_Closed_Generic_List_Should_Return_False()
+        public void IsOpenGenericType_With_Closed_Generic_List_Should_Return_False()
         {
             // Arrange
             var type = typeof(List<int>);
@@ -509,7 +509,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase037_IsOpenGenericType_With_Non_Generic_Type_Should_Return_False()
+        public void IsOpenGenericType_With_Non_Generic_Type_Should_Return_False()
         {
             // Arrange
             var type = typeof(string);
@@ -522,7 +522,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase038_IsOpenGenericType_With_Open_Generic_Dictionary_Should_Return_True()
+        public void IsOpenGenericType_With_Open_Generic_Dictionary_Should_Return_True()
         {
             // Arrange
             var type = typeof(Dictionary<,>);
@@ -539,7 +539,7 @@ namespace AnBo.Test
         #region GetDefaultValue Tests
 
         [Fact]
-        public void TestCase039_GetDefaultValue_With_Reference_Type_Should_Return_Null()
+        public void GetDefaultValue_With_Reference_Type_Should_Return_Null()
         {
             // Arrange
             var type = typeof(string);
@@ -552,7 +552,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase040_GetDefaultValue_With_Value_Type_Int_Should_Return_Zero()
+        public void GetDefaultValue_With_Value_Type_Int_Should_Return_Zero()
         {
             // Arrange
             var type = typeof(int);
@@ -565,7 +565,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase041_GetDefaultValue_With_Value_Type_Bool_Should_Return_False()
+        public void GetDefaultValue_With_Value_Type_Bool_Should_Return_False()
         {
             // Arrange
             var type = typeof(bool);
@@ -578,7 +578,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase042_GetDefaultValue_With_DateTime_Should_Return_MinValue()
+        public void GetDefaultValue_With_DateTime_Should_Return_MinValue()
         {
             // Arrange
             var type = typeof(DateTime);
@@ -591,7 +591,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase043_GetDefaultValue_With_Nullable_Type_Should_Return_Null()
+        public void GetDefaultValue_With_Nullable_Type_Should_Return_Null()
         {
             // Arrange
             var type = typeof(int?);
@@ -608,7 +608,7 @@ namespace AnBo.Test
         #region IsDefaultValue Tests
 
         [Fact]
-        public void TestCase044_IsDefaultValue_With_Null_Value_Should_Return_True()
+        public void IsDefaultValue_With_Null_Value_Should_Return_True()
         {
             // Arrange
             var type = typeof(string);
@@ -622,7 +622,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase045_IsDefaultValue_With_Default_Int_Should_Return_True()
+        public void IsDefaultValue_With_Default_Int_Should_Return_True()
         {
             // Arrange
             var type = typeof(int);
@@ -636,7 +636,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase046_IsDefaultValue_With_Non_Default_Int_Should_Return_False()
+        public void IsDefaultValue_With_Non_Default_Int_Should_Return_False()
         {
             // Arrange
             var type = typeof(int);
@@ -650,7 +650,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase047_IsDefaultValue_With_Default_Bool_Should_Return_True()
+        public void IsDefaultValue_With_Default_Bool_Should_Return_True()
         {
             // Arrange
             var type = typeof(bool);
@@ -664,7 +664,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase048_IsDefaultValue_With_Non_Default_Bool_Should_Return_False()
+        public void IsDefaultValue_With_Non_Default_Bool_Should_Return_False()
         {
             // Arrange
             var type = typeof(bool);
@@ -678,7 +678,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase049_IsDefaultValue_With_Non_Null_String_Should_Return_False()
+        public void IsDefaultValue_With_Non_Null_String_Should_Return_False()
         {
             // Arrange
             var type = typeof(string);
@@ -696,7 +696,7 @@ namespace AnBo.Test
         #region IsDefaultValueOrEmptyString Tests
 
         [Fact]
-        public void TestCase050_IsDefaultValueOrEmptyString_With_Null_Should_Return_True()
+        public void IsDefaultValueOrEmptyString_With_Null_Should_Return_True()
         {
             // Arrange
             var type = typeof(string);
@@ -710,7 +710,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase051_IsDefaultValueOrEmptyString_With_Empty_String_Should_Return_True()
+        public void IsDefaultValueOrEmptyString_With_Empty_String_Should_Return_True()
         {
             // Arrange
             var type = typeof(string);
@@ -724,7 +724,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase052_IsDefaultValueOrEmptyString_With_Non_Empty_String_Should_Return_False()
+        public void IsDefaultValueOrEmptyString_With_Non_Empty_String_Should_Return_False()
         {
             // Arrange
             var type = typeof(string);
@@ -738,7 +738,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase053_IsDefaultValueOrEmptyString_With_Default_Value_Type_Should_Return_True()
+        public void IsDefaultValueOrEmptyString_With_Default_Value_Type_Should_Return_True()
         {
             // Arrange
             var type = typeof(int);
@@ -752,7 +752,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase054_IsDefaultValueOrEmptyString_With_Non_Default_Value_Type_Should_Return_False()
+        public void IsDefaultValueOrEmptyString_With_Non_Default_Value_Type_Should_Return_False()
         {
             // Arrange
             var type = typeof(int);
@@ -770,7 +770,7 @@ namespace AnBo.Test
         #region IsJsonSerializable Tests
 
         [Fact]
-        public void TestCase055_IsJsonSerializable_With_Simple_Value_Type_Should_Return_True()
+        public void IsJsonSerializable_With_Simple_Value_Type_Should_Return_True()
         {
             // Arrange
             var type = typeof(int);
@@ -783,7 +783,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase056_IsJsonSerializable_With_String_Type_Should_Return_True()
+        public void IsJsonSerializable_With_String_Type_Should_Return_True()
         {
             // Arrange
             var type = typeof(string);
@@ -796,7 +796,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase057_IsJsonSerializable_With_Class_Having_Parameterless_Constructor_Should_Return_True()
+        public void IsJsonSerializable_With_Class_Having_Parameterless_Constructor_Should_Return_True()
         {
             // Arrange
             var type = typeof(TestClassWithParameterlessConstructor);
@@ -809,7 +809,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase058_IsJsonSerializable_With_Class_Without_Parameterless_Constructor_Should_Return_False()
+        public void IsJsonSerializable_With_Class_Without_Parameterless_Constructor_Should_Return_False()
         {
             // Arrange
             var type = typeof(TestClassWithoutParameterlessConstructor);
@@ -822,7 +822,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase059_IsJsonSerializable_With_Pointer_Type_Should_Return_False()
+        public void IsJsonSerializable_With_Pointer_Type_Should_Return_False()
         {
             // Arrange
             var type = typeof(int).MakePointerType();
@@ -835,7 +835,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase060_IsJsonSerializable_With_ByRef_Type_Should_Return_False()
+        public void IsJsonSerializable_With_ByRef_Type_Should_Return_False()
         {
             // Arrange
             var type = typeof(int).MakeByRefType();
@@ -848,7 +848,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase061_IsJsonSerializable_With_Nullable_Int32_Type_Should_Return_True()
+        public void IsJsonSerializable_With_Nullable_Int32_Type_Should_Return_True()
         {
             // Arrange
             var type = typeof(int?);
@@ -861,7 +861,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase062_IsJsonSerializable_With_Int32_Array_Type_Should_Return_True()
+        public void IsJsonSerializable_With_Int32_Array_Type_Should_Return_True()
         {
             // Arrange
             var type = typeof(int[]);
@@ -874,7 +874,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase063_IsJsonSerializable_With_Struct_Type_Should_Return_True()
+        public void IsJsonSerializable_With_Struct_Type_Should_Return_True()
         {
             // Arrange
             var type = typeof(BigInteger);
@@ -891,7 +891,7 @@ namespace AnBo.Test
         #region DeepClone Tests
 
         [Fact]
-        public void TestCase064_DeepClone_With_Null_Should_Return_Null()
+        public void DeepClone_With_Null_Should_Return_Null()
         {
             // Arrange
             string? original = null;
@@ -904,7 +904,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase065_DeepClone_With_Simple_Object_Should_Create_Copy()
+        public void DeepClone_With_Simple_Object_Should_Create_Copy()
         {
             // Arrange
             var original = "test string";
@@ -918,7 +918,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase066_DeepClone_With_Complex_Object_Should_Create_Deep_Copy()
+        public void DeepClone_With_Complex_Object_Should_Create_Deep_Copy()
         {
             // Arrange
             var original = new TestClassForCloning
@@ -941,7 +941,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase067_DeepClone_With_Value_Type_Should_Work()
+        public void DeepClone_With_Value_Type_Should_Work()
         {
             // Arrange
             int original = 42;

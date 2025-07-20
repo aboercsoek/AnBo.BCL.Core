@@ -19,7 +19,7 @@ namespace AnBo.Test
         #region HasAttribute Tests
 
         [Fact]
-        public void TestCase068_HasAttribute_With_Null_Type_Should_Should_Return_False()
+        public void HasAttribute_With_Null_Type_Should_Should_Return_False()
         {
             // Arrange
             Type? nullType = null;
@@ -34,7 +34,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase069_HasAttribute_With_Existing_Attribute_Should_Return_True()
+        public void HasAttribute_With_Existing_Attribute_Should_Return_True()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -49,7 +49,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase070_HasAttribute_With_Non_Existing_Attribute_Should_Return_False()
+        public void HasAttribute_With_Non_Existing_Attribute_Should_Return_False()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -68,7 +68,7 @@ namespace AnBo.Test
         #region TryGetAttribute Tests
 
         [Fact]
-        public void TestCase071_TryGetAttribute_With_Null_Type_Should_Return_False()
+        public void TryGetAttribute_With_Null_Type_Should_Return_False()
         {
             // Arrange
             Type? nullType = null;
@@ -80,7 +80,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase071b_GetAttribute_With_Null_Type_Should_Return_False()
+        public void GetAttribute_With_Null_Type_Should_Return_False()
         {
             // Arrange
             Type? nullType = null;
@@ -92,7 +92,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase072_TryGetAttribute_With_Existing_Attribute_Should_Return_True_And_Attribute()
+        public void TryGetAttribute_With_Existing_Attribute_Should_Return_True_And_Attribute()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -107,7 +107,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase072b_GetAttribute_With_Existing_Attribute_Should_Attribute()
+        public void GetAttribute_With_Existing_Attribute_Should_Attribute()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -121,7 +121,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase073_TryGetAttribute_With_Non_Existing_Attribute_Should_Return_False_And_Null()
+        public void TryGetAttribute_With_Non_Existing_Attribute_Should_Return_False_And_Null()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -135,7 +135,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase073b_GetAttribute_With_Non_Existing_Attribute_Should_Return_Null()
+        public void GetAttribute_With_Non_Existing_Attribute_Should_Return_Null()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -152,7 +152,7 @@ namespace AnBo.Test
         #region GetAllAttributes Tests
 
         [Fact]
-        public void TestCase074_GetAllAttributes_With_Null_Type_Should_Return_Empty_Collection()
+        public void GetAllAttributes_With_Null_Type_Should_Return_Empty_Collection()
         {
             // Arrange
             Type? nullType = null;
@@ -165,7 +165,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase074b_GetAttributes_With_Null_Type_Should_Return_Empty_Collection()
+        public void GetAttributes_With_Null_Type_Should_Return_Empty_Collection()
         {
             // Arrange
             Type? nullType = null;
@@ -178,7 +178,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase075_GetAllAttributes_With_Type_Having_Multiple_Attributes_Should_Return_All()
+        public void GetAllAttributes_With_Type_Having_Multiple_Attributes_Should_Return_All()
         {
             // Arrange
             var type = typeof(TestClassWithMultipleAttributes);
@@ -193,7 +193,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase075b_GetAttributes_With_Type_Having_Multiple_Attributes_Should_Return_Only_One()
+        public void GetAttributes_With_Type_Having_Multiple_Attributes_Should_Return_Only_One()
         {
             // Arrange
             var type = typeof(TestClassWithMultipleAttributes);
@@ -207,7 +207,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase076_GetAllAttributes_With_Type_Having_Single_Attribute_Should_Return_Single()
+        public void GetAllAttributes_With_Type_Having_Single_Attribute_Should_Return_Single()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -221,7 +221,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase076b_GetAttributes_With_Type_Having_Single_Attribute_Should_Return_Single()
+        public void GetAttributes_With_Type_Having_Single_Attribute_Should_Return_Single()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -235,7 +235,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase077_GetAllAttributes_With_Type_Having_No_Attribute_Should_Return_Empty()
+        public void GetAllAttributes_With_Type_Having_No_Attribute_Should_Return_Empty()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -248,7 +248,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase077b_GetAttributes_With_Type_Having_No_Attribute_Should_Return_Empty()
+        public void GetAttributes_With_Type_Having_No_Attribute_Should_Return_Empty()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -261,7 +261,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase078_GetAllAttributes_With_Inherit_False_Should_Not_Include_Base_Attributes()
+        public void GetAllAttributes_With_Inherit_False_Should_Not_Include_Base_Attributes()
         {
             // Arrange
             var type = typeof(DerivedTestClass);
@@ -274,7 +274,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase079_GetAllAttributes_With_Inherit_True_Should_Include_Base_Attributes()
+        public void GetAllAttributes_With_Inherit_True_Should_Include_Base_Attributes()
         {
             // Arrange
             var type = typeof(DerivedTestClass);
@@ -292,7 +292,7 @@ namespace AnBo.Test
         #region FindAttribute Tests
 
         [Fact]
-        public void TestCase080_FindAttribute_With_Null_Type_Should_Return_Null()
+        public void FindAttribute_With_Null_Type_Should_Return_Null()
         {
             // Arrange
             Type? nullType = null;
@@ -305,7 +305,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase081_FindAttribute_With_Matching_Predicate_Should_Return_Attribute()
+        public void FindAttribute_With_Matching_Predicate_Should_Return_Attribute()
         {
             // Arrange
             var type = typeof(TestClassWithMultipleAttributes);
@@ -319,7 +319,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase082_FindAttribute_With_Non_Matching_Predicate_Should_Return_Null()
+        public void FindAttribute_With_Non_Matching_Predicate_Should_Return_Null()
         {
             // Arrange
             var type = typeof(TestClassWithMultipleAttributes);
@@ -332,7 +332,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase083_FindAttribute_With_Type_Having_No_Attribute_Should_Return_Null()
+        public void FindAttribute_With_Type_Having_No_Attribute_Should_Return_Null()
         {
             // Arrange
             var type = typeof(TestClassWithFields);
@@ -349,7 +349,7 @@ namespace AnBo.Test
         #region HasMemberAttribute Tests
 
         [Fact]
-        public void TestCase084_HasMemberAttribute_With_Null_Type_Should_Return_False()
+        public void HasMemberAttribute_With_Null_Type_Should_Return_False()
         {
             // Arrange
             Type? nullType = null;
@@ -362,7 +362,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase085_HasMemberAttribute_With_Existing_Field_Attribute_Should_Return_True()
+        public void HasMemberAttribute_With_Existing_Field_Attribute_Should_Return_True()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -375,7 +375,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase086_HasMemberAttribute_With_Non_Existing_Field_Attribute_Should_Return_False()
+        public void HasMemberAttribute_With_Non_Existing_Field_Attribute_Should_Return_False()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -388,7 +388,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase087_HasMemberAttribute_With_Non_Existing_Member_Should_Return_False()
+        public void HasMemberAttribute_With_Non_Existing_Member_Should_Return_False()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -405,7 +405,7 @@ namespace AnBo.Test
         #region TryGetMemberAttribute Tests
 
         [Fact]
-        public void TestCase088_TryGetMemberAttribute_With_Null_Type_Should_Return_False_And_Null()
+        public void TryGetMemberAttribute_With_Null_Type_Should_Return_False_And_Null()
         {
             // Arrange
             Type? nullType = null;
@@ -419,7 +419,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase089_TryGetMemberAttribute_With_Existing_Field_Attribute_Should_Return_True_And_Attribute()
+        public void TryGetMemberAttribute_With_Existing_Field_Attribute_Should_Return_True_And_Attribute()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -433,7 +433,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase090_TryGetMemberAttribute_With_Non_Existing_Field_Attribute_Should_Return_False_And_Null()
+        public void TryGetMemberAttribute_With_Non_Existing_Field_Attribute_Should_Return_False_And_Null()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);
@@ -447,7 +447,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase091_TryGetMemberAttribute_With_Non_Existing_Member_Should_Return_False_And_Null()
+        public void TryGetMemberAttribute_With_Non_Existing_Member_Should_Return_False_And_Null()
         {
             // Arrange
             var type = typeof(TestClassWithAttributes);

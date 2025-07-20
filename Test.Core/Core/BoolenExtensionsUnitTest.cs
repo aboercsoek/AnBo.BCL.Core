@@ -7,7 +7,7 @@ namespace AnBo.Test
     public class BoolenExtensionsUnitTest
     {
         [Fact]
-        public void TestCase001_Boolean_Variable_with_value_true_should_return_true_for_IsTrue_and_false_for_IsFalse()
+        public void Boolean_Variable_with_value_true_should_return_true_for_IsTrue_and_false_for_IsFalse()
         {
             var trueValue = true;
 
@@ -16,7 +16,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase002_Boolean_Variable_with_value_false_should_return_true_for_IsFalse_and_false_for_IsTrue()
+        public void Boolean_Variable_with_value_false_should_return_true_for_IsFalse_and_false_for_IsTrue()
         {
             var falseValue = false;
 

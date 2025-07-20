@@ -55,7 +55,7 @@ namespace AnBo.Core
         {
             DescriptionAttribute? description =
                 m_MenuItemAction.Method.GetCustomAttributes(typeof(DescriptionAttribute), false)
-                    .AsSequence<DescriptionAttribute>().FirstOrDefault();
+                    .CastSequence<DescriptionAttribute>().FirstOrDefault();
 
             return description != null ? description.Description : "No description present";
         }

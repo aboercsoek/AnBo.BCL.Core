@@ -372,7 +372,7 @@ namespace AnBo.Core
                 throw new ArgumentNullException("converter");
             }
 
-            return collection.AsSequence<TSource>().Select(sourceItem => converter(sourceItem));
+            return collection.CastSequence<TSource>().Select(sourceItem => converter(sourceItem));
         }
         /// <summary>
         /// Converts all the items of type T in the object-based IEnumerator to a new collection of type U according to converter

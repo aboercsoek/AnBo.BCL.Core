@@ -12,14 +12,14 @@ namespace AnBo.Test
         #region LockingObject Tests
 
         [Fact]
-        public void TestCase001_LockingObject_Should_Not_Be_Null()
+        public void LockingObject_Should_Not_Be_Null()
         {
             // Act & Assert
             Globals.LockingObject.Should().NotBeNull();
         }
 
         [Fact]
-        public void TestCase002_LockingObject_Should_Be_Same_Instance_On_Multiple_Accesses()
+        public void LockingObject_Should_Be_Same_Instance_On_Multiple_Accesses()
         {
             // Act
             var firstAccess = Globals.LockingObject;
@@ -30,7 +30,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase003_LockingObject_Should_Be_Usable_For_Lock_Statement()
+        public void LockingObject_Should_Be_Usable_For_Lock_Statement()
         {
             // Arrange
             var executed = false;
@@ -49,7 +49,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase004_LockingObject_Should_Support_Multiple_Concurrent_Lock_Attempts()
+        public void LockingObject_Should_Support_Multiple_Concurrent_Lock_Attempts()
         {
             // Arrange
             var lockTaken1 = false;

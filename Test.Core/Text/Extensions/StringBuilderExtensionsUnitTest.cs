@@ -18,7 +18,7 @@ namespace AnBo.Test
         #region Clear Method Tests
 
         [Fact]
-        public void TestCase001_Clear_With_Non_Empty_StringBuilder_Should_Clear_Content_And_Return_Same_Instance()
+        public void Clear_With_Non_Empty_StringBuilder_Should_Clear_Content_And_Return_Same_Instance()
         {
             // Arrange
             var builder = new StringBuilder("Hello World");
@@ -33,7 +33,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase002_Clear_With_Empty_StringBuilder_Should_Return_Same_Instance()
+        public void Clear_With_Empty_StringBuilder_Should_Return_Same_Instance()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -47,7 +47,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase003_Clear_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void Clear_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -62,7 +62,7 @@ namespace AnBo.Test
         #region IsNullOrEmpty Method Tests
 
         [Fact]
-        public void TestCase004_IsNullOrEmpty_With_Null_StringBuilder_Should_Return_True()
+        public void IsNullOrEmpty_With_Null_StringBuilder_Should_Return_True()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -75,7 +75,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase005_IsNullOrEmpty_With_Empty_StringBuilder_Should_Return_True()
+        public void IsNullOrEmpty_With_Empty_StringBuilder_Should_Return_True()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -88,7 +88,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase006_IsNullOrEmpty_With_Non_Empty_StringBuilder_Should_Return_False()
+        public void IsNullOrEmpty_With_Non_Empty_StringBuilder_Should_Return_False()
         {
             // Arrange
             var builder = new StringBuilder("Hello");
@@ -101,7 +101,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase007_IsNullOrEmpty_With_StringBuilder_Containing_Whitespace_Should_Return_False()
+        public void IsNullOrEmpty_With_StringBuilder_Containing_Whitespace_Should_Return_False()
         {
             // Arrange
             var builder = new StringBuilder("   ");
@@ -118,7 +118,7 @@ namespace AnBo.Test
         #region IsEmpty Method Tests
 
         [Fact]
-        public void TestCase008_IsEmpty_With_Empty_StringBuilder_Should_Return_True()
+        public void IsEmpty_With_Empty_StringBuilder_Should_Return_True()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -131,7 +131,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase009_IsEmpty_With_Non_Empty_StringBuilder_Should_Return_False()
+        public void IsEmpty_With_Non_Empty_StringBuilder_Should_Return_False()
         {
             // Arrange
             var builder = new StringBuilder("Hello");
@@ -144,7 +144,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase010_IsEmpty_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void IsEmpty_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -159,7 +159,7 @@ namespace AnBo.Test
         #region AppendInvariant Method Tests
 
         [Fact]
-        public void TestCase011_AppendInvariant_With_String_Should_Append_String()
+        public void AppendInvariant_With_String_Should_Append_String()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -173,7 +173,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase012_AppendInvariant_With_Null_String_Should_Skip_Null()
+        public void AppendInvariant_With_Null_String_Should_Skip_Null()
         {
             // Arrange
             var builder = new StringBuilder("Start");
@@ -187,7 +187,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase013_AppendInvariant_With_IFormattable_Should_Use_InvariantCulture()
+        public void AppendInvariant_With_IFormattable_Should_Use_InvariantCulture()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -202,7 +202,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase014_AppendInvariant_With_Non_Formattable_Object_Should_Use_ToString()
+        public void AppendInvariant_With_Non_Formattable_Object_Should_Use_ToString()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -217,7 +217,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase015_AppendInvariant_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void AppendInvariant_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -228,7 +228,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase016_AppendInvariant_With_DateTime_Should_Use_InvariantCulture()
+        public void AppendInvariant_With_DateTime_Should_Use_InvariantCulture()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -243,7 +243,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase017_AppendInvariant_With_Integer_Should_Append_Correctly()
+        public void AppendInvariant_With_Integer_Should_Append_Correctly()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -261,7 +261,7 @@ namespace AnBo.Test
         #region AppendUseToInvariantString Method Tests
 
         [Fact]
-        public void TestCase018_AppendUseToInvariantString_With_String_Should_Append_String()
+        public void AppendUseToInvariantString_With_String_Should_Append_String()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -275,7 +275,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase019_AppendUseToInvariantString_With_Null_String_Should_Skip_Null()
+        public void AppendUseToInvariantString_With_Null_String_Should_Skip_Null()
         {
             // Arrange
             var builder = new StringBuilder("Start");
@@ -289,7 +289,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase020_AppendUseToInvariantString_With_IFormattable_Should_Use_InvariantCulture()
+        public void AppendUseToInvariantString_With_IFormattable_Should_Use_InvariantCulture()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -304,7 +304,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase021_AppendUseToInvariantString_With_Non_Formattable_Object_Should_Use_ToInvariantString()
+        public void AppendUseToInvariantString_With_Non_Formattable_Object_Should_Use_ToInvariantString()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -320,7 +320,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase022_AppendUseToInvariantString_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void AppendUseToInvariantString_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -335,7 +335,7 @@ namespace AnBo.Test
         #region AppendIf Method Tests
 
         [Fact]
-        public void TestCase023_AppendIf_With_True_Condition_Should_Append_Value()
+        public void AppendIf_With_True_Condition_Should_Append_Value()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -349,7 +349,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase024_AppendIf_With_False_Condition_Should_Not_Append_Value()
+        public void AppendIf_With_False_Condition_Should_Not_Append_Value()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -363,7 +363,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase025_AppendIf_With_True_Condition_And_Null_Value_Should_Not_Append()
+        public void AppendIf_With_True_Condition_And_Null_Value_Should_Not_Append()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -377,7 +377,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase026_AppendIf_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void AppendIf_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -388,7 +388,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase027_AppendIf_With_Function_Condition_True_Should_Append_Value()
+        public void AppendIf_With_Function_Condition_True_Should_Append_Value()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -403,7 +403,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase028_AppendIf_With_Function_Condition_False_Should_Not_Append_Value()
+        public void AppendIf_With_Function_Condition_False_Should_Not_Append_Value()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -418,7 +418,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase029_AppendIf_With_Null_Function_Condition_Should_Throw_ArgNullException()
+        public void AppendIf_With_Null_Function_Condition_Should_Throw_ArgNullException()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -430,7 +430,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase030_AppendIf_With_Function_Condition_And_Null_Value_Should_Not_Append()
+        public void AppendIf_With_Function_Condition_And_Null_Value_Should_Not_Append()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -449,7 +449,7 @@ namespace AnBo.Test
         #region Prepend Method Tests
 
         [Fact]
-        public void TestCase031_Prepend_Char_Should_Insert_At_Beginning()
+        public void Prepend_Char_Should_Insert_At_Beginning()
         {
             // Arrange
             var builder = new StringBuilder("World");
@@ -463,7 +463,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase032_Prepend_Char_To_Empty_StringBuilder_Should_Add_Char()
+        public void Prepend_Char_To_Empty_StringBuilder_Should_Add_Char()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -477,7 +477,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase033_Prepend_String_Should_Insert_At_Beginning()
+        public void Prepend_String_Should_Insert_At_Beginning()
         {
             // Arrange
             var builder = new StringBuilder("World");
@@ -491,7 +491,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase034_Prepend_String_To_Empty_StringBuilder_Should_Add_String()
+        public void Prepend_String_To_Empty_StringBuilder_Should_Add_String()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -505,7 +505,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase035_Prepend_Char_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void Prepend_Char_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -516,7 +516,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase036_Prepend_String_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void Prepend_String_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -527,7 +527,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase037_Prepend_String_With_Null_Value_Should_Throw_ArgNullException()
+        public void Prepend_String_With_Null_Value_Should_Throw_ArgNullException()
         {
             // Arrange
             var builder = new StringBuilder("World");
@@ -542,7 +542,7 @@ namespace AnBo.Test
         #region AppendJoin Method Tests
 
         [Fact]
-        public void TestCase038_AppendJoinCollection_String_Separator_With_Valid_Values_Should_Join_Correctly()
+        public void AppendJoinCollection_String_Separator_With_Valid_Values_Should_Join_Correctly()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -557,7 +557,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase039_AppendJoinCollection_String_Separator_With_Empty_Collection_Should_Not_Append()
+        public void AppendJoinCollection_String_Separator_With_Empty_Collection_Should_Not_Append()
         {
             // Arrange
             var builder = new StringBuilder("Start");
@@ -572,7 +572,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase040_AppendJoinCollection_String_Separator_With_Single_Value_Should_Append_Without_Separator()
+        public void AppendJoinCollection_String_Separator_With_Single_Value_Should_Append_Without_Separator()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -587,7 +587,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase041_AppendJoinCollection_String_Separator_With_Null_Separator_Should_Join_Without_Separator()
+        public void AppendJoinCollection_String_Separator_With_Null_Separator_Should_Join_Without_Separator()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -602,7 +602,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase042_AppendJoinCollection_Char_Separator_With_Valid_Values_Should_Join_Correctly()
+        public void AppendJoinCollection_Char_Separator_With_Valid_Values_Should_Join_Correctly()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -617,7 +617,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase043_AppendJoinCollection_Char_Separator_With_Empty_Collection_Should_Not_Append()
+        public void AppendJoinCollection_Char_Separator_With_Empty_Collection_Should_Not_Append()
         {
             // Arrange
             var builder = new StringBuilder("Start");
@@ -632,7 +632,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase044_AppendJoinCollection_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void AppendJoinCollection_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -644,7 +644,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase045_AppendJoinCollection_With_Null_Values_Should_Throw_ArgNullException()
+        public void AppendJoinCollection_With_Null_Values_Should_Throw_ArgNullException()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -656,7 +656,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase046_AppendJoinCollection_With_Mixed_Types_Should_Format_Using_AppendInvariant()
+        public void AppendJoinCollection_With_Mixed_Types_Should_Format_Using_AppendInvariant()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -675,7 +675,7 @@ namespace AnBo.Test
         #region AppendLineIf Method Tests
 
         [Fact]
-        public void TestCase047_AppendLineIf_With_Non_Empty_StringBuilder_Should_Append_Line()
+        public void AppendLineIf_With_Non_Empty_StringBuilder_Should_Append_Line()
         {
             // Arrange
             var builder = new StringBuilder("Hello");
@@ -689,7 +689,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase048_AppendLineIf_With_Empty_StringBuilder_Should_Not_Append_Line()
+        public void AppendLineIf_With_Empty_StringBuilder_Should_Not_Append_Line()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -703,7 +703,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase049_AppendLineIf_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void AppendLineIf_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -714,7 +714,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase050_AppendLineIf_With_Condition_True_Should_Append_Line_With_Value()
+        public void AppendLineIf_With_Condition_True_Should_Append_Line_With_Value()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -728,7 +728,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase051_AppendLineIf_With_Condition_False_Should_Not_Append()
+        public void AppendLineIf_With_Condition_False_Should_Not_Append()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -742,7 +742,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase052_AppendLineIf_With_Condition_True_And_Null_Value_Should_Not_Append()
+        public void AppendLineIf_With_Condition_True_And_Null_Value_Should_Not_Append()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -760,7 +760,7 @@ namespace AnBo.Test
         #region TrimEnd Method Tests
 
         [Fact]
-        public void TestCase053_TrimEnd_With_Trailing_Spaces_Should_Remove_Spaces()
+        public void TrimEnd_With_Trailing_Spaces_Should_Remove_Spaces()
         {
             // Arrange
             var builder = new StringBuilder("Hello   ");
@@ -774,7 +774,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase054_TrimEnd_With_Trailing_Mixed_Whitespace_Should_Remove_All_Whitespace()
+        public void TrimEnd_With_Trailing_Mixed_Whitespace_Should_Remove_All_Whitespace()
         {
             // Arrange
             var builder = new StringBuilder("Hello \t\n\r ");
@@ -788,7 +788,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase055_TrimEnd_With_No_Trailing_Whitespace_Should_Not_Change()
+        public void TrimEnd_With_No_Trailing_Whitespace_Should_Not_Change()
         {
             // Arrange
             var builder = new StringBuilder("Hello");
@@ -802,7 +802,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase056_TrimEnd_With_Only_Whitespace_Should_Result_In_Empty()
+        public void TrimEnd_With_Only_Whitespace_Should_Result_In_Empty()
         {
             // Arrange
             var builder = new StringBuilder("   \t\n   ");
@@ -817,7 +817,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase057_TrimEnd_With_Empty_StringBuilder_Should_Remain_Empty()
+        public void TrimEnd_With_Empty_StringBuilder_Should_Remain_Empty()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -831,7 +831,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase058_TrimEnd_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void TrimEnd_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -846,7 +846,7 @@ namespace AnBo.Test
         #region AsSpan Method Tests
 
         [Fact]
-        public void TestCase059_AsSpan_With_Non_Empty_StringBuilder_Should_Return_Correct_Span()
+        public void AsSpan_With_Non_Empty_StringBuilder_Should_Return_Correct_Span()
         {
             // Arrange
             var builder = new StringBuilder("Hello World");
@@ -860,7 +860,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase060_AsSpan_With_Empty_StringBuilder_Should_Return_Empty_Span()
+        public void AsSpan_With_Empty_StringBuilder_Should_Return_Empty_Span()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -874,17 +874,17 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase061_AsSpan_With_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void AsSpan_With_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             //StringBuilder? builder = null;
 
             // Act & Assert
-            var action = TestCase061_HelperMethod;
+            var action = HelperMethod;
             action.Should().Throw<ArgNullException>();
         }
 
-        private static void TestCase061_HelperMethod()
+        private static void HelperMethod()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -892,7 +892,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase062_AsSpan_With_Start_And_Length_Should_Return_Correct_Substring_Span()
+        public void AsSpan_With_Start_And_Length_Should_Return_Correct_Substring_Span()
         {
             // Arrange
             var builder = new StringBuilder("Hello World");
@@ -906,7 +906,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase063_AsSpan_With_Start_Zero_And_Full_Length_Should_Return_Full_Span()
+        public void AsSpan_With_Start_Zero_And_Full_Length_Should_Return_Full_Span()
         {
             // Arrange
             var builder = new StringBuilder("Hello");
@@ -920,17 +920,17 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase064_AsSpan_With_Invalid_Start_Should_Throw_ArgumentOutOfRangeException()
+        public void AsSpan_With_Invalid_Start_Should_Throw_ArgumentOutOfRangeException()
         {
             // Arrange
             //var builder = new StringBuilder("Hello");
 
             // Act & Assert
-            var action = TestCase064_HelperMethod;
+            var action = AsSpan_HelperMethod1;
             action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
-        private static void TestCase064_HelperMethod()
+        private static void AsSpan_HelperMethod1()
         {
             // Arrange
             var builder = new StringBuilder("Hello");
@@ -939,17 +939,17 @@ namespace AnBo.Test
 
 
         [Fact]
-        public void TestCase065_AsSpan_With_Invalid_Length_Should_Throw_ArgumentOutOfRangeException()
+        public void AsSpan_With_Invalid_Length_Should_Throw_ArgumentOutOfRangeException()
         {
             // Arrange
             //var builder = new StringBuilder("Hello");
 
             // Act & Assert
-            var action = TestCase065_HelperMethod;
+            var action = AsSpan_HelperMethod2;
             action.Should().Throw<ArgumentOutOfRangeException>();
         }
 
-        private static void TestCase065_HelperMethod()
+        private static void AsSpan_HelperMethod2()
         {
             // Arrange
             var builder = new StringBuilder("Hello");
@@ -957,17 +957,17 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase066_AsSpan_With_Start_And_Length_And_Null_StringBuilder_Should_Throw_ArgNullException()
+        public void AsSpan_With_Start_And_Length_And_Null_StringBuilder_Should_Throw_ArgNullException()
         {
             // Arrange
             //StringBuilder? builder = null;
 
             // Act & Assert
-            var action = TestCase066_HelperMethod;
+            var action = AsSpan_HelperMethod3;
             action.Should().Throw<ArgNullException>();
         }
 
-        private static void TestCase066_HelperMethod()
+        private static void AsSpan_HelperMethod3()
         {
             // Arrange
             StringBuilder? builder = null;
@@ -979,7 +979,7 @@ namespace AnBo.Test
         #region Integration Tests
 
         [Fact]
-        public void TestCase067_Method_Chaining_Should_Work_Correctly()
+        public void Method_Chaining_Should_Work_Correctly()
         {
             // Arrange
             var builder = new StringBuilder();
@@ -998,7 +998,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase068_Complex_AppendJoinCollection_With_Different_Types_Should_Format_Correctly()
+        public void Complex_AppendJoinCollection_With_Different_Types_Should_Format_Correctly()
         {
             // Arrange
             var builder = new StringBuilder("Values: ");
@@ -1017,7 +1017,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase069_Clear_And_Build_New_Content_Should_Work()
+        public void Clear_And_Build_New_Content_Should_Work()
         {
             // Arrange
             var builder = new StringBuilder("Old content");

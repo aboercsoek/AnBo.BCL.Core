@@ -8,7 +8,7 @@ namespace AnBo.Test
         #region Byte ToBinaryString Tests
 
         [Fact]
-        public void TestCase001_ByteToBinaryString_With_Zero_Should_Return_Zero()
+        public void ByteToBinaryString_With_Zero_Should_Return_Zero()
         {
             // Arrange
             byte value = 0;
@@ -21,7 +21,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase002_ByteToBinaryString_With_One_Should_Return_One()
+        public void ByteToBinaryString_With_One_Should_Return_One()
         {
             // Arrange
             byte value = 1;
@@ -34,7 +34,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase003_ByteToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
+        public void ByteToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
         {
             // Arrange
             byte value = byte.MaxValue; // 255
@@ -47,7 +47,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase004_ByteToBinaryString_With_PowerOfTwo_Should_Return_Correct_Binary()
+        public void ByteToBinaryString_With_PowerOfTwo_Should_Return_Correct_Binary()
         {
             // Arrange
             byte value = 128; // 2^7
@@ -60,7 +60,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase005_ByteToBinaryString_With_Mixed_Bits_Should_Return_Correct_Binary()
+        public void ByteToBinaryString_With_Mixed_Bits_Should_Return_Correct_Binary()
         {
             // Arrange
             byte value = 85; // 01010101
@@ -77,7 +77,7 @@ namespace AnBo.Test
         #region Int16 ToBinaryString Tests
 
         [Fact]
-        public void TestCase006_Int16ToBinaryString_With_Zero_Should_Return_Zero()
+        public void Int16ToBinaryString_With_Zero_Should_Return_Zero()
         {
             // Arrange
             Int16 value = 0;
@@ -90,7 +90,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase007_Int16ToBinaryString_With_Positive_Value_Should_Return_Correct_Binary()
+        public void Int16ToBinaryString_With_Positive_Value_Should_Return_Correct_Binary()
         {
             // Arrange
             Int16 value = 255;
@@ -103,7 +103,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase008_Int16ToBinaryString_With_Negative_Value_Should_Return_Correct_Binary()
+        public void Int16ToBinaryString_With_Negative_Value_Should_Return_Correct_Binary()
         {
             // Arrange
             Int16 value = -1;
@@ -116,7 +116,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase009_Int16ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
+        public void Int16ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
         {
             // Arrange
             Int16 value = Int16.MaxValue; // 32767
@@ -129,7 +129,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase010_Int16ToBinaryString_With_MinValue_Should_Return_Correct_Binary()
+        public void Int16ToBinaryString_With_MinValue_Should_Return_Correct_Binary()
         {
             // Arrange
             Int16 value = Int16.MinValue; // -32768
@@ -146,7 +146,7 @@ namespace AnBo.Test
         #region UInt16 ToBinaryString Tests
 
         [Fact]
-        public void TestCase011_UInt16ToBinaryString_With_Zero_Should_Return_Zero()
+        public void UInt16ToBinaryString_With_Zero_Should_Return_Zero()
         {
             // Arrange
             UInt16 value = 0;
@@ -159,7 +159,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase012_UInt16ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
+        public void UInt16ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
         {
             // Arrange
             UInt16 value = UInt16.MaxValue; // 65535
@@ -172,7 +172,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase013_UInt16ToBinaryString_With_PowerOfTwo_Should_Return_Correct_Binary()
+        public void UInt16ToBinaryString_With_PowerOfTwo_Should_Return_Correct_Binary()
         {
             // Arrange
             UInt16 value = 1024; // 2^10
@@ -189,7 +189,7 @@ namespace AnBo.Test
         #region Int32 ToBinaryString Tests
 
         [Fact]
-        public void TestCase014_Int32ToBinaryString_With_Zero_Should_Return_Zero()
+        public void Int32ToBinaryString_With_Zero_Should_Return_Zero()
         {
             // Arrange
             Int32 value = 0;
@@ -202,7 +202,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase015_Int32ToBinaryString_With_Positive_Value_Should_Return_Correct_Binary()
+        public void Int32ToBinaryString_With_Positive_Value_Should_Return_Correct_Binary()
         {
             // Arrange
             Int32 value = 255;
@@ -215,7 +215,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase016_Int32ToBinaryString_With_Negative_Value_Should_Return_Correct_Binary()
+        public void Int32ToBinaryString_With_Negative_Value_Should_Return_Correct_Binary()
         {
             // Arrange
             Int32 value = -1;
@@ -228,7 +228,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase017_Int32ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
+        public void Int32ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
         {
             // Arrange
             Int32 value = Int32.MaxValue;
@@ -241,7 +241,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase018_Int32ToBinaryString_With_MinValue_Should_Return_Correct_Binary()
+        public void Int32ToBinaryString_With_MinValue_Should_Return_Correct_Binary()
         {
             // Arrange
             Int32 value = Int32.MinValue;
@@ -258,7 +258,7 @@ namespace AnBo.Test
         #region UInt32 ToBinaryString Tests
 
         [Fact]
-        public void TestCase019_UInt32ToBinaryString_With_Zero_Should_Return_Zero()
+        public void UInt32ToBinaryString_With_Zero_Should_Return_Zero()
         {
             // Arrange
             UInt32 value = 0;
@@ -271,7 +271,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase020_UInt32ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
+        public void UInt32ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
         {
             // Arrange
             UInt32 value = UInt32.MaxValue;
@@ -284,7 +284,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase021_UInt32ToBinaryString_With_PowerOfTwo_Should_Return_Correct_Binary()
+        public void UInt32ToBinaryString_With_PowerOfTwo_Should_Return_Correct_Binary()
         {
             // Arrange
             UInt32 value = 1048576; // 2^20
@@ -301,7 +301,7 @@ namespace AnBo.Test
         #region Int64 ToBinaryString Tests
 
         [Fact]
-        public void TestCase022_Int64ToBinaryString_With_Zero_Should_Return_Zero()
+        public void Int64ToBinaryString_With_Zero_Should_Return_Zero()
         {
             // Arrange
             Int64 value = 0;
@@ -314,7 +314,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase023_Int64ToBinaryString_With_Positive_Value_Should_Return_Correct_Binary()
+        public void Int64ToBinaryString_With_Positive_Value_Should_Return_Correct_Binary()
         {
             // Arrange
             Int64 value = 255;
@@ -327,7 +327,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase024_Int64ToBinaryString_With_Negative_Value_Should_Return_Correct_Binary()
+        public void Int64ToBinaryString_With_Negative_Value_Should_Return_Correct_Binary()
         {
             // Arrange
             Int64 value = -1;
@@ -340,7 +340,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase025_Int64ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
+        public void Int64ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
         {
             // Arrange
             Int64 value = Int64.MaxValue;
@@ -353,7 +353,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase026_Int64ToBinaryString_With_MinValue_Should_Return_Correct_Binary()
+        public void Int64ToBinaryString_With_MinValue_Should_Return_Correct_Binary()
         {
             // Arrange
             Int64 value = Int64.MinValue;
@@ -370,7 +370,7 @@ namespace AnBo.Test
         #region UInt64 ToBinaryString Tests
 
         [Fact]
-        public void TestCase027_UInt64ToBinaryString_With_Zero_Should_Return_Zero()
+        public void UInt64ToBinaryString_With_Zero_Should_Return_Zero()
         {
             // Arrange
             UInt64 value = 0;
@@ -383,7 +383,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase028_UInt64ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
+        public void UInt64ToBinaryString_With_MaxValue_Should_Return_Correct_Binary()
         {
             // Arrange
             UInt64 value = UInt64.MaxValue;
@@ -396,7 +396,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase029_UInt64ToBinaryString_With_Large_Value_Should_Return_Correct_Binary()
+        public void UInt64ToBinaryString_With_Large_Value_Should_Return_Correct_Binary()
         {
             // Arrange
             UInt64 value = 18446744073709551615; // UInt64.MaxValue
@@ -413,7 +413,7 @@ namespace AnBo.Test
         #region Int16 ToHexString Tests
 
         [Fact]
-        public void TestCase030_Int16ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
+        public void Int16ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
         {
             // Arrange
             Int16 value = 0;
@@ -426,7 +426,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase031_Int16ToHexString_Single_Parameter_With_Positive_Value_Should_Return_Correct_Hex()
+        public void Int16ToHexString_Single_Parameter_With_Positive_Value_Should_Return_Correct_Hex()
         {
             // Arrange
             Int16 value = 255;
@@ -439,7 +439,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase032_Int16ToHexString_Single_Parameter_With_Negative_Value_Should_Return_Correct_Hex()
+        public void Int16ToHexString_Single_Parameter_With_Negative_Value_Should_Return_Correct_Hex()
         {
             // Arrange
             Int16 value = -1;
@@ -452,7 +452,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase033_Int16ToHexString_With_MinHexDigits_Should_Pad_Correctly()
+        public void Int16ToHexString_With_MinHexDigits_Should_Pad_Correctly()
         {
             // Arrange
             Int16 value = 15;
@@ -466,7 +466,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase034_Int16ToHexString_With_MinHexDigits_One_Should_Return_Minimum_Length()
+        public void Int16ToHexString_With_MinHexDigits_One_Should_Return_Minimum_Length()
         {
             // Arrange
             Int16 value = 255;
@@ -480,7 +480,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase035_Int16ToHexString_With_ZeroX_Prefix_True_Should_Add_Prefix()
+        public void Int16ToHexString_With_ZeroX_Prefix_True_Should_Add_Prefix()
         {
             // Arrange
             Int16 value = 255;
@@ -495,7 +495,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase036_Int16ToHexString_With_ZeroX_Prefix_False_Should_Not_Add_Prefix()
+        public void Int16ToHexString_With_ZeroX_Prefix_False_Should_Not_Add_Prefix()
         {
             // Arrange
             Int16 value = 255;
@@ -510,7 +510,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase037_Int16ToHexString_With_All_Parameters_Should_Format_Correctly()
+        public void Int16ToHexString_With_All_Parameters_Should_Format_Correctly()
         {
             // Arrange
             Int16 value = 15;
@@ -525,7 +525,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase038_Int16ToHexString_With_MaxValue_Should_Return_Correct_Hex()
+        public void Int16ToHexString_With_MaxValue_Should_Return_Correct_Hex()
         {
             // Arrange
             Int16 value = Int16.MaxValue; // 32767
@@ -538,7 +538,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase039_Int16ToHexString_With_MinValue_Should_Return_Correct_Hex()
+        public void Int16ToHexString_With_MinValue_Should_Return_Correct_Hex()
         {
             // Arrange
             Int16 value = Int16.MinValue; // -32768
@@ -555,7 +555,7 @@ namespace AnBo.Test
         #region Int32 ToHexString Tests
 
         [Fact]
-        public void TestCase040_Int32ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
+        public void Int32ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
         {
             // Arrange
             int value = 0;
@@ -568,7 +568,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase041_Int32ToHexString_Single_Parameter_With_Positive_Value_Should_Return_Correct_Hex()
+        public void Int32ToHexString_Single_Parameter_With_Positive_Value_Should_Return_Correct_Hex()
         {
             // Arrange
             int value = 255;
@@ -581,7 +581,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase042_Int32ToHexString_Single_Parameter_With_Negative_Value_Should_Return_Correct_Hex()
+        public void Int32ToHexString_Single_Parameter_With_Negative_Value_Should_Return_Correct_Hex()
         {
             // Arrange
             int value = -1;
@@ -594,7 +594,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase043_Int32ToHexString_With_MinHexDigits_Should_Pad_Correctly()
+        public void Int32ToHexString_With_MinHexDigits_Should_Pad_Correctly()
         {
             // Arrange
             int value = 15;
@@ -608,7 +608,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase044_Int32ToHexString_With_ZeroX_Prefix_True_Should_Add_Prefix()
+        public void Int32ToHexString_With_ZeroX_Prefix_True_Should_Add_Prefix()
         {
             // Arrange
             int value = 255;
@@ -623,7 +623,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase045_Int32ToHexString_With_ZeroX_Prefix_False_Should_Not_Add_Prefix()
+        public void Int32ToHexString_With_ZeroX_Prefix_False_Should_Not_Add_Prefix()
         {
             // Arrange
             int value = 255;
@@ -638,7 +638,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase046_Int32ToHexString_With_All_Parameters_Should_Format_Correctly()
+        public void Int32ToHexString_With_All_Parameters_Should_Format_Correctly()
         {
             // Arrange
             int value = 15;
@@ -653,7 +653,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase047_Int32ToHexString_With_MaxValue_Should_Return_Correct_Hex()
+        public void Int32ToHexString_With_MaxValue_Should_Return_Correct_Hex()
         {
             // Arrange
             int value = Int32.MaxValue;
@@ -666,7 +666,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase048_Int32ToHexString_With_MinValue_Should_Return_Correct_Hex()
+        public void Int32ToHexString_With_MinValue_Should_Return_Correct_Hex()
         {
             // Arrange
             int value = Int32.MinValue;
@@ -679,7 +679,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase049_Int32ToHexString_With_Large_Positive_Value_Should_Return_Correct_Hex()
+        public void Int32ToHexString_With_Large_Positive_Value_Should_Return_Correct_Hex()
         {
             // Arrange
             int value = 0x12345678;
@@ -696,7 +696,7 @@ namespace AnBo.Test
         #region Int64 ToHexString Tests
 
         [Fact]
-        public void TestCase050_Int64ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
+        public void Int64ToHexString_Single_Parameter_With_Zero_Should_Return_Zero()
         {
             // Arrange
             long value = 0;
@@ -709,7 +709,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase051_Int64ToHexString_Single_Parameter_With_Positive_Value_Should_Return_Correct_Hex()
+        public void Int64ToHexString_Single_Parameter_With_Positive_Value_Should_Return_Correct_Hex()
         {
             // Arrange
             long value = 255;
@@ -722,7 +722,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase052_Int64ToHexString_Single_Parameter_With_Negative_Value_Should_Return_Correct_Hex()
+        public void Int64ToHexString_Single_Parameter_With_Negative_Value_Should_Return_Correct_Hex()
         {
             // Arrange
             long value = -1;
@@ -735,7 +735,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase053_Int64ToHexString_With_MinHexDigits_Should_Pad_Correctly()
+        public void Int64ToHexString_With_MinHexDigits_Should_Pad_Correctly()
         {
             // Arrange
             long value = 15;
@@ -749,7 +749,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase054_Int64ToHexString_With_ZeroX_Prefix_True_Should_Add_Prefix()
+        public void Int64ToHexString_With_ZeroX_Prefix_True_Should_Add_Prefix()
         {
             // Arrange
             long value = 255;
@@ -764,7 +764,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase055_Int64ToHexString_With_ZeroX_Prefix_False_Should_Not_Add_Prefix()
+        public void Int64ToHexString_With_ZeroX_Prefix_False_Should_Not_Add_Prefix()
         {
             // Arrange
             long value = 255;
@@ -779,7 +779,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase056_Int64ToHexString_With_All_Parameters_Should_Format_Correctly()
+        public void Int64ToHexString_With_All_Parameters_Should_Format_Correctly()
         {
             // Arrange
             long value = 15;
@@ -794,7 +794,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase057_Int64ToHexString_With_MaxValue_Should_Return_Correct_Hex()
+        public void Int64ToHexString_With_MaxValue_Should_Return_Correct_Hex()
         {
             // Arrange
             long value = Int64.MaxValue;
@@ -807,7 +807,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase058_Int64ToHexString_With_MinValue_Should_Return_Correct_Hex()
+        public void Int64ToHexString_With_MinValue_Should_Return_Correct_Hex()
         {
             // Arrange
             long value = Int64.MinValue;
@@ -820,7 +820,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase059_Int64ToHexString_With_Large_Positive_Value_Should_Return_Correct_Hex()
+        public void Int64ToHexString_With_Large_Positive_Value_Should_Return_Correct_Hex()
         {
             // Arrange
             long value = 0x123456789ABCDEF0;
@@ -833,7 +833,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase060_Int64ToHexString_With_Small_MinHexDigits_Should_Use_Actual_Length()
+        public void Int64ToHexString_With_Small_MinHexDigits_Should_Use_Actual_Length()
         {
             // Arrange
             long value = 0x123456789ABCDEF0;
@@ -851,7 +851,7 @@ namespace AnBo.Test
         #region Edge Cases and Boundary Tests
 
         [Fact]
-        public void TestCase061_All_Binary_Methods_With_One_Should_Return_One()
+        public void All_Binary_Methods_With_One_Should_Return_One()
         {
             // Act & Assert
             NumberFormatter.ToBinaryString((byte)1).Should().Be("1");
@@ -864,7 +864,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase062_All_Hex_Methods_With_Zero_Should_Return_Zero()
+        public void All_Hex_Methods_With_Zero_Should_Return_Zero()
         {
             // Act & Assert
             NumberFormatter.ToHexString((short)0).Should().Be("0");
@@ -873,7 +873,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase063_All_Hex_Methods_With_One_Should_Return_One()
+        public void All_Hex_Methods_With_One_Should_Return_One()
         {
             // Act & Assert
             NumberFormatter.ToHexString((short)1).Should().Be("1");
@@ -882,7 +882,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase064_Hex_Methods_With_Fifteen_Should_Return_f()
+        public void Hex_Methods_With_Fifteen_Should_Return_f()
         {
             // Act & Assert
             NumberFormatter.ToHexString((short)15).Should().Be("f");
@@ -891,7 +891,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase065_Hex_Methods_With_Sixteen_Should_Return_10()
+        public void Hex_Methods_With_Sixteen_Should_Return_10()
         {
             // Act & Assert
             NumberFormatter.ToHexString((short)16).Should().Be("10");
@@ -900,7 +900,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase066_Binary_Methods_With_Two_Should_Return_10()
+        public void Binary_Methods_With_Two_Should_Return_10()
         {
             // Act & Assert
             NumberFormatter.ToBinaryString((byte)2).Should().Be("10");
@@ -913,7 +913,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase067_Hex_Methods_With_Prefix_And_Zero_Should_Add_Prefix()
+        public void Hex_Methods_With_Prefix_And_Zero_Should_Add_Prefix()
         {
             // Act & Assert
             NumberFormatter.ToHexString<Int16>(value: 0, addZeroXPrefix: true).Should().Be("0x0");
@@ -922,7 +922,7 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase068_Hex_Methods_With_Large_MinHexDigits_Should_Pad_Correctly()
+        public void Hex_Methods_With_Large_MinHexDigits_Should_Pad_Correctly()
         {
             // Act & Assert
             NumberFormatter.ToHexString<Int16>(1, 4).Should().Be("0001");
@@ -935,7 +935,7 @@ namespace AnBo.Test
         #region Test Cases for Invalid Inputs
 
         [Fact]
-        public void TestCase069_ToBinaryString_Called_With_Int128_Should_Thow_ArgException()
+        public void ToBinaryString_Called_With_Int128_Should_Thow_ArgException()
         {   // Arrange
             Int128 i128 = 0;
             // Act & Assert

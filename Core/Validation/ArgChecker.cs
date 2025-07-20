@@ -115,7 +115,7 @@ namespace AnBo.Core
                 return;
             }
 
-            if (!argValue!.AsSequence<object>().Any())
+            if (!argValue!.CastSequence<object>().Any())
                 throw new ArgEmptyException(argName!);
         }
 
