@@ -472,7 +472,7 @@ namespace AnBo.Test
             // Act
             var result = list.With(l =>
             {
-                l.Add("test");
+                l!.Add("test");
                 actionExecuted = true;
             });
 
