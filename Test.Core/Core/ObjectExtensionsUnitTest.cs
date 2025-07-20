@@ -483,24 +483,22 @@ namespace AnBo.Test
         }
 
         [Fact]
-        public void TestCase031_With_Should_Handle_Null_Object()
+        public void TestCase031_With_Should_Allow_Null_Object()
         {
             // Arrange
             List<string>? list = null;
             var actionExecuted = false;
 
             // Act & Assert
-            //var action = () => list!.With(l =>
-            //{
-            //    actionExecuted = true;
-            //});
-            // Act & Assert
-            var action = () => {
-                var count = list!.Count;
+            var result = list.With((value) =>
+            {
+                var count = value is not null ? value!.Count : -1;
                 actionExecuted = true;
-            };
-            action.Should().Throw<NullReferenceException>();
-            actionExecuted.Should().BeFalse();
+            });
+
+            // Assert
+            result.Should().BeNull();
+            actionExecuted.Should().BeTrue();
         }
 
         [Fact]
@@ -511,8 +509,8 @@ namespace AnBo.Test
 
             // Act
             var result = list
-                .With(l => l.Add("first"))
-                .With(l => l.Add("second"));
+                .With(l => l!.Add("first"))
+                .With(l => l!.Add("second"));
 
             // Assert
             result.Should().BeSameAs(list);

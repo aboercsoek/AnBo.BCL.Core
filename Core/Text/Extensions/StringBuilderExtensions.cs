@@ -31,6 +31,7 @@ namespace AnBo.Core
         public static StringBuilder Clear(this StringBuilder builder)
         {
             ArgChecker.ShouldNotBeNull(builder);
+
             builder.Length = 0;
             return builder;
         }

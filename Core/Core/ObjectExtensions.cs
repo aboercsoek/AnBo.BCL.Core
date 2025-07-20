@@ -220,9 +220,8 @@ namespace AnBo.Core
         /// <param name="control">The control object.</param>
         /// <param name="action">The action to apply.</param>
         /// <returns>The control object after action(control) was called.</returns>
-        public static T With<T>(this T control, Action<T> action)
+        public static T? With<T>(this T? control, Action<T?> action)
         {
-            ArgChecker.ShouldNotBeNull(control);
             ArgChecker.ShouldNotBeNull(action);
 
             action(control);
