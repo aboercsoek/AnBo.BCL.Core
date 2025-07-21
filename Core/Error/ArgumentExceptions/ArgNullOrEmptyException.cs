@@ -9,41 +9,40 @@
 
 #endregion
 
-namespace AnBo.Core
+namespace AnBo.Core;
+
+///<summary>Argument is null or empty validation exception class</summary>
+public class ArgNullOrEmptyException : TechException
 {
-    ///<summary>Argument is null or empty validation exception class</summary>
-    public class ArgNullOrEmptyException : TechException
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ArgNullOrEmptyException"/> class.
+    /// </summary>
+    public ArgNullOrEmptyException()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ArgNullOrEmptyException"/> class.
-        /// </summary>
-        public ArgNullOrEmptyException()
-        {
-            ErrorCode = 1004;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ArgNullOrEmptyException"/> class.
-        /// </summary>
-        /// <param name="argValue">The argument value.</param>
-        /// <param name="argName">The argument name.</param>
-        public ArgNullOrEmptyException(object argValue, string argName)
-            : base(StringResources.ErrorShouldNotBeNullOrEmptyValidationTemplate2Args.SafeFormatWith(argName, argValue))
-        {
-            ErrorCode = 1004;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ArgNullOrEmptyException"/> class.
-        /// </summary>
-        /// <param name="argValue">The argument value.</param>
-        /// <param name="argName">The argument name.</param>
-        /// <param name="message">The message.</param>
-        public ArgNullOrEmptyException(object argValue, string argName, string message)
-            : base(message.SafeFormatWith(argName, argValue))
-        {
-            ErrorCode = 1004;
-        }
-
+        ErrorCode = 1004;
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ArgNullOrEmptyException"/> class.
+    /// </summary>
+    /// <param name="argValue">The argument value.</param>
+    /// <param name="argName">The argument name.</param>
+    public ArgNullOrEmptyException(object argValue, string argName)
+        : base(StringResources.ErrorShouldNotBeNullOrEmptyValidationTemplate2Args.SafeFormatWith(argName, argValue))
+    {
+        ErrorCode = 1004;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ArgNullOrEmptyException"/> class.
+    /// </summary>
+    /// <param name="argValue">The argument value.</param>
+    /// <param name="argName">The argument name.</param>
+    /// <param name="message">The message.</param>
+    public ArgNullOrEmptyException(object argValue, string argName, string message)
+        : base(message.SafeFormatWith(argName, argValue))
+    {
+        ErrorCode = 1004;
+    }
+
 }

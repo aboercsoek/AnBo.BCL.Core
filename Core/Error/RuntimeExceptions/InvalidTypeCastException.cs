@@ -16,29 +16,28 @@ using System.Xml.Serialization;
 
 #endregion
 
-namespace AnBo.Core
+namespace AnBo.Core;
+
+/// <summary>
+/// This exception is thrown when error occurs during type casting.
+/// </summary>
+public class InvalidTypeCastException : TechException
 {
+    private const int TypeErrorCode = 1018;
     /// <summary>
-	/// This exception is thrown when error occurs during type casting.
-	/// </summary>
-    public class InvalidTypeCastException : TechException
-    {
-        private const int TypeErrorCode = 1018;
-        /// <summary>
-        /// Creates a new instance of this class.
-        /// </summary>
-        public InvalidTypeCastException() { ErrorCode = TypeErrorCode; }
-        /// <summary>
-        /// Creates a new instance of this class with the specified message
-        /// </summary>
-        /// <param name="message">The message used for the exception</param>
-        public InvalidTypeCastException(string message) : base(message) { ErrorCode = TypeErrorCode; }
-        /// <summary>
-        /// Creates a new instance of this class with the specified message and inner exception
-        /// </summary>
-        /// <param name="message">The message used for the exception</param>
-        /// <param name="inner">The inner exception that this instance wraps.</param>
-        public InvalidTypeCastException(string message, Exception inner) : base(inner, message) { ErrorCode = TypeErrorCode; }
-        
-    }
+    /// Creates a new instance of this class.
+    /// </summary>
+    public InvalidTypeCastException() { ErrorCode = TypeErrorCode; }
+    /// <summary>
+    /// Creates a new instance of this class with the specified message
+    /// </summary>
+    /// <param name="message">The message used for the exception</param>
+    public InvalidTypeCastException(string message) : base(message) { ErrorCode = TypeErrorCode; }
+    /// <summary>
+    /// Creates a new instance of this class with the specified message and inner exception
+    /// </summary>
+    /// <param name="message">The message used for the exception</param>
+    /// <param name="inner">The inner exception that this instance wraps.</param>
+    public InvalidTypeCastException(string message, Exception inner) : base(inner, message) { ErrorCode = TypeErrorCode; }
+
 }

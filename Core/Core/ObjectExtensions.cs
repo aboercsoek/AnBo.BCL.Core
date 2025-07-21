@@ -24,7 +24,6 @@ namespace AnBo.Core;
 /// </summary>
 public static class ObjectEx
 {
-
     // Cache for default values to improve performance
     private static readonly ConcurrentDictionary<Type, object?> DefaultValueCache = new();
 
