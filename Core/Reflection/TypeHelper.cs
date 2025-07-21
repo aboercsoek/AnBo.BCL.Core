@@ -175,6 +175,7 @@ namespace AnBo.Core
             }
         }
 
+        #region Private DeepClone helper methods
 
         /// <summary>
         /// Gets or creates cached JsonSerializerOptions for a specific type to improve performance.
@@ -356,6 +357,8 @@ namespace AnBo.Core
             return property.GetCustomAttributes(typeof(JsonIgnoreAttribute), true).Any();
             // Note: NonSerializedAttribute is not valid on properties, only on fields
         }
+
+        #endregion
 
         #endregion
 

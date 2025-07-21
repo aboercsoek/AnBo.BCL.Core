@@ -8,9 +8,8 @@
 
 using FluentAssertions;
 using AnBo.Core;
-using System.Runtime.Serialization;
-using System.Xml.Serialization;
 using System.Numerics;
+using System.Text.Json.Serialization;
 
 namespace AnBo.Test
 {
@@ -303,6 +302,19 @@ namespace AnBo.Test
             // Act & Assert
             var exception = Assert.Throws<ArgNullException>(() => nullType!.ImplementsInterface<IDisposable>());
             exception.ParamName.Should().Be("type");
+        }
+
+        [Fact]
+        public void ImplementsInterface_With_No_Interface_Type_Should_Return_False()
+        {
+            // Arrange
+            var type = typeof(TestClassImplementingIDisposable);
+
+            // Act
+            var result = type.ImplementsInterface<List<int>>();
+
+            // Assert
+            result.Should().BeFalse();
         }
 
         [Fact]
@@ -613,6 +625,20 @@ namespace AnBo.Test
             // Arrange
             var type = typeof(string);
             object? value = null;
+
+            // Act
+            var result = type.IsDefaultValue(value!);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void IsDefaultValue_With_Nullable_Type_And_Null_Value_Should_Return_True()
+        {
+            // Arrange
+            var type = typeof(int?);
+            int? value = null;
 
             // Act
             var result = type.IsDefaultValue(value!);
@@ -955,6 +981,161 @@ namespace AnBo.Test
 
         #endregion
 
+        #region CanBeInstantiated Tests
+
+        [Fact]
+        public void CanBeInstantiated_WithNullType_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            Type? nullType = null;
+
+            // Act
+            Action act = () => nullType!.CanBeInstantiated();
+
+            // Assert
+            act.Should().Throw<ArgNullException>();
+        }
+
+        [Fact]
+        public void CanBeInstantiated_WithConcreteClassWithParameterlessConstructor_ShouldReturnTrue()
+        {
+            // Arrange
+            var type = typeof(TestClassWithParameterlessConstructor);
+
+            // Act
+            var result = type.CanBeInstantiated();
+
+            // Assert
+            result.Should().BeTrue("because concrete classes with parameterless constructors can be instantiated");
+        }
+
+        [Fact]
+        public void CanBeInstantiated_WithConcreteClassWithoutParameterlessConstructor_ShouldReturnFalse()
+        {
+            // Arrange
+            var type = typeof(TestClassWithoutParameterlessConstructor);
+
+            // Act
+            var result = type.CanBeInstantiated();
+
+            // Assert
+            result.Should().BeFalse("because classes without parameterless constructors cannot be instantiated via reflection");
+        }
+
+        [Fact]
+        public void CanBeInstantiated_WithAbstractClass_ShouldReturnFalse()
+        {
+            // Arrange
+            var type = typeof(AbstractTestClass);
+
+            // Act
+            var result = type.CanBeInstantiated();
+
+            // Assert
+            result.Should().BeFalse("because abstract classes cannot be instantiated");
+        }
+
+        [Fact]
+        public void CanBeInstantiated_WithInterface_ShouldReturnFalse()
+        {
+            // Arrange
+            var type = typeof(ITestInterface);
+
+            // Act
+            var result = type.CanBeInstantiated();
+
+            // Assert
+            result.Should().BeFalse("because interfaces cannot be instantiated");
+        }
+
+        [Fact]
+        public void CanBeInstantiated_WithGenericTypeDefinition_ShouldReturnFalse()
+        {
+            // Arrange
+            var type = typeof(List<>);
+
+            // Act
+            var result = type.CanBeInstantiated();
+
+            // Assert
+            result.Should().BeFalse("because generic type definitions cannot be instantiated");
+        }
+
+        [Fact]
+        public void CanBeInstantiated_WithClosedGenericType_ShouldReturnTrue()
+        {
+            // Arrange
+            var type = typeof(List<string>);
+
+            // Act
+            var result = type.CanBeInstantiated();
+
+            // Assert
+            result.Should().BeTrue("because closed generic types with parameterless constructors can be instantiated");
+        }
+
+        [Theory]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(TestStruct))]
+        public void CanBeInstantiated_WithValueTypesAndString_ShouldReturnTrue(Type type)
+        {
+            // Act
+            var result = type.CanBeInstantiated();
+
+            // Assert
+            result.Should().BeTrue("because value types and string have implicit parameterless constructors");
+        }
+
+        #endregion
+
+        #region GetUnderlyingType Tests
+
+        [Fact]
+        public void GetUnderlyingType_WithNullType_ShouldThrowArgumentNullException()
+        {
+            // Arrange
+            Type? nullType = null;
+
+            // Act
+            Action act = () => nullType!.GetUnderlyingType();
+
+            // Assert
+            act.Should().Throw<ArgNullException>();
+        }
+
+        [Theory]
+        [InlineData(typeof(int?), typeof(int))]
+        [InlineData(typeof(bool?), typeof(bool))]
+        [InlineData(typeof(DateTime?), typeof(DateTime))]
+        [InlineData(typeof(decimal?), typeof(decimal))]
+        public void GetUnderlyingType_WithNullableTypes_ShouldReturnUnderlyingType(Type nullableType, Type expectedUnderlyingType)
+        {
+            // Act
+            var result = nullableType.GetUnderlyingType();
+
+            // Assert
+            result.Should().Be(expectedUnderlyingType,
+                "because nullable types should return their underlying non-nullable type");
+        }
+
+        [Theory]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(DateTime))]
+        [InlineData(typeof(TestClassWithFields))]
+        public void GetUnderlyingType_WithNonNullableTypes_ShouldReturnSameType(Type type)
+        {
+            // Act
+            var result = type.GetUnderlyingType();
+
+            // Assert
+            result.Should().Be(type,
+                "because non-nullable types should return themselves");
+        }
+
+        #endregion
+
         #region Test Helper Classes
 
         public class TestClassWithFields
@@ -1027,6 +1208,37 @@ namespace AnBo.Test
             {
                 Name = name;
             }
+        }
+
+        // Additional test classes for specific scenarios
+        public abstract class AbstractTestClass
+        {
+            public string Name { get; set; } = "";
+        }
+
+        public interface ITestInterface
+        {
+            void TestMethod();
+        }
+
+        public class TestClassWithJsonConstructor
+        {
+            public string Name { get; set; }
+            public int Value { get; set; }
+
+            [JsonConstructor]
+            public TestClassWithJsonConstructor(string name, int value)
+            {
+                Name = name;
+                Value = value;
+            }
+        }
+
+        public record TestRecord(string Name, int Value);
+
+        public struct TestStruct
+        {
+            public int Value { get; set; }
         }
 
         #endregion
