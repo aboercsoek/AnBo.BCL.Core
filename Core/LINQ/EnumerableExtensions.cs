@@ -541,7 +541,7 @@ namespace AnBo.Core
             int i = 0;
             foreach (T item in items)
             {
-                yield return new IndexValuePair<T>(item, i);
+                yield return IndexValuePair.Create(item, i);
                 i++;
             }
         }
