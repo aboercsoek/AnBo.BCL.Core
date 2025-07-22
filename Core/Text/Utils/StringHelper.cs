@@ -256,31 +256,35 @@ public static partial class StringHelper
     #region Byte-Array convertion to and from string
 
     /// <summary>
-    /// Converts a string to its UTF-16 byte representation.
+    /// Converts a string to its byte representation, using the specified enconding (default is UTF-16).
     /// </summary>
     /// <param name="str">The string to convert.</param>
-    /// <returns>The UTF-16 byte array representation of the string.</returns>
-    public static byte[] GetBytesFromString(string? str)
+    /// <param name="encoding">Optional encoding to use for conversion. If null, defaults to UTF-16 (Unicode).</param>
+    /// <returns>The byte array representation of the string.</returns>
+    public static byte[] GetBytesFromString(string? str, Encoding? encoding = null)
     {
         if (string.IsNullOrEmpty(str))
             return [];
 
-        // Strings in .NET are always UTF16
-        return Encoding.Unicode.GetBytes(str);
+        encoding ??= Encoding.Unicode; // Default to UTF-16 encoding
+        
+        return encoding.GetBytes(str);
     }
 
     /// <summary>
     /// Converts a UTF-16 byte array back to a string.
     /// </summary>
     /// <param name="data">The byte array to convert.</param>
+    /// <param name="encoding">Optional encoding to use for conversion. If null, defaults to UTF-16 (Unicode).</param>
     /// <returns>The decoded string.</returns>
     /// <exception cref="ArgumentNullException">Thrown when data is null.</exception>
-    public static string GetStringFromBytes(byte[] data)
+    public static string GetStringFromBytes(byte[] data, Encoding? encoding = null)
     {
         ArgumentNullException.ThrowIfNull(data);
 
-        // Strings in .NET are UTF-16
-        return Encoding.Unicode.GetString(data);
+        encoding ??= Encoding.Unicode; // Default to UTF-16 encoding
+       
+        return encoding.GetString(data);
     }
 
     #endregion
