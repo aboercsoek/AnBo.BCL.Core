@@ -8,10 +8,12 @@
 
 using AnBo.Core;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AnBo.Test;
 
@@ -380,15 +382,15 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeTrue_With_False_Should_Throw_ArgException()
+    public void ShouldBeTrue_With_False_Should_Throw_ArgumentException()
     {
         // Arrange
         bool condition = false;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeTrue(condition);
-        action.Should().Throw<ArgException<bool>>()
-            .WithMessage("Argument validation failed (condition: False)");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Argument validation failed*");
     }
 
     [Fact]
@@ -400,8 +402,8 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeTrue(condition, customMessage);
-        action.Should().Throw<ArgException<bool>>()
-            .WithMessage(customMessage);
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Custom true validation error message*");
     }
 
     #endregion
@@ -420,14 +422,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeFalse_With_True_Should_Throw_ArgException()
+    public void ShouldBeFalse_With_True_Should_Throw_ArgumentException()
     {
         // Arrange
         bool condition = true;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeFalse(condition);
-        action.Should().Throw<ArgException<bool>>()
+        action.Should().Throw<ArgumentException>()
             .WithMessage("*validation failed*");
     }
 
@@ -440,8 +442,8 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeFalse(condition, customMessage);
-        action.Should().Throw<ArgException<bool>>()
-            .WithMessage(customMessage);
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Custom false validation error message*");
     }
 
     #endregion
@@ -768,7 +770,7 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldMatch_String_Pattern_With_Non_Matching_Value_Should_Throw_ArgException()
+    public void ShouldMatch_String_Pattern_With_Non_Matching_Value_Should_Throw_ArgumentException()
     {
         // Arrange
         string value = "abc";
@@ -776,7 +778,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldMatch(value, pattern);
-        action.Should().Throw<ArgException<string>>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -801,8 +803,8 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldMatch(value, pattern, RegexOptions.None, customMessage);
-        action.Should().Throw<ArgException<string>>()
-            .WithMessage(customMessage);
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Custom regex match error message*");
     }
 
     #endregion
@@ -846,7 +848,7 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldMatch_Regex_Object_With_Non_Matching_Value_Should_Throw_ArgException()
+    public void ShouldMatch_Regex_Object_With_Non_Matching_Value_Should_Throw_ArgumentException()
     {
         // Arrange
         string value = "abc";
@@ -854,7 +856,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldMatch(value, regex);
-        action.Should().Throw<ArgException<string>>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -867,8 +869,8 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldMatch(value, regex, customMessage);
-        action.Should().Throw<ArgException<string>>()
-            .WithMessage(customMessage);
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Custom regex object match error message*");
     }
 
     #endregion

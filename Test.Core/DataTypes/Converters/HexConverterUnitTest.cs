@@ -69,12 +69,12 @@ public class HexConverterUnitTest
     [InlineData(':')]
     [InlineData('@')]
     [InlineData('`')]
-    public void ConvertHexDigit_With_Invalid_Characters_Should_Throw_ArgException(char input)
+    public void ConvertHexDigit_With_Invalid_Characters_Should_Throw_ArgumentException(char input)
     {
         // Act & Assert
         var action = () => HexConverter.ConvertHexDigit(input);
-        action.Should().Throw<ArgException<char>>()
-            .WithMessage("Value was out of range. Must be between '0'-'9' or 'a'-'f' or 'A'-'F'.");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Value was out of range. Must be between '0'-'9' or 'a'-'f' or 'A'-'F'.*");
     }
 
     #endregion
@@ -216,15 +216,15 @@ public class HexConverterUnitTest
     }
 
     [Fact]
-    public void FromHexString_With_Simple_Hex_But_Wrong_Fromat_Throw_ArgException()
+    public void FromHexString_With_Simple_Hex_But_Wrong_Fromat_Throw_ArgumentException()
     {
         // Arrange
         string hexString = "a41424344";
 
         // Act & Assert
         var action = () => HexConverter.FromHexString(hexString);
-        action.Should().Throw<ArgException<string>>()
-            .WithMessage("Inproperly formatted hex string");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Inproperly formatted hex string*");
     }
 
     [Fact]
@@ -235,20 +235,20 @@ public class HexConverterUnitTest
 
         // Act & Assert
         var action = () => HexConverter.FromHexString(hexString);
-        action.Should().Throw<ArgException<string>>()
-            .WithMessage("Inproperly formatted hex string");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Inproperly formatted hex string*");
     }
 
     [Fact]
-    public void FromHexString_With_Invalid_Hex_Character_Should_Throw_ArgException()
+    public void FromHexString_With_Invalid_Hex_Character_Should_Throw_ArgumentException()
     {
         // Arrange
         string hexString = "41G2";
 
         // Act & Assert
         var action = () => HexConverter.FromHexString(hexString);
-        action.Should().Throw<ArgException<string>>()
-            .WithMessage("Inproperly formatted hex string");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Inproperly formatted hex string*");
     }
 
     #endregion
@@ -839,14 +839,14 @@ public class HexConverterUnitTest
     #region Edge Cases and Error Conditions Tests
 
     [Fact]
-    public void FromHexString_With_Mixed_Invalid_Format_Should_Throw_ArgException()
+    public void FromHexString_With_Mixed_Invalid_Format_Should_Throw_ArgumentException()
     {
         // Arrange
         string hexString = "41 4 43";
 
         // Act & Assert
         var action = () => HexConverter.FromHexString(hexString);
-        action.Should().Throw<ArgException<string>>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -951,27 +951,27 @@ public class HexConverterUnitTest
     #region Failed ToHexString Method Tests
 
     [Fact]
-    public void ToHexString_Bool_Should_Throw_ArgException()
+    public void ToHexString_Bool_Should_Throw_ArgumentException()
     {
         // Arrange
         bool value = false;
 
         // Act & Assert
         var action = () => HexConverter.ToHexString(value);
-        action.Should().Throw<ArgException<bool>>()
-            .WithMessage("Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.*");
     }
 
     [Fact]
-    public void ToHexString_BigInteger_Should_Throw_ArgException()
+    public void ToHexString_BigInteger_Should_Throw_ArgumentException()
     {
         // Arrange
         BigInteger value = 42;
 
         // Act & Assert
         var action = () => HexConverter.ToHexString(value);
-        action.Should().Throw<ArgException<BigInteger>>()
-            .WithMessage("Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.*");
     }
 
     #endregion

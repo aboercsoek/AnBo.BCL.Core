@@ -24,7 +24,7 @@ public static class HexConverter
     /// <summary>
     /// Converts a hex digit.
     /// </summary>
-    /// <exception cref="ArgException{TValue}">Is thrown if <paramref name="val"/> has imcompatible digits for hex convertian.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="val"/> has imcompatible digits for hex convertian.</exception>
     /// <param name="val">The value.</param>
     /// <returns>The converted hex digit.</returns>
     public static int ConvertHexDigit(char val)
@@ -39,7 +39,7 @@ public static class HexConverter
         }
         if ((val < 'A') || (val > 'F'))
         {
-            throw new ArgException<char>(val, "val", "Value was out of range. Must be between '0'-'9' or 'a'-'f' or 'A'-'F'.");
+            throw new ArgumentException("Value was out of range. Must be between '0'-'9' or 'a'-'f' or 'A'-'F'.", nameof(val));
         }
         return ((val - 'A') + 0xa);
     }
@@ -49,7 +49,7 @@ public static class HexConverter
     /// </summary>
     /// <param name="hexString">The hex string.</param>
     /// <returns>The converted byte buffer.</returns>
-    /// <exception cref="ArgException{TValue}">Is thrown if <paramref name="hexString"/> is not properly formatted.</exception>"
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="hexString"/> is not properly formatted.</exception>"
     public static byte[] FromHexString(string hexString)
     {
         try
@@ -72,7 +72,7 @@ public static class HexConverter
         }
         catch (FormatException)
         {
-            throw new ArgException<string>(hexString, "hexString", "Inproperly formatted hex string");
+            throw new ArgumentException("Inproperly formatted hex string", nameof(hexString));
         }
 
     }
@@ -131,7 +131,7 @@ public static class HexConverter
                 minHexDigits = Math.Min(minHexDigits, maxDigits);
                 return prefix + tempI128.ToString("x").PadLeft(minHexDigits, '0');
             default:
-                throw new ArgException<T>(value, "value", "Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.");
+                throw new ArgumentException("Value must be a byte, short, int, long, ushort ,uint, ulong, Int128 type.", nameof(value));
         }
     }
 

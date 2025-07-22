@@ -447,7 +447,7 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void Compute_Stream_With_Non_Readable_Stream_Should_Throw_ArgException()
+    public void Compute_Stream_With_Non_Readable_Stream_Should_Throw_ArgumentException()
     {
         // Arrange
         var writeOnlyStream = new MemoryStream();
@@ -458,7 +458,7 @@ public class Crc32HelperUnitTest
 
         // Act & Assert
         var action = () => Crc32Helper.Compute(nonReadableStream);
-        action.Should().Throw<ArgException<Stream>>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -533,7 +533,7 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public async Task ComputeAsync_Stream_With_Non_Readable_Stream_Should_Throw_ArgException()
+    public async Task ComputeAsync_Stream_With_Non_Readable_Stream_Should_Throw_ArgumentException()
     {
         // Arrange
         var writeOnlyStream = new MemoryStream();
@@ -543,7 +543,7 @@ public class Crc32HelperUnitTest
 
         // Act & Assert
         var action = async () => await Crc32Helper.ComputeAsync(nonReadableStream);
-        await action.Should().ThrowAsync<ArgException<Stream>>();
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]

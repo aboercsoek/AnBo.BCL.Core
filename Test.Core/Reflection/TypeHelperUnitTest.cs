@@ -59,7 +59,7 @@ public class TypeHelperUnitTest
         var action = () => TypeHelper.DeepClone(original, typeof(int));
 
         // Assert
-        action.Should().Throw<ArgException<Type>>()
+        action.Should().Throw<ArgumentException>()
             .WithMessage("*is not compatible with the object type*");
     }
 

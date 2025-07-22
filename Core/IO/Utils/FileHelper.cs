@@ -227,7 +227,7 @@ namespace AnBo.Core
         /// <param name="paths">The path segments.</param>
         /// <returns>A string containing the combined paths.</returns>
         /// <exception cref="ArgumentNullException">Is thrown if <paramref name="basePath"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgException{TValue}">
+        /// <exception cref="ArgumentException">
         /// Is thrown if <paramref name="basePath"/> or any item of <paramref name="paths"/> contains invalid path characters.
         /// </exception>
         public static string CombinePath(string basePath, params string[] paths)
@@ -236,7 +236,7 @@ namespace AnBo.Core
             ArgumentNullException.ThrowIfNull(basePath);
 
             if (basePath.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
-                throw new ArgException<string>(basePath, "basePath", "Argument {0} error: {0} contains invalid path characters (value = {1}");
+                throw new ArgumentException("Argument error: Contains invalid path characters (value = {1}", nameof(basePath));
             #endregion
 
             paths.Foreach(path =>
@@ -244,8 +244,7 @@ namespace AnBo.Core
                 ArgumentNullException.ThrowIfNull(path);
                 if (path.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
                 {
-                    throw new ArgException<string>(path, "paths",
-                                                   "Argument {0} error: {0} contains invalid path characters (value = {1}");
+                    throw new ArgumentException("Argument error: Contains invalid path characters.", nameof(basePath));
                 }
             });
 

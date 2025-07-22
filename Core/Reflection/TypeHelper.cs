@@ -83,7 +83,7 @@ public static class TypeHelper
     /// <param name="type">The type of object to be cloned. If null, uses the runtime type of the object</param>
     /// <returns>A deep copy of the original object, or null if the original was null</returns>
     /// <exception cref="InvalidOperationException">Thrown when the object cannot be cloned due to serialization errors</exception>
-    /// <exception cref="ArgException">Thrown when the provided type is incompatible with the object</exception>
+    /// <exception cref="ArgumentException">Thrown when the provided type is incompatible with the object</exception>
     public static object? DeepClone(object? original, Type type)
     {
         if (original is null)
@@ -94,9 +94,9 @@ public static class TypeHelper
         // Validate type compatibility
         if (type is not null && !targetType.IsAssignableFrom(original.GetType()))
         {
-            throw new ArgException<Type>(type,
-                nameof(type),
-                $"The provided type '{targetType.Name}' is not compatible with the object type '{original.GetType().Name}'");
+            throw new ArgumentException(
+                $"The provided type '{targetType.Name}' is not compatible with the object type '{original.GetType().Name}'",
+                nameof(type));
 
         }
 

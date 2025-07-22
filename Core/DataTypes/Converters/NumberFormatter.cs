@@ -36,7 +36,7 @@ public static class NumberFormatter
             ushort us => Convert.ToString(us, 2),
             uint ui => Convert.ToString(ui, 2),
             ulong ul => Convert.ToString((long)ul, 2),
-            _ => throw new ArgException<T>(value, "value", "Value must be a byte, short, int, long, ushort, uint, ulong type.")
+            _ => throw new ArgumentException("Value must be a byte, short, int, long, ushort, uint, ulong type.", nameof(value))
         };
     }
 

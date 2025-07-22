@@ -935,13 +935,13 @@ public class NumberFormatterUnitTest
     #region Test Cases for Invalid Inputs
 
     [Fact]
-    public void ToBinaryString_Called_With_Int128_Should_Thow_ArgException()
+    public void ToBinaryString_Called_With_Int128_Should_Thow_ArgumentException()
     {   // Arrange
         Int128 i128 = 0;
         // Act & Assert
         var action = () => NumberFormatter.ToBinaryString(i128);
-        action.Should().Throw<ArgException<Int128>>()
-            .WithMessage("Value must be a byte, short, int, long, ushort, uint, ulong type.");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Value must be a byte, short, int, long, ushort, uint, ulong type.*");
     }
 
 

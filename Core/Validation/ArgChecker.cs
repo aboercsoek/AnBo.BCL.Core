@@ -192,7 +192,7 @@ public static class ArgChecker
     /// <summary>
     /// Checks if the argument condition is true.
     /// </summary>
-    /// <exception cref="ArgException{T}">Is thrown if <paramref name="argCondition"/> is false.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argCondition"/> is false.</exception>
     /// <param name="argCondition">The argument condition.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
@@ -200,15 +200,15 @@ public static class ArgChecker
     public static void ShouldBeTrue([DoesNotReturnIf(false)] bool argCondition, string? errorMessage = null, [CallerArgumentExpression(nameof(argCondition))] string? argName = null)
     {
         if (!argCondition)
-            throw new ArgException<bool>(false, argName!, string.IsNullOrEmpty(errorMessage)
-                                                      ? StringResources.ErrorArgumentValidationFailedTemplate2Args
-                                                      : errorMessage);
+            throw new ArgumentException(string.IsNullOrEmpty(errorMessage) ? 
+                StringResources.ErrorArgumentValidationFailedTemplate2Args.SafeFormatWith(argName, argCondition) : errorMessage,
+                argName!);
     }
 
     /// <summary>
     /// Checks if the argument condition is false.
     /// </summary>
-    /// <exception cref="ArgException{T}">Is thrown if <paramref name="argCondition"/> is true.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argCondition"/> is true.</exception>
     /// <param name="argCondition">The argument condition.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
@@ -216,9 +216,9 @@ public static class ArgChecker
     public static void ShouldBeFalse([DoesNotReturnIf(true)] bool argCondition, string? errorMessage = null, [CallerArgumentExpression(nameof(argCondition))] string? argName = null)
     {
         if (argCondition)
-            throw new ArgException<bool>(true, argName!, string.IsNullOrEmpty(errorMessage)
-                                                      ? StringResources.ErrorArgumentValidationFailedTemplate2Args
-                                                      : errorMessage);
+            throw new ArgumentException(string.IsNullOrEmpty(errorMessage) ?
+                StringResources.ErrorArgumentValidationFailedTemplate2Args.SafeFormatWith(argName, argCondition) : errorMessage,
+                argName!);
     }
 
     #endregion ShouldBeTrue, ShouldBeFalse methods
@@ -342,7 +342,7 @@ public static class ArgChecker
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> or <paramref name="regexPattern"/> is <see langword="null"/></exception>
-    /// <exception cref="ArgException{String}">Is thrown if the <paramref name="argValue"/> value does not mathes the <paramref name="regexPattern">Regular Expression</paramref>.</exception>
+    /// <exception cref="ArgumentException">Is thrown if the <paramref name="argValue"/> value does not mathes the <paramref name="regexPattern">Regular Expression</paramref>.</exception>
     [DebuggerStepThrough]
     public static void ShouldMatch(string? argValue, [NotNull] string regexPattern,
         RegexOptions options = RegexOptions.None,
@@ -358,10 +358,7 @@ public static class ArgChecker
         // Use compiled regex for better performance
         if (!Regex.IsMatch(argValue!, regexPattern!, options | RegexOptions.Compiled))
         {
-            if (errorMessage == null)
-                throw new ArgException<string>(argValue!, argName!);
-            else
-                throw new ArgException<string>(argValue!, argName!, errorMessage);
+            throw new ArgumentException(errorMessage, argName!);
         }
 
         //ShouldMatch(argValue!, regex, errorMessage, argName);
@@ -375,7 +372,7 @@ public static class ArgChecker
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> or <paramref name="regex"/> is <see langword="null"/></exception>
-    /// <exception cref="ArgException{String}">Is thrown if the <paramref name="argValue"/> value does not mathes the <paramref name="regex">Regular Expression</paramref>.</exception>
+    /// <exception cref="ArgumentException">Is thrown if the <paramref name="argValue"/> value does not mathes the <paramref name="regex">Regular Expression</paramref>.</exception>
     [DebuggerStepThrough]
     public static void ShouldMatch(string? argValue, Regex regex, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
@@ -386,10 +383,7 @@ public static class ArgChecker
 
         if (RegexHelper.MatchAny(argValue!, regex) == -1)
         {
-            if (errorMessage == null)
-                throw new ArgException<string>(argValue!, argName!);
-            else
-                throw new ArgException<string>(argValue!, argName!, errorMessage);
+            throw new ArgumentException(errorMessage, argName!);
         }
     }
 

@@ -267,14 +267,14 @@ public sealed class Crc32Helper
     /// <param name="stream">The stream to read from. Must not be null and must be readable.</param>
     /// <returns>The computed CRC32 checksum</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="stream"/> is null</exception>
-    /// <exception cref="ArgException">Thrown when the stream is not readable</exception>
+    /// <exception cref="ArgumentException">Thrown when the stream is not readable</exception>
     public static uint Compute(Stream stream)
     {
         ArgumentNullException.ThrowIfNull(stream);
 
         if (!stream.CanRead)
         {
-            throw new ArgException<Stream>(stream, nameof(stream), "Stream must be readable");
+            throw new ArgumentException("Stream must be readable", nameof(stream));
         }
 
         uint crc = InitialCrc;
@@ -313,7 +313,7 @@ public sealed class Crc32Helper
 
         if (!stream.CanRead)
         {
-            throw new ArgException<Stream>(stream, nameof(stream), "Stream must be readable");
+            throw new ArgumentException("Stream must be readable", nameof(stream));
         }
 
         uint crc = InitialCrc;
