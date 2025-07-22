@@ -1023,6 +1023,106 @@ public class ObjectExtensionsUnitTest
         result.Should().BeFalse();
     }
 
+    [Fact]
+    public void IsDefaultValue_With_Decimal_Default_Should_Return_True()
+    {
+        // Arrange
+        object value = 0.0m;
+
+        // Act
+        var result = value.IsDefaultValue();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsDefaultValue_With_DateTime_Default_Should_Return_True()
+    {
+        // Arrange
+        object value = (DateTime)default;
+
+        // Act
+        var result = value.IsDefaultValue();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsDefaultValue_With_DateOnly_Default_Should_Return_True()
+    {
+        // Arrange
+        object value = (DateOnly)default;
+
+        // Act
+        var result = value.IsDefaultValue();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsDefaultValue_With_TimeOnly_Default_Should_Return_True()
+    {
+        // Arrange
+        object value = (TimeOnly)default;
+
+        // Act
+        var result = value.IsDefaultValue();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsDefaultValue_With_TimeSpan_Default_Should_Return_True()
+    {
+        // Arrange
+        object value = (TimeSpan)default;
+
+        // Act
+        var result = value.IsDefaultValue();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsDefaultValue_With_Guid_Default_Should_Return_True()
+    {
+        // Arrange
+        object value = (Guid)default;
+
+        // Act
+        var result = value.IsDefaultValue();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(0.0f)]
+    [InlineData(0.0)]
+    [InlineData(false)]
+    [InlineData((long)0L)]
+    [InlineData((short)0)]
+    [InlineData((byte)0)]
+    [InlineData((sbyte)0)]
+    [InlineData((uint)0)]
+    [InlineData((ulong)0UL)]
+    [InlineData((ushort)0)]
+    [InlineData((char)0)]
+    public void IsDefaultValue_WithValueTypeObjects_ShouldReturnTrue(object valueObj)
+    {
+        // Act
+        var result = valueObj.IsDefaultValue();
+
+        // Assert
+        result.Should().BeTrue($"value type object '{valueObj}' should be cloneable");
+    }
+
     #endregion
 
     #region IsDefaultOrEmpty Method Tests

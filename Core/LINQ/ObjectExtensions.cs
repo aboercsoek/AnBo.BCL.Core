@@ -482,6 +482,8 @@ public static class ObjectEx
             decimal m => m == default(decimal),
             DateTime dt => dt == default(DateTime),
             TimeSpan ts => ts == default(TimeSpan),
+            DateOnly dateOnly => dateOnly == default(DateOnly),
+            TimeOnly timeOnly => timeOnly == default(TimeOnly),
             Guid g => g == default(Guid),
             _ => Equals(Activator.CreateInstance(type), value)
         };
