@@ -23,23 +23,6 @@ namespace AnBo.Core;
 /// </summary>
 public static class ArgChecker
 {
-    #region ShouldNotBeNull methods
-
-    /// <summary>
-    /// Check if <paramref name="argValue"/> is not <see langword="null"/>.
-    /// </summary>
-    /// <param name="argValue">The argument value.</param>
-    /// <param name="errorMessage">The message.</param>
-    /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
-    //[DebuggerStepThrough]
-    //public static void ShouldNotBeNull<T>([NotNull] T? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
-    //{
-    //    ArgumentNullException.ThrowIfNull(argValue, argName);
-    //}
-
-    #endregion ShouldNotBeNull methods
-
     #region ShouldNotBeEmpty methods
 
     /// <summary>
@@ -132,7 +115,6 @@ public static class ArgChecker
     public static void ShouldNotBeNullOrEmpty([NotNull] string? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
         ArgumentNullException.ThrowIfNull(argValue, argName);
-
         ShouldNotBeEmpty(argValue: argValue!, errorMessage: errorMessage, argName: argName);
     }
 
@@ -148,7 +130,6 @@ public static class ArgChecker
     public static void ShouldNotBeNullOrEmpty([NotNull] Guid? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
         ArgumentNullException.ThrowIfNull(argValue, argName);
-
         ShouldNotBeEmpty(argValue: argValue!.Value, errorMessage: errorMessage, argName: argName);
     }
 
@@ -164,8 +145,6 @@ public static class ArgChecker
     public static void ShouldNotBeNullOrEmpty([NotNull] StringBuilder? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
         ArgumentNullException.ThrowIfNull(argValue, argName);
-        //ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
-
         ShouldNotBeEmpty(argValue: argValue!, errorMessage: errorMessage, argName: argName);
     }
 
@@ -180,8 +159,6 @@ public static class ArgChecker
     public static void ShouldNotBeNullOrEmpty([NotNull] IEnumerable? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
         ArgumentNullException.ThrowIfNull(argValue, argName);
-        //ShouldNotBeNull(argValue: argValue, argName: argName);
-
         ShouldNotBeEmpty(argValue: argValue!, argName: argName);
     }
 
@@ -232,8 +209,8 @@ public static class ArgChecker
     /// <param name="argName">The Name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argFilePath"/> is <see langword="null"/></exception>
     /// <exception cref="ArgumentException">Is thrown if <paramref name="argFilePath"/> is an empty string.</exception>
-    /// <exception cref="FilePathTooLongException">Is thrown if <paramref name="argFilePath"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
-    /// <exception cref="ArgFilePathException">Is thrown if the <paramref name="argFilePath"/> value is not a path to a existing file.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argFilePath"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
+    /// <exception cref="ArgumentException">Is thrown if the <paramref name="argFilePath"/> value is not a path to a existing file.</exception>
     [DebuggerStepThrough]
     public static void ShouldBeExistingFile(string? argFilePath, [CallerArgumentExpression(nameof(argFilePath))] string? argName = null)
     {
@@ -244,14 +221,20 @@ public static class ArgChecker
             var fullPath = Path.GetFullPath(argFilePath);
 
             if (fullPath.Length > FileHelper.MAXIMUM_FILE_NAME_LENGTH)
-                throw new FilePathTooLongException(argFilePath, argName!);
+                throw new ArgumentException(
+                    StringResources.ErrorArgFilePathToLongTemplate2Args.SafeFormatWith(argName, argFilePath),
+                    argName!);
 
             if (File.Exists(fullPath) == false)
-                throw new ArgFilePathException(argFilePath, argName!);
+                throw new ArgumentException(
+                    StringResources.ErrorArgumentFilePathExceptionTemplate2Args.SafeFormatWith(argName, argFilePath),
+                    argName!);
         }
-        catch (Exception ex) when (ex is not ArgFilePathException)
+        catch (Exception ex) when (ex is not ArgumentException)
         {
-            throw new ArgFilePathException(argFilePath, argName!);
+            throw new ArgumentException(
+                    StringResources.ErrorArgumentFilePathExceptionTemplate2Args.SafeFormatWith(argName, argFilePath),
+                    argName!);
         }
     }
 
@@ -262,16 +245,17 @@ public static class ArgChecker
     /// <param name="argName">The Name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argFileInfo"/> is <see langword="null"/></exception>
     /// <exception cref="ArgumentException">Is thrown if <paramref name="argFileInfo"/> is an empty string.</exception>
-    /// <exception cref="FilePathTooLongException">Is thrown if <paramref name="argFileInfo"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
-    /// <exception cref="ArgFilePathException">Is thrown if the <paramref name="argFileInfo"/> value is not a path to a existing file.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argFileInfo"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
+    /// <exception cref="ArgumentException">Is thrown if the <paramref name="argFileInfo"/> value is not a path to a existing file.</exception>
     [DebuggerStepThrough]
     public static void ShouldBeExistingFile(FileInfo? argFileInfo, [CallerArgumentExpression(nameof(argFileInfo))] string? argName = null)
     {
         ArgumentNullException.ThrowIfNull(argFileInfo, argName);
-        //ShouldNotBeNull(argValue: argFileInfo, argName: argName);
 
         if (argFileInfo!.Exists == false)
-            throw new ArgFilePathException(argFileInfo, argName!);
+            throw new ArgumentException(
+                StringResources.ErrorArgumentFilePathExceptionTemplate2Args.SafeFormatWith(argName, argFileInfo!.Name),
+                argName!);
     }
 
     /// <summary>
@@ -281,8 +265,7 @@ public static class ArgChecker
     /// <param name="argName">The Name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argDirectoryPath"/> is <see langword="null"/></exception>
     /// <exception cref="ArgumentException">Is thrown if <paramref name="argDirectoryPath"/> is an empty string.</exception>
-    /// <exception cref="DirectoryPathTooLongException">Is thrown if <paramref name="argDirectoryPath"/> length is too long (see <see cref="FileHelper.MAXIMUM_FOLDER_NAME_LENGTH"/>).</exception>
-    /// <exception cref="ArgDirectoryPathException">Is thrown if the <paramref name="argDirectoryPath"/> value is not a path to a existing directory.</exception>
+    /// <exception cref="ArgumentException">Is thrown if the <paramref name="argDirectoryPath"/> value is not a path to a existing directory or is to long.</exception>
     [DebuggerStepThrough]
     public static void ShouldBeExistingDirectory(string? argDirectoryPath, [CallerArgumentExpression(nameof(argDirectoryPath))] string? argName = null)
     {
@@ -294,14 +277,20 @@ public static class ArgChecker
             var fullPath = Path.GetFullPath(argDirectoryPath);
 
             if (fullPath.Length > FileHelper.MAXIMUM_FOLDER_NAME_LENGTH)
-                throw new DirectoryPathTooLongException(argDirectoryPath, argName!);
+                throw new ArgumentException(
+                    StringResources.ErrorArgDirectoryPathToLongTemplate2Args.SafeFormatWith(argName, argDirectoryPath),
+                    argName!);
 
             if (Directory.Exists(fullPath) == false)
-                throw new ArgDirectoryPathException(argDirectoryPath, argName!);
+                throw new ArgumentException(
+                    StringResources.ErrorArgumentDirectoryPathExceptionTemplate2Args.SafeFormatWith(argName, argDirectoryPath), 
+                    argName!);
         }
-        catch (Exception ex) when (ex is not ArgFilePathException)
+        catch (Exception ex) when (ex is not ArgumentException)
         {
-            throw new ArgFilePathException(argDirectoryPath, argName!);
+            throw new ArgumentException(
+                    StringResources.ErrorArgDirectoryPathToLongTemplate2Args.SafeFormatWith(argName, argDirectoryPath),
+                    argName!);
         }
     }
 

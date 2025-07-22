@@ -473,25 +473,25 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeExistingFile_String_With_Non_Existing_File_Should_Throw_ArgFilePathException()
+    public void ShouldBeExistingFile_String_With_Non_Existing_File_Should_Throw_ArgumentException()
     {
         // Arrange
         string filePath = @"C:\NonExistentFile.txt";
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingFile(filePath);
-        action.Should().Throw<ArgFilePathException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
-    public void ShouldBeExistingFile_String_With_Invalid_Path_Should_Throw_ArgFilePathException()
+    public void ShouldBeExistingFile_String_With_Invalid_Path_Should_Throw_ArgumentException()
     {
         // Arrange
         string filePath = "InvalidPath|<>?";
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingFile(filePath);
-        action.Should().Throw<ArgFilePathException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -530,14 +530,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeExistingFile_FileInfo_With_Non_Existing_File_Should_Throw_ArgFilePathException()
+    public void ShouldBeExistingFile_FileInfo_With_Non_Existing_File_Should_Throw_ArgumentException()
     {
         // Arrange
         var fileInfo = new FileInfo(@"C:\NonExistentFile.txt");
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingFile(fileInfo);
-        action.Should().Throw<ArgFilePathException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -589,14 +589,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeExistingDirectory_With_Non_Existing_Directory_Should_Throw_ArgDirectoryPathException()
+    public void ShouldBeExistingDirectory_With_Non_Existing_Directory_Should_Throw_ArgumentException()
     {
         // Arrange
         string directoryPath = @"C:\NonExistentDirectory";
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingDirectory(directoryPath);
-        action.Should().Throw<ArgFilePathException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -611,14 +611,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeExistingDirectory_With_Invalid_Path_Should_Throw_ArgFilePathException()
+    public void ShouldBeExistingDirectory_With_Invalid_Path_Should_Throw_ArgumentException()
     {
         // Arrange
         string directoryPath = "InvalidPath|<>?";
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingDirectory(directoryPath);
-        action.Should().Throw<ArgFilePathException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     #endregion

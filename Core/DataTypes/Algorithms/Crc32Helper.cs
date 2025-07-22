@@ -346,7 +346,7 @@ public sealed class Crc32Helper
     /// <returns>The computed CRC32 checksum</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="filePath"/> empty</exception>
-    /// <exception cref="ArgFilePathException">Thrown when the file does not exist</exception>
+    /// <exception cref="ArgumentException">Thrown when the file does not exist</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown when access to the file is denied</exception>
     /// <exception cref="IOException">Thrown when an I/O error occurs</exception>
     public static uint ComputeFile(string filePath)
@@ -365,7 +365,7 @@ public sealed class Crc32Helper
     /// <returns>A task representing the asynchronous operation with the computed CRC32 checksum as result</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null</exception>
     /// <exception cref="ArgumentException">Thrown when <paramref name="filePath"/> empty</exception>
-    /// <exception cref="ArgFilePathException">Thrown when the file does not exist</exception>
+    /// <exception cref="ArgumentException">Thrown when the file does not exist</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown when access to the file is denied</exception>
     /// <exception cref="IOException">Thrown when an I/O error occurs</exception>
     /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>

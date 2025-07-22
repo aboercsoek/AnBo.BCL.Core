@@ -620,14 +620,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void ComputeFile_With_Non_Existent_File_Should_Throw_ArgFilePathException()
+    public void ComputeFile_With_Non_Existent_File_Should_Throw_ArgumentException()
     {
         // Arrange
         string nonExistentPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
 
         // Act & Assert
         var action = () => Crc32Helper.ComputeFile(nonExistentPath);
-        action.Should().Throw<ArgFilePathException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -686,14 +686,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public async Task ComputeFileAsync_With_Non_Existent_File_Should_Throw_ArgFilePathException()
+    public async Task ComputeFileAsync_With_Non_Existent_File_Should_Throw_ArgumentException()
     {
         // Arrange
         string nonExistentPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
 
         // Act & Assert
         var action = async () => await Crc32Helper.ComputeFileAsync(nonExistentPath);
-        await action.Should().ThrowAsync<ArgFilePathException>();
+        await action.Should().ThrowAsync<ArgumentException>();
     }
 
     [Fact]

@@ -23,4 +23,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Error\ArgumentExceptions\" />
+    <Folder Include="Error\IOExceptions\" />
+  </ItemGroup>
+
 </Project>
