@@ -475,7 +475,7 @@ public static class StringConversionHelper
     /// <exception cref="ArgNullException">Thrown when <paramref name="value"/> is null.</exception>"
     public static T? ParseInvariantString<T>(this string value)
     {
-        ArgChecker.ShouldNotBeNull(value);
+        ArgumentNullException.ThrowIfNull(value);
 
         // Verwende Reflection-basierte Prüfung für beide Interfaces
         return (T?)ParseInvariantString(value, typeof(T));
@@ -490,8 +490,8 @@ public static class StringConversionHelper
     /// <exception cref="ArgNullException">Thrown when <paramref name="value"/> or <paramref name="type"/> is null.</exception>"
     public static object? ParseInvariantString(this string value, Type type)
     {
-        ArgChecker.ShouldNotBeNull(value);
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(value);
+        ArgumentNullException.ThrowIfNull(type);
 
         if (type.IsEnum)
         {

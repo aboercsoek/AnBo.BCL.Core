@@ -77,7 +77,7 @@ public static class ObjectEx
     /// <typeparam name="T">The target type to cast to</typeparam>
     /// <param name="item">The object to cast (must not be null)</param>
     /// <returns>The casted value</returns>
-    /// <exception cref="ArgNullException">Thrown when item is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when item is null</exception>
     /// <exception cref="InvalidCastException">Thrown when the cast is not possible</exception>
     /// <example>
     /// <code>
@@ -90,7 +90,7 @@ public static class ObjectEx
     /// </example>
     public static T CastTo<T>(this object item)
     {
-        ArgChecker.ShouldNotBeNull(item);
+        ArgumentNullException.ThrowIfNull(item);
 
         return item is T result
             ? result
@@ -162,7 +162,7 @@ public static class ObjectEx
     /// <exception cref="InvalidCastException">Thrown when any element cannot be casted</exception>
     public static IEnumerable<TTarget> CastSequenceStrict<TSource, TTarget>(this IEnumerable<TSource?> source)
     {
-        ArgChecker.ShouldNotBeNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
         foreach (var item in source)
         {
@@ -195,7 +195,7 @@ public static class ObjectEx
     /// </example>
     public static object? CreateInstance(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         // Optimized handling for common types
         return type == typeof(string)
@@ -226,7 +226,7 @@ public static class ObjectEx
     /// </example>
     public static T With<T>(this T obj, Action<T> action)
     {
-        ArgChecker.ShouldNotBeNull(action);
+        ArgumentNullException.ThrowIfNull(action);
 
         action(obj);
         return obj;
@@ -249,7 +249,7 @@ public static class ObjectEx
     /// </example>
     public static T WithIf<T>(this T obj, bool condition, Action<T> action)
     {
-        ArgChecker.ShouldNotBeNull(action);
+        ArgumentNullException.ThrowIfNull(action);
 
         if (condition)
             action(obj);
@@ -271,8 +271,8 @@ public static class ObjectEx
     /// <exception cref="ArgNullException">Thrown when disposable or action is null</exception>
     public static void Using<T>(this T disposable, Action<T> action) where T : IDisposable
     {
-        ArgChecker.ShouldNotBeNull(disposable);
-        ArgChecker.ShouldNotBeNull(action);
+        ArgumentNullException.ThrowIfNull(disposable);
+        ArgumentNullException.ThrowIfNull(action);
 
         using (disposable)
         {
@@ -293,8 +293,8 @@ public static class ObjectEx
     public static TResult Using<TDisposable, TResult>(this TDisposable disposable, Func<TDisposable, TResult> func)
         where TDisposable : IDisposable
     {
-        ArgChecker.ShouldNotBeNull(disposable);
-        ArgChecker.ShouldNotBeNull(func);
+        ArgumentNullException.ThrowIfNull(disposable);
+        ArgumentNullException.ThrowIfNull(func);
 
         using (disposable)
         {
@@ -317,8 +317,8 @@ public static class ObjectEx
         TFuncParam2? funcParam2, 
         Func<TDisposable, TFuncParam2?, TResult> func) where TDisposable : IDisposable
     {
-        ArgChecker.ShouldNotBeNull(disposable);
-        ArgChecker.ShouldNotBeNull(func);
+        ArgumentNullException.ThrowIfNull(disposable);
+        ArgumentNullException.ThrowIfNull(func);
 
         using (disposable)
         {
@@ -336,8 +336,8 @@ public static class ObjectEx
     /// <exception cref="ArgNullException">Thrown when sequence or action is null</exception>
     public static void UsingEach<T>(this IEnumerable<T> sequence, Action<T> action) where T : IDisposable
     {
-        ArgChecker.ShouldNotBeNull(sequence);
-        ArgChecker.ShouldNotBeNull(action);
+        ArgumentNullException.ThrowIfNull(sequence);
+        ArgumentNullException.ThrowIfNull(action);
 
         foreach (var item in sequence)
         {

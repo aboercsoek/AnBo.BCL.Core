@@ -226,7 +226,7 @@ public static partial class StringHelper
     /// <exception cref="ArgNullException">Thrown when separator is null.</exception>
     public static string JoinParams(string separator, params object?[] items)
     {
-        ArgChecker.ShouldNotBeNull(separator);
+        ArgumentNullException.ThrowIfNull(separator);
 
         return string.Join(separator, items.Select(item => item?.ToString() ?? string.Empty));
     }
@@ -242,8 +242,8 @@ public static partial class StringHelper
     /// <exception cref="ArgNullException">Thrown when separator or items is null.</exception>
     public static string Join<T>(string separator, IEnumerable<T> items, Func<T, string>? converter = null)
     {
-        ArgChecker.ShouldNotBeNull(separator);
-        ArgChecker.ShouldNotBeNull(items);
+        ArgumentNullException.ThrowIfNull(separator);
+        ArgumentNullException.ThrowIfNull(items);
 
         return (converter is null) ?
             string.Join(separator, items.Select(item => item?.ToString() ?? string.Empty)) :
@@ -276,7 +276,7 @@ public static partial class StringHelper
     /// <exception cref="ArgNullException">Thrown when data is null.</exception>
     public static string GetStringFromBytes(byte[] data)
     {
-        ArgChecker.ShouldNotBeNull(data);
+        ArgumentNullException.ThrowIfNull(data);
 
         // Strings in .NET are UTF-16
         return Encoding.Unicode.GetString(data);

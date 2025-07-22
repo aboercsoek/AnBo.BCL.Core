@@ -165,7 +165,7 @@ public sealed class Crc32Helper
     /// <exception cref="ArgNullException">Thrown when <paramref name="data"/> is null</exception>
     public void Update(byte[] data)
     {
-        ArgChecker.ShouldNotBeNull(data);
+        ArgumentNullException.ThrowIfNull(data);
         Update(data.AsSpan());
     }
 
@@ -201,7 +201,7 @@ public sealed class Crc32Helper
     /// <exception cref="ArgNullException">Thrown when <paramref name="data"/> is null</exception>
     public static uint Compute(byte[] data)
     {
-        ArgChecker.ShouldNotBeNull(data);
+        ArgumentNullException.ThrowIfNull(data);
         return Compute(data.AsSpan());
     }
 
@@ -227,7 +227,7 @@ public sealed class Crc32Helper
     /// <exception cref="ArgNullException">Thrown when <paramref name="text"/> is null</exception>
     public static uint Compute(string text)
     {
-        ArgChecker.ShouldNotBeNull(text);
+        ArgumentNullException.ThrowIfNull(text);
 
         return Compute(text, Encoding.UTF8);
     }
@@ -241,8 +241,8 @@ public sealed class Crc32Helper
     /// <exception cref="ArgNullException">Thrown when <paramref name="text"/> or <paramref name="encoding"/> is null</exception>
     public static uint Compute(string text, Encoding encoding)
     {
-        ArgChecker.ShouldNotBeNull(text);
-        ArgChecker.ShouldNotBeNull(encoding);
+        ArgumentNullException.ThrowIfNull(text);
+        ArgumentNullException.ThrowIfNull(encoding);
 
         // For small strings, use stack allocation to avoid heap allocation
         if (text.Length <= 256)
@@ -270,7 +270,7 @@ public sealed class Crc32Helper
     /// <exception cref="ArgException">Thrown when the stream is not readable</exception>
     public static uint Compute(Stream stream)
     {
-        ArgChecker.ShouldNotBeNull(stream);
+        ArgumentNullException.ThrowIfNull(stream);
 
         if (!stream.CanRead)
         {
@@ -309,7 +309,7 @@ public sealed class Crc32Helper
     /// <exception cref="OperationCanceledException">Thrown when the operation is canceled</exception>
     public static async Task<uint> ComputeAsync(Stream stream, CancellationToken cancellationToken = default)
     {
-        ArgChecker.ShouldNotBeNull(stream); ;
+        ArgumentNullException.ThrowIfNull(stream); ;
 
         if (!stream.CanRead)
         {

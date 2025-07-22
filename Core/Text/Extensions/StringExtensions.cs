@@ -475,7 +475,7 @@ public static partial class StringExtensions
     /// <returns>The quoted string if necessary.</returns>
     public static string QuoteIfNeeded(this string s)
     {
-        ArgChecker.ShouldNotBeNull(s);
+        ArgumentNullException.ThrowIfNull(s);
         //if (s is null) return "<NULL>";
 
         if (s.Length == 0 || s.Contains(' '))

@@ -31,14 +31,12 @@ public static class ArgChecker
     /// <param name="argValue">The argument value.</param>
     /// <param name="errorMessage">The message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
-    [DebuggerStepThrough]
-    public static void ShouldNotBeNull<T>([NotNull] T? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
-    {
-        if (argValue == null)
-            throw new ArgNullException(argName!,
-                string.IsNullOrEmpty(errorMessage) ? StringResources.ErrorShouldNotBeNullValidationTemplate1Arg : errorMessage);
-    }
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
+    //[DebuggerStepThrough]
+    //public static void ShouldNotBeNull<T>([NotNull] T? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
+    //{
+    //    ArgumentNullException.ThrowIfNull(argValue, argName);
+    //}
 
     #endregion ShouldNotBeNull methods
 
@@ -86,7 +84,7 @@ public static class ArgChecker
     /// <param name="argValue">The argument value.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeEmpty(StringBuilder argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
@@ -129,12 +127,13 @@ public static class ArgChecker
     /// <param name="argValue">The argument value.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
     /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty string.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeNullOrEmpty([NotNull] string? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
-        ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
+        ArgumentNullException.ThrowIfNull(argValue, argName);
+        //ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
 
         ShouldNotBeEmpty(argValue: argValue!, errorMessage: errorMessage, argName: argName);
     }
@@ -145,12 +144,13 @@ public static class ArgChecker
     /// <param name="argValue">The argument value.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
     /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty Guid.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeNullOrEmpty([NotNull] Guid? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
-        ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
+        ArgumentNullException.ThrowIfNull(argValue, argName);
+        //ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
 
         ShouldNotBeEmpty(argValue: argValue!.Value, errorMessage: errorMessage, argName: argName);
     }
@@ -161,12 +161,13 @@ public static class ArgChecker
     /// <param name="argValue">The argument value.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
     /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty StringBuilder.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeNullOrEmpty([NotNull] StringBuilder? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
-        ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
+        ArgumentNullException.ThrowIfNull(argValue, argName);
+        //ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
 
         ShouldNotBeEmpty(argValue: argValue!, errorMessage: errorMessage, argName: argName);
     }
@@ -176,12 +177,13 @@ public static class ArgChecker
     /// </summary>
     /// <param name="argValue">The argument value.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
     /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty collection.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeNullOrEmpty([NotNull] IEnumerable? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
-        ShouldNotBeNull(argValue: argValue, argName: argName);
+        ArgumentNullException.ThrowIfNull(argValue, argName);
+        //ShouldNotBeNull(argValue: argValue, argName: argName);
 
         ShouldNotBeEmpty(argValue: argValue!, argName: argName);
     }
@@ -255,7 +257,7 @@ public static class ArgChecker
     /// </summary>
     /// <param name="argFilePath">The argument file path value.</param>
     /// <param name="argName">The Name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argFilePath"/> is <see langword="null"/></exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argFilePath"/> is <see langword="null"/></exception>
     /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argFilePath"/> is an empty string.</exception>
     /// <exception cref="FilePathTooLongException">Is thrown if <paramref name="argFilePath"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
     /// <exception cref="ArgFilePathException">Is thrown if the <paramref name="argFilePath"/> value is not a path to a existing file.</exception>
@@ -285,14 +287,15 @@ public static class ArgChecker
     /// </summary>
     /// <param name="argFileInfo">The file info to check.</param>
     /// <param name="argName">The Name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argFileInfo"/> is <see langword="null"/></exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argFileInfo"/> is <see langword="null"/></exception>
     /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argFileInfo"/> is an empty string.</exception>
     /// <exception cref="FilePathTooLongException">Is thrown if <paramref name="argFileInfo"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
     /// <exception cref="ArgFilePathException">Is thrown if the <paramref name="argFileInfo"/> value is not a path to a existing file.</exception>
     [DebuggerStepThrough]
     public static void ShouldBeExistingFile(FileInfo? argFileInfo, [CallerArgumentExpression(nameof(argFileInfo))] string? argName = null)
     {
-        ShouldNotBeNull(argValue: argFileInfo, argName: argName);
+        ArgumentNullException.ThrowIfNull(argFileInfo, argName);
+        //ShouldNotBeNull(argValue: argFileInfo, argName: argName);
 
         if (argFileInfo!.Exists == false)
             throw new ArgFilePathException(argFileInfo, argName!);
@@ -303,7 +306,7 @@ public static class ArgChecker
     /// </summary>
     /// <param name="argDirectoryPath">The argument directory path value.</param>
     /// <param name="argName">The Name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argDirectoryPath"/> is <see langword="null"/></exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argDirectoryPath"/> is <see langword="null"/></exception>
     /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argDirectoryPath"/> is an empty string.</exception>
     /// <exception cref="DirectoryPathTooLongException">Is thrown if <paramref name="argDirectoryPath"/> length is too long (see <see cref="FileHelper.MAXIMUM_FOLDER_NAME_LENGTH"/>).</exception>
     /// <exception cref="ArgDirectoryPathException">Is thrown if the <paramref name="argDirectoryPath"/> value is not a path to a existing directory.</exception>
@@ -341,7 +344,7 @@ public static class ArgChecker
     /// <param name="options">Regex options (default: None).</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> or <paramref name="regexPattern"/> is <see langword="null"/></exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> or <paramref name="regexPattern"/> is <see langword="null"/></exception>
     /// <exception cref="ArgException{String}">Is thrown if the <paramref name="argValue"/> value does not mathes the <paramref name="regexPattern">Regular Expression</paramref>.</exception>
     [DebuggerStepThrough]
     public static void ShouldMatch(string? argValue, [NotNull] string regexPattern,
@@ -349,7 +352,8 @@ public static class ArgChecker
         string? errorMessage = null,
         [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
-        ShouldNotBeNull(argValue: argValue, argName: argName);
+        ArgumentNullException.ThrowIfNull(argValue, argName);
+        //ShouldNotBeNull(argValue: argValue, argName: argName);
         ShouldNotBeNullOrEmpty(regexPattern);
 
         Regex regex = new Regex(regexPattern!, options);
@@ -373,13 +377,15 @@ public static class ArgChecker
     /// <param name="regex">The regular expression to match.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="argValue"/> or <paramref name="regex"/> is <see langword="null"/></exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> or <paramref name="regex"/> is <see langword="null"/></exception>
     /// <exception cref="ArgException{String}">Is thrown if the <paramref name="argValue"/> value does not mathes the <paramref name="regex">Regular Expression</paramref>.</exception>
     [DebuggerStepThrough]
     public static void ShouldMatch(string? argValue, Regex regex, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
-        ShouldNotBeNull(argValue: argValue, argName: argName);
-        ShouldNotBeNull(regex);
+        ArgumentNullException.ThrowIfNull(argValue, argName);
+        //ShouldNotBeNull(argValue: argValue, argName: argName);
+        ArgumentNullException.ThrowIfNull(regex);
+        //ShouldNotBeNull(regex);
 
         if (RegexHelper.MatchAny(argValue!, regex) == -1)
         {
@@ -401,22 +407,15 @@ public static class ArgChecker
     /// <param name="targetType">The argument type that will be assigned to.</param>
     /// <param name="sourceType">The type of the value being assigned.</param>
     /// <param name="sourceArgumentName">Argument name.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="sourceType"/> or <paramref name="targetType"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="sourceType"/> or <paramref name="targetType"/> is <see langword="null"</exception>
     /// <exception cref="InvalidTypeCastException">Is thrown if <paramref name="targetType"/> is not assignable from <paramref name="sourceType"</exception>
     [DebuggerStepThrough]
     public static void ShouldBeAssignableFrom(Type? sourceType, Type? targetType, string sourceArgumentName)
     {
-        if (targetType == null)
-        {
-            throw new ArgNullException("targetType", StringResources.ErrorShouldNotBeNullValidationTemplate1Arg);
-        }
-        if (sourceType == null)
-        {
-            throw new ArgNullException("sourceType", StringResources.ErrorShouldNotBeNullValidationTemplate1Arg);
-        }
+        ArgumentNullException.ThrowIfNull(sourceType, sourceArgumentName);
+        ArgumentNullException.ThrowIfNull(targetType);
         if (!targetType.IsAssignableFrom(sourceType))
         {
-
             throw new InvalidTypeCastException("Argument {0} error. {1}".SafeFormatWith(sourceArgumentName.SafeString(), StringResources.ErrorTypesAreNotAssignableTemplate2Args.SafeFormatWith(sourceType, targetType)));
         }
     }
@@ -443,18 +442,18 @@ public static class ArgChecker
     /// <param name="targetType">The argument type that will be assigned to.</param>
     /// <param name="instance">The instance that will be assigned.</param>
     /// <param name="argName">Argument name.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="instance"/> or <paramref name="targetType"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="instance"/> or <paramref name="targetType"/> is <see langword="null"</exception>
     /// <exception cref="InvalidTypeCastException">Is thrown if <paramref name="assignmentInstance"/> is not an instance of <paramref name="targetType"</exception>
     [DebuggerStepThrough]
     public static void ShouldBeInstanceOfType(Type targetType, object instance, string argName)
     {
         if (instance == null)
         {
-            throw new ArgNullException("instance", StringResources.ErrorShouldNotBeNullValidationTemplate1Arg);
+            throw new ArgumentNullException("instance", StringResources.ErrorShouldNotBeNullValidationTemplate1Arg);
         }
         if (targetType == null)
         {
-            throw new ArgNullException("targetType", StringResources.ErrorShouldNotBeNullValidationTemplate1Arg);
+            throw new ArgumentNullException("targetType", StringResources.ErrorShouldNotBeNullValidationTemplate1Arg);
         }
 
         if (targetType.IsInstanceOfType(instance) == false)
@@ -471,12 +470,13 @@ public static class ArgChecker
     /// <typeparam name="TTarget">The type of the value being assigned.</typeparam>
     /// <param name="instance">The instance that will be assigned.</param>
     /// <param name="argName">Argument name.</param>
-    /// <exception cref="ArgNullException">Is thrown if <paramref name="instance"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="instance"/> is <see langword="null"</exception>
     /// <exception cref="InvalidTypeCastException">Is thrown if <paramref name="instance"/> is not an instance of <typeparamref name="TTarget"</exception>
     [DebuggerStepThrough]
     public static void ShouldBeInstanceOfType<TTarget>(object? instance, [CallerArgumentExpression(nameof(instance))] string? argName = null)
     {
-        ShouldNotBeNull(argValue: instance, argName: argName);
+        ArgumentNullException.ThrowIfNull(instance, argName);
+        //ShouldNotBeNull(argValue: instance, argName: argName);
 
         if (instance is not TTarget)
         {

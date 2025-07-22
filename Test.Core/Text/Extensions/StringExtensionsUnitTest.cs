@@ -607,7 +607,7 @@ public class StringExtensionsUnitTest
 
         // Act & Assert
         Action action = () => items!.Join();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -1108,7 +1108,7 @@ public class StringExtensionsUnitTest
 
         // Act & Assert
         var action = () => s!.QuoteIfNeeded();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
 
     }
 

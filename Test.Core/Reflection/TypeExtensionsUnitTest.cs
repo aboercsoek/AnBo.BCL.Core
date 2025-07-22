@@ -24,7 +24,7 @@ public class TypeExtensionsUnitTest
         Type? nullType = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgNullException>(() => nullType!.QuoteAssemblyQualifiedNameIfNeeded());
+        var exception = Assert.Throws<ArgumentNullException>(() => nullType!.QuoteAssemblyQualifiedNameIfNeeded());
         exception.ParamName.Should().Be("type");
     }
 
@@ -67,7 +67,7 @@ public class TypeExtensionsUnitTest
         Type? nullType = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgNullException>(() => nullType!.GetTypeName());
+        var exception = Assert.Throws<ArgumentNullException>(() => nullType!.GetTypeName());
         exception.ParamName.Should().Be("type");
     }
 
@@ -134,7 +134,7 @@ public class TypeExtensionsUnitTest
         Type? nullType = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgNullException>(() => nullType!.GetAnyField("fieldName"));
+        var exception = Assert.Throws<ArgumentNullException>(() => nullType!.GetAnyField("fieldName"));
         exception.ParamName.Should().Be("type");
     }
 
@@ -145,7 +145,7 @@ public class TypeExtensionsUnitTest
         var type = typeof(TestClassWithFields);
 
         // Act & Assert
-        var exception = Assert.Throws<ArgNullException>(() => type.GetAnyField(null!));
+        var exception = Assert.Throws<ArgumentNullException>(() => type.GetAnyField(null!));
         exception.ParamName.Should().Be("fieldName");
     }
 
@@ -156,7 +156,7 @@ public class TypeExtensionsUnitTest
         var type = typeof(TestClassWithFields);
 
         // Act & Assert
-        var exception = Assert.Throws<ArgEmptyException>(() => type.GetAnyField(""));
+        var exception = Assert.Throws<ArgumentException>(() => type.GetAnyField(""));
         exception.ParamName.Should().Be("fieldName");
     }
 
@@ -241,7 +241,7 @@ public class TypeExtensionsUnitTest
         Type? nullType = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgNullException>(() => nullType!.GetAllFields().ToList());
+        var exception = Assert.Throws<ArgumentNullException>(() => nullType!.GetAllFields().ToList());
         exception.ParamName.Should().Be("type");
     }
 
@@ -300,7 +300,7 @@ public class TypeExtensionsUnitTest
         Type? nullType = null;
 
         // Act & Assert
-        var exception = Assert.Throws<ArgNullException>(() => nullType!.ImplementsInterface<IDisposable>());
+        var exception = Assert.Throws<ArgumentNullException>(() => nullType!.ImplementsInterface<IDisposable>());
         exception.ParamName.Should().Be("type");
     }
 
@@ -381,7 +381,7 @@ public class TypeExtensionsUnitTest
 
         // Act & Assert
         var action = () => nullType!.HasRequiredMembers();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -491,7 +491,7 @@ public class TypeExtensionsUnitTest
 
         // Act & Assert
         var action = () => nullType!.IsOpenGenericType();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -993,7 +993,7 @@ public class TypeExtensionsUnitTest
         Action act = () => nullType!.CanBeInstantiated();
 
         // Assert
-        act.Should().Throw<ArgNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -1101,7 +1101,7 @@ public class TypeExtensionsUnitTest
         Action act = () => nullType!.GetUnderlyingType();
 
         // Assert
-        act.Should().Throw<ArgNullException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Theory]

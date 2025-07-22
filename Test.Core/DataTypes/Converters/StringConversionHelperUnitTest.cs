@@ -700,7 +700,7 @@ public class StringConversionHelperUnitTest
 
         // Act & Assert
         var action = () => value!.ParseInvariantString<int>();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -795,7 +795,7 @@ public class StringConversionHelperUnitTest
 
         // Act & Assert
         var action = () => value!.ParseInvariantString(type);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -807,7 +807,7 @@ public class StringConversionHelperUnitTest
 
         // Act & Assert
         var action = () => value.ParseInvariantString(type!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

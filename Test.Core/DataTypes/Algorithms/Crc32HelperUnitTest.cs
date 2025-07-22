@@ -169,7 +169,7 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void Update_ByteArray_With_Null_Should_Throw_ArgNullException()
+    public void Update_ByteArray_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         var helper = new Crc32Helper();
@@ -177,7 +177,7 @@ public class Crc32HelperUnitTest
 
         // Act & Assert
         var action = () => helper.Update(nullArray!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -257,14 +257,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void Compute_ByteArray_With_Null_Should_Throw_ArgNullException()
+    public void Compute_ByteArray_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         byte[]? nullArray = null;
 
         // Act & Assert
         var action = () => Crc32Helper.Compute(nullArray!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -315,14 +315,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void Compute_String_With_Null_Should_Throw_ArgNullException()
+    public void Compute_String_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? nullText = null;
 
         // Act & Assert
         var action = () => Crc32Helper.Compute(nullText!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -353,7 +353,7 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void Compute_String_With_Null_Text_And_Encoding_Should_Throw_ArgNullException()
+    public void Compute_String_With_Null_Text_And_Encoding_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? nullText = null;
@@ -361,11 +361,11 @@ public class Crc32HelperUnitTest
 
         // Act & Assert
         var action = () => Crc32Helper.Compute(nullText!, encoding);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
-    public void Compute_String_With_Null_Encoding_Should_Throw_ArgNullException()
+    public void Compute_String_With_Null_Encoding_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string text = "test";
@@ -373,7 +373,7 @@ public class Crc32HelperUnitTest
 
         // Act & Assert
         var action = () => Crc32Helper.Compute(text, nullEncoding!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -436,14 +436,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void Compute_Stream_With_Null_Should_Throw_ArgNullException()
+    public void Compute_Stream_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         Stream? nullStream = null;
 
         // Act & Assert
         var action = () => Crc32Helper.Compute(nullStream!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -522,14 +522,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public async Task ComputeAsync_Stream_With_Null_Should_Throw_ArgNullException()
+    public async Task ComputeAsync_Stream_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         Stream? nullStream = null;
 
         // Act & Assert
         var action = async () => await Crc32Helper.ComputeAsync(nullStream!);
-        await action.Should().ThrowAsync<ArgNullException>();
+        await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Fact]
@@ -598,14 +598,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void ComputeFile_With_Null_Path_Should_Throw_ArgNullException()
+    public void ComputeFile_With_Null_Path_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? nullPath = null;
 
         // Act & Assert
         var action = () => Crc32Helper.ComputeFile(nullPath!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -675,14 +675,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public async Task ComputeFileAsync_With_Null_Path_Should_Throw_ArgNullException()
+    public async Task ComputeFileAsync_With_Null_Path_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? nullPath = null;
 
         // Act & Assert
         var action = async () => await Crc32Helper.ComputeFileAsync(nullPath!);
-        await action.Should().ThrowAsync<ArgNullException>();
+        await action.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Fact]

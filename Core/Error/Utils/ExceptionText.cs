@@ -41,8 +41,8 @@ public class ExceptionText
     /// <param name="userFriendlyMessage">The user friendly exception message.</param>
     public ExceptionText(string message, string fullText, string userFriendlyMessage)
     {
-        ArgChecker.ShouldNotBeNull(message);
-        ArgChecker.ShouldNotBeNull(fullText);
+        ArgumentNullException.ThrowIfNull(message);
+        ArgumentNullException.ThrowIfNull(fullText);
 
         Message = message;
         FullText = fullText;

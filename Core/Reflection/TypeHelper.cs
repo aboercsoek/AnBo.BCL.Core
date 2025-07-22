@@ -557,10 +557,10 @@ public static class TypeHelper
     /// </summary>
     /// <param name="type">The type to check</param>
     /// <returns>True if the type can likely be cloned successfully, false otherwise</returns>
-    /// <exception cref="ArgNullException">Thrown if the type is null</exception>"
+    /// <exception cref="ArgumentNullException">Thrown if the type is null</exception>"
     public static bool IsCloneable(Type type)
     {
-        ArgNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         // Value types are generally cloneable
         if (type.IsPrimitive && type != typeof(IntPtr) && type != typeof(UIntPtr))

@@ -42,7 +42,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static string QuoteAssemblyQualifiedNameIfNeeded(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return type.AssemblyQualifiedName?.QuoteIfNeeded() ?? string.Empty;
     }
@@ -59,7 +59,7 @@ public static class TypeExtensions
     /// </remarks>
     public static string GetTypeName(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         // Check cache first for performance
         return _typeNameCache.GetOrAdd(type, static t =>
@@ -107,8 +107,8 @@ public static class TypeExtensions
     /// <exception cref="ArgEmptyException">Thrown when <paramref name="fieldName"/> is empty.</exception>
     public static FieldInfo? GetAnyField(this Type type, string fieldName)
     {
-        ArgChecker.ShouldNotBeNull(type);
-        ArgChecker.ShouldNotBeNullOrEmpty(fieldName);
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentException.ThrowIfNullOrEmpty(fieldName);
 
         return GetFieldInfo(type, fieldName);
     }
@@ -121,7 +121,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static IEnumerable<FieldInfo> GetAllFields(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic |
                                      BindingFlags.Instance | BindingFlags.Static |
@@ -186,7 +186,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool ImplementsInterface<TInterface>(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         // if TInterface is not an interface, return false
         var interfaceType = typeof(TInterface);
@@ -206,7 +206,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool HasRequiredMembers(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return type.GetCustomAttribute<RequiredMemberAttribute>() is not null;
     }
@@ -219,7 +219,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool CanBeInstantiated(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return !type.IsAbstract &&
                !type.IsInterface &&
@@ -240,7 +240,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool IsNullableType(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return _nullableTypeCache.GetOrAdd(type,
             static t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>));
@@ -254,7 +254,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static Type GetUnderlyingType(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return Nullable.GetUnderlyingType(type) ?? type;
     }
@@ -267,7 +267,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool IsOpenGenericType(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         //if (type == null)
         //    return false;
@@ -284,7 +284,7 @@ public static class TypeExtensions
     /// </summary>
     public static object? GetDefaultValue(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return _defaultValueCache.GetOrAdd(type,
             static t => t.IsValueType ? Activator.CreateInstance(t) : null);
@@ -297,7 +297,7 @@ public static class TypeExtensions
     /// <returns>true if the value is the default value, othewise false</returns>
     public static bool IsDefaultValue(this Type type, object? value)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return value switch
         {
@@ -317,7 +317,7 @@ public static class TypeExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool IsDefaultValueOrEmptyString(this Type type, object? value)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return value switch
         {
@@ -346,7 +346,7 @@ public static class TypeExtensions
     /// </remarks>
     public static bool IsJsonSerializable(this Type type)
     {
-        ArgChecker.ShouldNotBeNull(type);
+        ArgumentNullException.ThrowIfNull(type);
 
         return _jsonSerializableCache.GetOrAdd(type, static t => CheckJsonSerializability(t));
     }

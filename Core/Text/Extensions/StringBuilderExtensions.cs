@@ -32,7 +32,7 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder ClearBuilder(this StringBuilder builder)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
 
         builder.Length = 0;
         return builder;
@@ -63,7 +63,7 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsEmpty(this StringBuilder builder)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
         return builder.Length == 0;
     }
 
@@ -81,7 +81,7 @@ public static class StringBuilderExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     public static StringBuilder AppendInvariant<T>(this StringBuilder builder, T? value)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
 
         return value switch
         {
@@ -103,7 +103,7 @@ public static class StringBuilderExtensions
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     public static StringBuilder AppendUseToInvariantString<T>(this StringBuilder builder, T? value)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
 
         return value switch
         {
@@ -129,7 +129,7 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder AppendIf(this StringBuilder builder, bool condition, string? value)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
 
         return condition && value is not null ? builder.Append(value) : builder;
     }
@@ -145,8 +145,8 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder AppendIf(this StringBuilder builder, Func<bool> condition, string? value)
     {
-        ArgChecker.ShouldNotBeNull(builder);
-        ArgChecker.ShouldNotBeNull(condition);
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(condition);
 
         return condition() && value is not null ? builder.Append(value) : builder;
     }
@@ -165,7 +165,7 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder Prepend(this StringBuilder builder, char value)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
 
         return builder.Insert(0, value);
     }
@@ -180,8 +180,8 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder Prepend(this StringBuilder builder, string value)
     {
-        ArgChecker.ShouldNotBeNull(builder);
-        ArgChecker.ShouldNotBeNull(value);
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(value);
 
         return builder.Insert(0, value);
     }
@@ -201,8 +201,8 @@ public static class StringBuilderExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> or <paramref name="values"/> is null.</exception>
     public static StringBuilder AppendJoinCollection<T>(this StringBuilder builder, string? separator, IEnumerable<T> values)
     {
-        ArgChecker.ShouldNotBeNull(builder);
-        ArgChecker.ShouldNotBeNull(values);
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(values);
 
         using var enumerator = values.GetEnumerator();
         if (!enumerator.MoveNext())
@@ -233,8 +233,8 @@ public static class StringBuilderExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> or <paramref name="values"/> is null.</exception>
     public static StringBuilder AppendJoinCollection<T>(this StringBuilder builder, char separator, IEnumerable<T> values)
     {
-        ArgChecker.ShouldNotBeNull(builder);
-        ArgChecker.ShouldNotBeNull(values);
+        ArgumentNullException.ThrowIfNull(builder);
+        ArgumentNullException.ThrowIfNull(values);
 
         using var enumerator = values.GetEnumerator();
         if (!enumerator.MoveNext())
@@ -266,7 +266,7 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder AppendLineIf(this StringBuilder builder)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
         return builder.Length > 0 ? builder.AppendLine() : builder;
     }
 
@@ -281,7 +281,7 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder AppendLineIf(this StringBuilder builder, bool condition, string? value)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
         return condition && value is not null ? builder.AppendLine(value) : builder;
     }
 
@@ -297,7 +297,7 @@ public static class StringBuilderExtensions
     /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
     public static StringBuilder TrimEnd(this StringBuilder builder)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
 
         int length = builder.Length;
         while (length > 0 && char.IsWhiteSpace(builder[length - 1]))
@@ -323,7 +323,7 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<char> AsSpan(this StringBuilder builder)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
         return builder.ToString().AsSpan();
     }
 
@@ -339,7 +339,7 @@ public static class StringBuilderExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<char> AsSpan(this StringBuilder builder, int start, int length)
     {
-        ArgChecker.ShouldNotBeNull(builder);
+        ArgumentNullException.ThrowIfNull(builder);
         return builder.ToString().AsSpan(start, length);
     }
 

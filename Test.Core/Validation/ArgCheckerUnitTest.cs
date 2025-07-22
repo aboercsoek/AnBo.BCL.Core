@@ -6,8 +6,9 @@
 // License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 
-using FluentAssertions;
 using AnBo.Core;
+using FluentAssertions;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,79 +17,6 @@ namespace AnBo.Test;
 
 public class ArgCheckerUnitTest
 {
-    #region ShouldNotBeNull Method Tests
-
-    [Fact]
-    public void ShouldNotBeNull_With_Valid_Object_Should_Not_Throw()
-    {
-        // Arrange
-        var value = "test";
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldNotBeNull(value);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
-    public void ShouldNotBeNull_With_Null_Should_Throw_ArgNullException()
-    {
-        // Arrange
-        string? value = null;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldNotBeNull(value);
-        action.Should().Throw<ArgNullException>()
-            .WithMessage("Argument value may not be null.");
-    }
-
-    [Fact]
-    public void ShouldNotBeNull_With_Custom_Error_Message_Should_Use_Custom_Message()
-    {
-        // Arrange
-        string? value = null;
-        var customMessage = "Custom null error message";
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldNotBeNull(value, customMessage);
-        action.Should().Throw<ArgNullException>()
-            .WithMessage(customMessage);
-    }
-
-    [Fact]
-    public void ShouldNotBeNull_With_Value_Type_Should_Not_Throw()
-    {
-        // Arrange
-        int value = 42;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldNotBeNull(value);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
-    public void ShouldNotBeNull_With_Nullable_Value_Type_Null_Should_Throw()
-    {
-        // Arrange
-        int? value = null;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldNotBeNull(value);
-        action.Should().Throw<ArgNullException>();
-    }
-
-    [Fact]
-    public void ShouldNotBeNull_With_Nullable_Value_Type_Valid_Should_Not_Throw()
-    {
-        // Arrange
-        int? value = 42;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldNotBeNull(value);
-        action.Should().NotThrow();
-    }
-
-    #endregion
-
     #region ShouldNotBeEmpty String Method Tests
 
     [Fact]
@@ -304,14 +232,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeNullOrEmpty_String_With_Null_Should_Throw_ArgNullException()
+    public void ShouldNotBeNullOrEmpty_String_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? value = null;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -323,19 +251,6 @@ public class ArgCheckerUnitTest
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
         action.Should().Throw<ArgEmptyException>();
-    }
-
-    [Fact]
-    public void ShouldNotBeNullOrEmpty_String_With_Custom_Error_Message_Should_Use_Custom_Message()
-    {
-        // Arrange
-        string? value = null;
-        var customMessage = "Custom null or empty error message";
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value, customMessage);
-        action.Should().Throw<ArgNullException>()
-            .WithMessage(customMessage);
     }
 
     #endregion
@@ -354,14 +269,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeNullOrEmpty_Guid_With_Null_Should_Throw_ArgNullException()
+    public void ShouldNotBeNullOrEmpty_Guid_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         Guid? value = null;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -391,14 +306,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeNullOrEmpty_StringBuilder_With_Null_Should_Throw_ArgNullException()
+    public void ShouldNotBeNullOrEmpty_StringBuilder_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? value = null;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -428,14 +343,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeNullOrEmpty_IEnumerable_With_Null_Should_Throw_ArgNullException()
+    public void ShouldNotBeNullOrEmpty_IEnumerable_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         IEnumerable? value = null;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -642,14 +557,14 @@ public class ArgCheckerUnitTest
     #region ShouldBeExistingFile String Method Tests
 
     [Fact]
-    public void ShouldBeExistingFile_String_With_Null_Should_Throw_ArgNullException()
+    public void ShouldBeExistingFile_String_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? filePath = null;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingFile(filePath);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -710,14 +625,14 @@ public class ArgCheckerUnitTest
     #region ShouldBeExistingFile FileInfo Method Tests
 
     [Fact]
-    public void ShouldBeExistingFile_FileInfo_With_Null_Should_Throw_ArgNullException()
+    public void ShouldBeExistingFile_FileInfo_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         FileInfo? fileInfo = null;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingFile(fileInfo);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -758,14 +673,14 @@ public class ArgCheckerUnitTest
     #region ShouldBeExistingDirectory Method Tests
 
     [Fact]
-    public void ShouldBeExistingDirectory_With_Null_Should_Throw_ArgNullException()
+    public void ShouldBeExistingDirectory_With_Null_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? directoryPath = null;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingDirectory(directoryPath);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -817,7 +732,7 @@ public class ArgCheckerUnitTest
     #region ShouldMatch String RegexPattern Method Tests
 
     [Fact]
-    public void ShouldMatch_String_Pattern_With_Null_Value_Should_Throw_ArgNullException()
+    public void ShouldMatch_String_Pattern_With_Null_Value_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? value = null;
@@ -825,11 +740,11 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldMatch(value, pattern);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
-    public void ShouldMatch_String_Pattern_With_Null_Pattern_Should_Throw_ArgNullException()
+    public void ShouldMatch_String_Pattern_With_Null_Pattern_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string value = "123";
@@ -837,7 +752,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldMatch(value, pattern!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -895,7 +810,7 @@ public class ArgCheckerUnitTest
     #region ShouldMatch Regex Object Method Tests
 
     [Fact]
-    public void ShouldMatch_Regex_Object_With_Null_Value_Should_Throw_ArgNullException()
+    public void ShouldMatch_Regex_Object_With_Null_Value_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? value = null;
@@ -903,11 +818,11 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldMatch(value, regex);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
-    public void ShouldMatch_Regex_Object_With_Null_Regex_Should_Throw_ArgNullException()
+    public void ShouldMatch_Regex_Object_With_Null_Regex_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string value = "123";
@@ -915,7 +830,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldMatch(value, regex!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -961,7 +876,7 @@ public class ArgCheckerUnitTest
     #region ShouldBeAssignableFrom Type Method Tests
 
     [Fact]
-    public void ShouldBeAssignableFrom_Type_With_Null_Source_Type_Should_Throw_ArgNullException()
+    public void ShouldBeAssignableFrom_Type_With_Null_Source_Type_Should_Throw_ArgumentNullException()
     {
         // Arrange
         Type? sourceType = null;
@@ -969,12 +884,12 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeAssignableFrom(sourceType, targetType, "sourceType");
-        action.Should().Throw<ArgNullException>()
+        action.Should().Throw<ArgumentNullException>()
             .WithMessage("*sourceType*");
     }
 
     [Fact]
-    public void ShouldBeAssignableFrom_Type_With_Null_Target_Type_Should_Throw_ArgNullException()
+    public void ShouldBeAssignableFrom_Type_With_Null_Target_Type_Should_Throw_ArgumentNullException()
     {
         // Arrange
         Type sourceType = typeof(string);
@@ -982,7 +897,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeAssignableFrom(sourceType, targetType, "sourceType");
-        action.Should().Throw<ArgNullException>()
+        action.Should().Throw<ArgumentNullException>()
             .WithMessage("*targetType*");
     }
 
@@ -1055,7 +970,7 @@ public class ArgCheckerUnitTest
     #region ShouldBeInstanceOfType Type Method Tests
 
     [Fact]
-    public void ShouldBeInstanceOfType_Type_With_Null_Instance_Should_Throw_ArgNullException()
+    public void ShouldBeInstanceOfType_Type_With_Null_Instance_Should_Throw_ArgumentNullException()
     {
         // Arrange
         object? instance = null;
@@ -1063,12 +978,12 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeInstanceOfType(targetType, instance!, "testParam");
-        action.Should().Throw<ArgNullException>()
+        action.Should().Throw<ArgumentNullException>()
             .WithMessage("*instance*");
     }
 
     [Fact]
-    public void ShouldBeInstanceOfType_Type_With_Null_Target_Type_Should_Throw_ArgNullException()
+    public void ShouldBeInstanceOfType_Type_With_Null_Target_Type_Should_Throw_ArgumentNullException()
     {
         // Arrange
         object instance = "test";
@@ -1076,7 +991,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeInstanceOfType(targetType!, instance, "testParam");
-        action.Should().Throw<ArgNullException>()
+        action.Should().Throw<ArgumentNullException>()
             .WithMessage("*targetType*");
     }
 
@@ -1121,14 +1036,14 @@ public class ArgCheckerUnitTest
     #region ShouldBeInstanceOfType Generic Method Tests
 
     [Fact]
-    public void ShouldBeInstanceOfType_Generic_With_Null_Instance_Should_Throw_ArgNullException()
+    public void ShouldBeInstanceOfType_Generic_With_Null_Instance_Should_Throw_ArgumentNullException()
     {
         // Arrange
         object? instance = null;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeInstanceOfType<string>(instance!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

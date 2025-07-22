@@ -1003,8 +1003,8 @@ public class TypeHelperUnitTest
         var action = () => TypeHelper.IsCloneable((Type)null!);
 
         // Assert
-        action.Should().Throw<ArgNullException>()
-            .Which.ParamName.Should().Be("type");
+        action.Should().Throw<ArgumentNullException>()
+            .WithParameterName("type");
     }
 
     [Theory]

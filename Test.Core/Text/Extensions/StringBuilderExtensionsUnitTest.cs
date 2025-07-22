@@ -47,14 +47,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void Clear_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void Clear_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.ClearBuilder();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     #endregion
@@ -144,14 +144,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void IsEmpty_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void IsEmpty_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.IsEmpty();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     #endregion
@@ -217,14 +217,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AppendInvariant_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void AppendInvariant_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.AppendInvariant("test");
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -320,14 +320,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AppendUseToInvariantString_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void AppendUseToInvariantString_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.AppendUseToInvariantString("test");
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     #endregion
@@ -377,14 +377,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AppendIf_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void AppendIf_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.AppendIf(true, "test");
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -418,7 +418,7 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AppendIf_With_Null_Function_Condition_Should_Throw_ArgNullException()
+    public void AppendIf_With_Null_Function_Condition_Should_Throw_ArgumentNullException()
     {
         // Arrange
         var builder = new StringBuilder();
@@ -426,7 +426,7 @@ public class StringBuilderExtensionsUnitTest
 
         // Act & Assert
         var action = () => builder.AppendIf(condition!, "test");
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -505,36 +505,36 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void Prepend_Char_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void Prepend_Char_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.Prepend('H');
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
-    public void Prepend_String_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void Prepend_String_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.Prepend("Hello");
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
-    public void Prepend_String_With_Null_Value_Should_Throw_ArgNullException()
+    public void Prepend_String_With_Null_Value_Should_Throw_ArgumentNullException()
     {
         // Arrange
         var builder = new StringBuilder("World");
 
         // Act & Assert
         var action = () => builder.Prepend((string)null!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     #endregion
@@ -632,7 +632,7 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AppendJoinCollection_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void AppendJoinCollection_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
@@ -640,11 +640,11 @@ public class StringBuilderExtensionsUnitTest
 
         // Act & Assert
         var action = () => builder!.AppendJoinCollection(", ", values);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
-    public void AppendJoinCollection_With_Null_Values_Should_Throw_ArgNullException()
+    public void AppendJoinCollection_With_Null_Values_Should_Throw_ArgumentNullException()
     {
         // Arrange
         var builder = new StringBuilder();
@@ -652,7 +652,7 @@ public class StringBuilderExtensionsUnitTest
 
         // Act & Assert
         var action = () => builder.AppendJoinCollection(", ", values!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -703,14 +703,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AppendLineIf_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void AppendLineIf_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.AppendLineIf();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -831,14 +831,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void TrimEnd_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void TrimEnd_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         StringBuilder? builder = null;
 
         // Act & Assert
         var action = () => builder!.TrimEnd();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     #endregion
@@ -874,14 +874,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AsSpan_With_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void AsSpan_With_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         //StringBuilder? builder = null;
 
         // Act & Assert
         var action = HelperMethod;
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     private static void HelperMethod()
@@ -957,14 +957,14 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AsSpan_With_Start_And_Length_And_Null_StringBuilder_Should_Throw_ArgNullException()
+    public void AsSpan_With_Start_And_Length_And_Null_StringBuilder_Should_Throw_ArgumentNullException()
     {
         // Arrange
         //StringBuilder? builder = null;
 
         // Act & Assert
         var action = AsSpan_HelperMethod3;
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     private static void AsSpan_HelperMethod3()

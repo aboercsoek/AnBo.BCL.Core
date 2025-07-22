@@ -391,7 +391,7 @@ public class StringHelperUnitTest
     #region Join Method Tests
 
     [Fact]
-    public void Join_With_Null_Separator_Should_Throw_ArgNullException()
+    public void Join_With_Null_Separator_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? separator = null;
@@ -399,7 +399,7 @@ public class StringHelperUnitTest
 
         // Act & Assert
         Action action = () => StringHelper.Join(separator!, items);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -431,7 +431,7 @@ public class StringHelperUnitTest
     }
 
     [Fact]
-    public void Join_With_IEnumerable_And_Null_Items_Should_Throw_ArgNullException()
+    public void Join_With_IEnumerable_And_Null_Items_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string separator = ", ";
@@ -439,7 +439,7 @@ public class StringHelperUnitTest
 
         // Act & Assert
         Action action = () => StringHelper.Join(separator, items!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -518,14 +518,14 @@ public class StringHelperUnitTest
     }
 
     [Fact]
-    public void GetStringFromBytes_With_Null_Array_Should_Throw_ArgNullException()
+    public void GetStringFromBytes_With_Null_Array_Should_Throw_ArgumentNullException()
     {
         // Arrange
         byte[]? data = null;
 
         // Act & Assert
         Action action = () => StringHelper.GetStringFromBytes(data!);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -1248,7 +1248,7 @@ public class StringHelperUnitTest
     #region JoinParams Method Tests
 
     [Fact]
-    public void JoinParams_With_Null_Separator_Should_Throw_ArgNullException()
+    public void JoinParams_With_Null_Separator_Should_Throw_ArgumentNullException()
     {
         // Arrange
         string? separator = null;
@@ -1256,7 +1256,7 @@ public class StringHelperUnitTest
 
         // Act & Assert
         Action action = () => StringHelper.JoinParams(separator!, items);
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

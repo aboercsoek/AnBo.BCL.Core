@@ -277,7 +277,8 @@ public class ObjectExtensionsUnitTest
 
         // Act & Assert
         var action = () => item!.CastTo<string>();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>()
+            .WithParameterName("item");
     }
 
     [Fact]
@@ -344,7 +345,7 @@ public class ObjectExtensionsUnitTest
 
         // Act & Assert
         var action = () => source!.CastSequenceStrict<object, string>().ToList();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
@@ -409,7 +410,7 @@ public class ObjectExtensionsUnitTest
 
         // Act & Assert
         var action = () => type!.CreateInstance();
-        action.Should().Throw<ArgNullException>();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]
