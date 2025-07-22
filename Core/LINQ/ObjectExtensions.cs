@@ -24,9 +24,6 @@ namespace AnBo.Core;
 /// </summary>
 public static class ObjectEx
 {
-    // Cache for default values to improve performance
-    private static readonly ConcurrentDictionary<Type, object?> DefaultValueCache = new();
-
     #region Safe Casting Extensions
 
     /// <summary>
@@ -97,25 +94,54 @@ public static class ObjectEx
             : throw new InvalidCastException($"Cannot cast from type '{item.GetType().Name}' to '{typeof(T).Name}'");
     }
 
+    /// <summary>
+    /// Attempts to cast an object to the specified type, returning success status and result.
+    /// Uses modern .NET 8 try-pattern for better performance.
+    /// </summary>
+    /// <typeparam name="T">The target type</typeparam>
+    /// <param name="obj">The object to cast</param>
+    /// <param name="result">The casted result if successful</param>
+    /// <returns>true if casting succeeded; otherwise false</returns>
+    /// <example>
+    /// <code>
+    /// object value = 42;
+    /// if (value.TryCast&lt;int&gt;(out var number))
+    /// {
+    ///     Console.WriteLine($"Number: {number}");
+    /// }
+    /// </code>
+    /// </example>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryCast<T>(this object? obj, [NotNullWhen(true)] out T? result)
+    {
+        if (obj is T casted)
+        {
+            result = casted;
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
     #endregion
 
     #region Sequence Casting Extensions
 
     /// <summary>
     /// Safely casts elements of a sequence to the target type, filtering out incompatible elements.
-    /// Uses modern enumeration patterns and null-safety features.
+    /// Core implementation for all sequence casting operations.
     /// </summary>
-    /// <typeparam name="TSource">The source element type</typeparam>
     /// <typeparam name="TTarget">The target element type</typeparam>
     /// <param name="source">The source sequence</param>
     /// <returns>A sequence containing only successfully casted elements</returns>
     /// <example>
     /// <code>
     /// IEnumerable&lt;object&gt; mixed = new object[] { 1, "text", 2, null, 3.14 };
-    /// IEnumerable&lt;int&gt; integers = mixed.CastSequence&lt;object, int&gt;(); // Returns [1]
+    /// IEnumerable&lt;int&gt; integers = mixed.CastSequenceCore&lt;int&gt;(); // Returns [1]
     /// </code>
     /// </example>
-    public static IEnumerable<TTarget> CastSequence<TSource, TTarget>(this IEnumerable<TSource?>? source)
+    private static IEnumerable<TTarget> CastSequenceCore<TTarget>(IEnumerable? source)
     {
         if (source is null) yield break;
 
@@ -127,28 +153,23 @@ public static class ObjectEx
     }
 
     /// <summary>
+    /// Safely casts elements of a typed sequence to the target type, filtering out incompatible elements.
+    /// </summary>
+    /// <typeparam name="TSource">The source element type</typeparam>
+    /// <typeparam name="TTarget">The target element type</typeparam>
+    /// <param name="source">The source sequence</param>
+    /// <returns>A sequence containing only successfully casted elements</returns>
+    public static IEnumerable<TTarget> CastSequence<TSource, TTarget>(this IEnumerable<TSource?>? source)
+        => CastSequenceCore<TTarget>(source);
+
+    /// <summary>
     /// Safely casts elements of a non-generic sequence to the target type.
-    /// Optimized for .NET 8 with span-aware enumeration where possible.
     /// </summary>
     /// <typeparam name="TTarget">The target element type</typeparam>
     /// <param name="source">The source sequence</param>
     /// <returns>A sequence containing only successfully casted elements</returns>
-    /// <example>
-    /// <code>
-    /// ArrayList list = new() { 1, "text", 2, 3.14 };
-    /// IEnumerable&lt;int&gt; integers = list.CastSequence&lt;int&gt;(); // Returns [1]
-    /// </code>
-    /// </example>
     public static IEnumerable<TTarget> CastSequence<TTarget>(this IEnumerable? source)
-    {
-        if (source is null) yield break;
-
-        foreach (var item in source)
-        {
-            if (item is TTarget casted)
-                yield return casted;
-        }
-    }
+        => CastSequenceCore<TTarget>(source);
 
     /// <summary>
     /// Strictly casts all elements of a sequence to the target type.
@@ -257,6 +278,29 @@ public static class ObjectEx
         return obj;
     }
 
+    /// <summary>
+    /// Provides a null-safe way to access nested properties using a selector function.
+    /// Returns default(TResult) if any intermediate value is null.
+    /// </summary>
+    /// <typeparam name="T">The source type</typeparam>
+    /// <typeparam name="TResult">The result type</typeparam>
+    /// <param name="obj">The source object</param>
+    /// <param name="selector">The selector function</param>
+    /// <returns>The selected value or default if any intermediate value is null</returns>
+    /// <example>
+    /// <code>
+    /// Person? person = GetPerson();
+    /// string? city = person.SafeSelect(p => p.Address?.City);
+    /// </code>
+    /// </example>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static TResult? SafeSelect<T, TResult>(this T? obj, Func<T, TResult?> selector)
+        where T : class
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+        return obj is null ? default : selector(obj);
+    }
+
     #endregion
 
     #region IDisposable Extensions
@@ -313,9 +357,11 @@ public static class ObjectEx
     /// <param name="func">The function to execute</param>
     /// <returns>The result of the function</returns>
     /// <exception cref="ArgumentNullException">Thrown when disposable or func is null</exception>
-    public static TResult Using<TDisposable, TFuncParam2, TResult>(this TDisposable disposable, 
+    public static TResult Using<TDisposable, TFuncParam2, TResult>(
+        this TDisposable disposable, 
         TFuncParam2? funcParam2, 
-        Func<TDisposable, TFuncParam2?, TResult> func) where TDisposable : IDisposable
+        Func<TDisposable, TFuncParam2?, TResult> func) 
+        where TDisposable : IDisposable
     {
         ArgumentNullException.ThrowIfNull(disposable);
         ArgumentNullException.ThrowIfNull(func);
@@ -418,11 +464,27 @@ public static class ObjectEx
         // Reference types: only null is default
         if (!type.IsValueType) return false;
 
-        // Use cached default values for performance
-        var defaultValue = DefaultValueCache.GetOrAdd(type, 
-            static t => t == typeof(string) ? null : Activator.CreateInstance(t));
-
-        return Equals(defaultValue, value);
+        // Fast path for common value types
+        return value switch
+        {
+            bool b => b == default(bool),
+            byte b => b == default(byte),
+            sbyte sb => sb == default(sbyte),
+            char c => c == default(char),
+            short s => s == default(short),
+            ushort us => us == default(ushort),
+            int i => i == default(int),
+            uint ui => ui == default(uint),
+            long l => l == default(long),
+            ulong ul => ul == default(ulong),
+            float f => f == default(float),
+            double d => d == default(double),
+            decimal m => m == default(decimal),
+            DateTime dt => dt == default(DateTime),
+            TimeSpan ts => ts == default(TimeSpan),
+            Guid g => g == default(Guid),
+            _ => Equals(Activator.CreateInstance(type), value)
+        };
     }
 
     /// Determines whether a value is the default value for its type or an empty string.
@@ -433,63 +495,6 @@ public static class ObjectEx
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefaultOrEmpty(this object? value)
         => value is null or "" || (value.GetType().IsValueType && value.IsDefaultValue());
-
-    #endregion
-
-    #region Modern .NET 8 Extensions
-
-    /// <summary>
-    /// Attempts to cast an object to the specified type, returning success status and result.
-    /// Uses modern .NET 8 try-pattern for better performance.
-    /// </summary>
-    /// <typeparam name="T">The target type</typeparam>
-    /// <param name="obj">The object to cast</param>
-    /// <param name="result">The casted result if successful</param>
-    /// <returns>true if casting succeeded; otherwise false</returns>
-    /// <example>
-    /// <code>
-    /// object value = 42;
-    /// if (value.TryCast&lt;int&gt;(out var number))
-    /// {
-    ///     Console.WriteLine($"Number: {number}");
-    /// }
-    /// </code>
-    /// </example>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryCast<T>(this object? obj, [NotNullWhen(true)] out T? result)
-    {
-        if (obj is T casted)
-        {
-            result = casted;
-            return true;
-        }
-
-        result = default;
-        return false;
-    }
-
-    /// <summary>
-    /// Provides a null-safe way to access nested properties using a selector function.
-    /// Returns default(TResult) if any intermediate value is null.
-    /// </summary>
-    /// <typeparam name="T">The source type</typeparam>
-    /// <typeparam name="TResult">The result type</typeparam>
-    /// <param name="obj">The source object</param>
-    /// <param name="selector">The selector function</param>
-    /// <returns>The selected value or default if any intermediate value is null</returns>
-    /// <example>
-    /// <code>
-    /// Person? person = GetPerson();
-    /// string? city = person.SafeSelect(p => p.Address?.City);
-    /// </code>
-    /// </example>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static TResult? SafeSelect<T, TResult>(this T? obj, Func<T, TResult?> selector)
-        where T : class
-    {
-        ArgumentNullException.ThrowIfNull(selector);
-        return obj is null ? default : selector(obj);
-    }
 
     #endregion
 
