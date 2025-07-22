@@ -33,7 +33,7 @@ public static partial class StringExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsFormatString([NotNullWhen(true)] this string? text)
     {
-        return !string.IsNullOrEmpty(text) && FormatStringRegex().IsMatch(text);
+        return !string.IsNullOrEmpty(text) && RegexPatterns.FormatString().IsMatch(text);
     }
 
     #endregion

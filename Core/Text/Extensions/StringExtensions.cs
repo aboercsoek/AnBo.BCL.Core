@@ -9,9 +9,7 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
 
 #endregion
@@ -23,25 +21,6 @@ namespace AnBo.Core;
 /// </summary>
 public static partial class StringExtensions
 {
-    #region Cached Regex Patterns
-
-    [GeneratedRegex(@"\{0", RegexOptions.Compiled)]
-    private static partial Regex FormatStringRegex();
-
-    [GeneratedRegex(@"[a-zA-Z0-9]", RegexOptions.Compiled)]
-    private static partial Regex AlphaNumericRegex();
-
-    [GeneratedRegex(@"[a-zA-Z]", RegexOptions.Compiled)]
-    private static partial Regex AlphaCharactersRegex();
-
-    [GeneratedRegex(@"[0-9,\.]", RegexOptions.Compiled)]
-    private static partial Regex NumericWithPunctuationRegex();
-
-    [GeneratedRegex(@"[0-9]", RegexOptions.Compiled)]
-    private static partial Regex NumericOnlyRegex();
-
-    #endregion
-
     #region Safe string extensions
 
     /// <summary>
@@ -61,7 +40,7 @@ public static partial class StringExtensions
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string SafeString(this string? text, string defaultValue = "")
-        => text ?? defaultValue;
+        => StringHelper.SafeToString(text, defaultValue);
 
     /// <summary>
     /// Formats the string value with the <paramref name="parameters"/> and returns the result.

@@ -7,6 +7,7 @@
 //--------------------------------------------------------------------------
 #region Using directives
 
+using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -46,40 +47,26 @@ public static partial class StringHelper
     #region Safe ToString methods
 
     /// <summary>
-    /// Safe ToString-Operation that handles null values gracefully.
-    /// </summary>
-    /// <param name="obj">The object to convert to string. Can be null.</param>
-    /// <returns>If <paramref name="obj"/> is null returns String.Empty; otherwise obj.ToString().</returns>
-    [return: NotNull]
-    [DebuggerStepThrough]
-    public static string SafeToString(object? obj)
-    {
-        try
-        {
-            return obj?.ToInvariantString() ?? string.Empty;
-        }
-        catch (Exception ex) when (!ex.IsFatal())
-        {
-            return string.Empty;
-        }
-    }
-
-    /// <summary>
     /// Safe ToString-Operation with fallback value.
     /// </summary>
     /// <param name="obj">The object to convert to string. Can be null.</param>
-    /// <param name="defaultValue">The default value to use if obj is null or conversion fails.</param>
+    /// <param name="defaultValue">The default value to use if obj is null or conversion fails. (default: empty string)</param>
     /// <returns>If <paramref name="obj"/> is null or conversion fails, returns the safe ToString value of <paramref name="defaultValue"/>; otherwise the value of obj.ToString().</returns>
+    [return: NotNull]
     [DebuggerStepThrough]
-    public static string SafeToString(object? obj, string defaultValue)
+    public static string SafeToString(object? obj, string defaultValue = "")
     {
+        defaultValue ??= string.Empty;
+        var options = new ToStringOptions();
+        options.NullString = defaultValue;
+
         try
         {
-            return obj?.ToInvariantString() ?? SafeToString(defaultValue);
+            return obj?.ToInvariantString(options) ?? defaultValue;
         }
         catch (Exception ex) when (!ex.IsFatal())
         {
-            return SafeToString(defaultValue);
+            return defaultValue;
         }
     }
 
@@ -104,7 +91,7 @@ public static partial class StringHelper
         try
         {
             // Use string interpolation-friendly approach
-            //var safeArgs = args.Select(arg => arg.ToInvariantString()).ToArray();
+            //var safeArgs = args.Select(arg => SafeToStrin(arg)).ToArray();
             //return string.Format(CultureInfo.InvariantCulture, format, safeArgs);
             return string.Format(format, parameters);
         }
@@ -123,18 +110,19 @@ public static partial class StringHelper
     [DebuggerStepThrough]
     public static void SafeAppendFormat(StringBuilder sb, string format, params object[] args)
     {
-        if (sb is null || string.IsNullOrEmpty(format))
-            return;
+        ArgumentNullException.ThrowIfNull(sb);
+        //if (sb is null || string.IsNullOrEmpty(format))
+        //    return;
 
         if (args.Length == 0)
         {
-            sb.Append(format);
+            sb.Append(SafeToString(format));
             return;
         }
 
         try
         {
-            sb.Append(SafeFormat(format, args));
+            sb.Append(StringHelper.SafeFormat(format, args));
         }
         catch (Exception ex) when (!ex.IsFatal())
         {
@@ -229,7 +217,7 @@ public static partial class StringHelper
     {
         ArgumentNullException.ThrowIfNull(separator);
 
-        return string.Join(separator, items.Select(item => item?.ToString() ?? string.Empty));
+        return string.Join(separator, items.Select(item => SafeToString(item)));
     }
 
     /// <summary>
@@ -247,7 +235,7 @@ public static partial class StringHelper
         ArgumentNullException.ThrowIfNull(items);
 
         return (converter is null) ?
-            string.Join(separator, items.Select(item => item?.ToString() ?? string.Empty)) :
+            string.Join(separator, items.Select(item => SafeToString(item))) :
             string.Join(separator, items.Select(converter));
     }
 

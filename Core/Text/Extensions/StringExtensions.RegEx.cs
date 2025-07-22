@@ -174,7 +174,7 @@ public static partial class StringExtensions
     public static string AlphaNumericOnly(this string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-        return AlphaNumericRegex().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
+        return RegexPatterns.AlphaNumeric().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
             .ToString();
     }
 
@@ -187,7 +187,7 @@ public static partial class StringExtensions
     public static string AlphaCharactersOnly(this string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-        return AlphaCharactersRegex().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
+        return RegexPatterns.AlphaCharacters().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
             .ToString();
     }
 
@@ -201,7 +201,7 @@ public static partial class StringExtensions
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
-        var regex = keepNumericPunctuation ? NumericWithPunctuationRegex() : NumericOnlyRegex();
+        var regex = keepNumericPunctuation ? RegexPatterns.NumericWithPunctuation() : RegexPatterns.NumericOnly();
         return regex.Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
             .ToString();
     }

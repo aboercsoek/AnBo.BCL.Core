@@ -327,7 +327,7 @@ public class StringExtensionsUnitTest
     }
 
     [Fact]
-    public void SafeFormatWith_With_Null_Should_Handle_Gracefully()
+    public void SafeFormat_With_Null_Should_Handle_Gracefully()
     {
         // Arrange
         string? text = null;
@@ -341,7 +341,7 @@ public class StringExtensionsUnitTest
     }
 
     [Fact]
-    public void SafeFormatWith_With_Valid_Format_Should_Format_Correctly()
+    public void SafeFormat_With_Valid_Format_Should_Format_Correctly()
     {
         // Arrange
         string text = "Hello {0}, you are {1} years old";

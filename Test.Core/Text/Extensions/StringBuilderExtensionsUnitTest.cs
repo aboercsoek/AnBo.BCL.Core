@@ -239,7 +239,7 @@ public class StringBuilderExtensionsUnitTest
 
         // Assert
         result.Should().BeSameAs(builder);
-        result.ToString().Should().Be(dateTime.ToString(null, CultureInfo.InvariantCulture));
+        result.ToString().Should().Be(dateTime.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
     }
 
     [Fact]
@@ -275,7 +275,7 @@ public class StringBuilderExtensionsUnitTest
     }
 
     [Fact]
-    public void AppendUseToInvariantString_With_Null_String_Should_Skip_Null()
+    public void AppendUseToInvariantString_With_Null_String_Should_Add_Null_String()
     {
         // Arrange
         var builder = new StringBuilder("Start");

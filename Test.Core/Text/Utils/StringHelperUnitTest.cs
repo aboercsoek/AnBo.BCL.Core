@@ -6,10 +6,11 @@
 // License: GNU General Public License v3.0
 //--------------------------------------------------------------------------
 
-using FluentAssertions;
 using AnBo.Core;
+using FluentAssertions;
 using System.Globalization;
 using System.Text;
+using Xunit.Abstractions;
 
 namespace AnBo.Test;
 
@@ -212,11 +213,9 @@ public class StringHelperUnitTest
         string format = "test {0}";
         object[] args = { 1 };
 
-        // Act
+        // Act & Assert
         Action action = () => StringHelper.SafeAppendFormat(sb!, format, args);
-
-        // Assert
-        action.Should().NotThrow();
+        action.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

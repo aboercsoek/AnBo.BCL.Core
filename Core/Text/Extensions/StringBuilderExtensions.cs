@@ -83,13 +83,7 @@ public static class StringBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        return value switch
-        {
-            null => builder, // Skip null values
-            string str => builder.Append(str),
-            IFormattable formattable => builder.Append(formattable.ToString(null, CultureInfo.InvariantCulture)),
-            _ => builder.Append(value.ToString())
-        };
+        return builder.Append(StringHelper.SafeToString(value));
     }
 
     /// <summary>
@@ -105,13 +99,10 @@ public static class StringBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        return value switch
-        {
-            null => builder, // Skip null values
-            string str => builder.Append(str),
-            IFormattable formattable => builder.Append(formattable.ToString(null, CultureInfo.InvariantCulture)),
-            _ => builder.Append(value.ToInvariantString())
-        };
+        var options = new ToStringOptions();
+        options.NullString = string.Empty;
+
+        return builder.Append(value.ToInvariantString(options));
     }
 
     #endregion
