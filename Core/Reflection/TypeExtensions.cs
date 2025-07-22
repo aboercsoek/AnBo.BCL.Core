@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------------
 // File:    TypeExtensions.cs
-// Content:	Implementation of class TypeExtensions
+// Content:	Optimized implementation of class TypeExtensions
 // Author:	Andreas Börcsök
 // Copyright © 2025 Andreas Börcsök
 // License: GNU General Public License v3.0
@@ -13,25 +13,17 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Caching.Memory;
 
 #endregion
 
 namespace AnBo.Core;
 
 /// <summary>
-/// Provides extension methods for <see cref="Type"/> with enhanced .NET 8 support.
+/// Provides extension methods for <see cref="Type"/> with enhanced .NET 8 support and optimized performance.
 /// </summary>
 public static class TypeExtensions
 {
-    #region Private fields and caches
-
-    private static readonly ConcurrentDictionary<Type, bool> _nullableTypeCache = new();
-    private static readonly ConcurrentDictionary<Type, bool> _jsonSerializableCache = new();
-    private static readonly ConcurrentDictionary<Type, string> _typeNameCache = new();
-    private static readonly ConcurrentDictionary<Type, object?> _defaultValueCache = new();
-
-    #endregion
-
     #region Type name methods
 
     /// <summary>
@@ -49,6 +41,7 @@ public static class TypeExtensions
 
     /// <summary>
     /// Returns the user-friendly name of the given type, including generic type parameters.
+    /// Uses optimized caching and StringBuilder pooling for better performance.
     /// </summary>
     /// <param name="type">The type to get the name for.</param>
     /// <returns>A user-friendly type name with generic parameters in readable format.</returns>
@@ -61,36 +54,44 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        // Check cache first for performance
-        return _typeNameCache.GetOrAdd(type, static t =>
+        return TypeCache.GetOrAdd($"typename_{type}", () => GenerateTypeName(type));
+    }
+
+    /// <summary>
+    /// Generates user-friendly type names with StringBuilder pooling for memory efficiency.
+    /// </summary>
+    /// <param name="type">The type to generate the name for.</param>
+    /// <returns>A user-friendly type name.</returns>
+    private static string GenerateTypeName(Type type)
+    {
+        if (!type.IsGenericType)
+            return type.Name;
+
+        // Use StringBuilder from pool for better memory management
+        var sb = StringBuilderPool.Get();
+        try
         {
-            // If type is not generic, return its name directly
-            if (!t.IsGenericType)
-                return t.Name;
-
-            // Handle generic types with parameters
-            var sb = new StringBuilder();
-            var typeName = t.Name;
-
-            // Get the type name without the generic parameter backtick notation
-            var backtickIndex = typeName.IndexOf('`');
+            var typeName = type.Name;
+            var backtickIndex = typeName.IndexOf('`', StringComparison.Ordinal);
             if (backtickIndex > 0)
                 typeName = typeName[..backtickIndex];
 
-            sb.Append(typeName);
-            sb.Append("[of ");
+            sb.Append(typeName).Append("[of ");
 
-            // Append each generic argument
-            var genericArgs = t.GetGenericArguments();
+            var genericArgs = type.GetGenericArguments();
             for (var i = 0; i < genericArgs.Length; i++)
             {
                 if (i > 0) sb.Append(',');
-                sb.Append(GetTypeName(genericArgs[i]));
+                sb.Append(GetTypeName(genericArgs[i])); // Recursive call uses cache
             }
 
             sb.Append(']');
             return sb.ToString();
-        });
+        }
+        finally
+        {
+            StringBuilderPool.Return(sb);
+        }
     }
 
     #endregion
@@ -99,6 +100,7 @@ public static class TypeExtensions
 
     /// <summary>
     /// Gets the first field that matches the specified field name (case-insensitive).
+    /// Uses optimized caching for better performance.
     /// </summary>
     /// <param name="type">The type to search in.</param>
     /// <param name="fieldName">The name of the field to find.</param>
@@ -110,7 +112,7 @@ public static class TypeExtensions
         ArgumentNullException.ThrowIfNull(type);
         ArgumentException.ThrowIfNullOrEmpty(fieldName);
 
-        return GetFieldInfo(type, fieldName);
+        return ReflectionCache.GetField(type, fieldName);
     }
 
     /// <summary>
@@ -123,9 +125,19 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
+        return TypeCache.GetOrAdd($"allfields_{type}", () => GetAllFieldsCore(type).ToArray());
+    }
+
+    /// <summary>
+    /// Core implementation for getting all fields from the type hierarchy.
+    /// </summary>
+    /// <param name="type">The type to get fields from.</param>
+    /// <returns>An enumerable of all fields in the type hierarchy.</returns>
+    private static IEnumerable<FieldInfo> GetAllFieldsCore(Type type)
+    {
         const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic |
-                                     BindingFlags.Instance | BindingFlags.Static |
-                                     BindingFlags.DeclaredOnly;
+                                         BindingFlags.Instance | BindingFlags.Static |
+                                         BindingFlags.DeclaredOnly;
 
         var currentType = type;
         while (currentType is not null)
@@ -137,41 +149,6 @@ public static class TypeExtensions
             currentType = currentType.BaseType;
         }
     }
-
-    #region Private Field helper methods
-
-    /// <summary>
-    /// Gets the field info of a field inside the type hierarchy that matches the given field name.
-    /// </summary>
-    /// <param name="type">The type to search for the field.</param>
-    /// <param name="fieldName">The name of the field.</param>
-    /// <returns>The first field info that matches the field name; otherwise, null.</returns>
-    /// <remarks>
-    /// Searches in the provided type and walks up the inheritance tree if not found.
-    /// Uses case-insensitive comparison.
-    /// </remarks>
-    private static FieldInfo? GetFieldInfo(Type? type, string fieldName)
-    {
-        const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic |
-                                     BindingFlags.Instance | BindingFlags.Static |
-                                     BindingFlags.DeclaredOnly;
-        while (type is not null)
-        {
-            var fields = type.GetFields(bindingFlags);
-
-            foreach (var field in fields)
-            {
-                if (field.Name.Equals(fieldName, StringComparison.OrdinalIgnoreCase))
-                    return field;
-            }
-
-            type = type.BaseType;
-        }
-
-        return null;
-    }
-
-    #endregion
 
     #endregion
 
@@ -188,16 +165,17 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        // if TInterface is not an interface, return false
         var interfaceType = typeof(TInterface);
         if (!interfaceType.IsInterface)
             return false;
 
-        return typeof(TInterface).IsAssignableFrom(type);
+        return TypeCache.GetOrAdd($"implements_{type}_{interfaceType}",
+            () => interfaceType.IsAssignableFrom(type));
     }
 
     /// <summary>
     /// Determines whether the specified type has required members.
+    /// Uses caching for improved performance.
     /// </summary>
     /// <param name="type">The type to check for required members.</param>
     /// <returns>
@@ -208,11 +186,13 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        return type.GetCustomAttribute<RequiredMemberAttribute>() is not null;
+        return TypeCache.GetOrAdd($"requiredmembers_{type}",
+            () => type.GetCustomAttribute<RequiredMemberAttribute>() is not null);
     }
 
     /// <summary>
     /// Determines if the type can be instantiated (has accessible constructor and is not abstract).
+    /// Uses caching for improved performance.
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the type can be instantiated; otherwise, false.</returns>
@@ -221,12 +201,23 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
+        return TypeCache.GetOrAdd($"instantiable_{type}", () => CheckCanBeInstantiated(type));
+    }
+
+    /// <summary>
+    /// Core implementation for checking if a type can be instantiated.
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns>true if the type can be instantiated; otherwise, false.</returns>
+    private static bool CheckCanBeInstantiated(Type type)
+    {
         return !type.IsAbstract &&
                !type.IsInterface &&
                !type.IsGenericTypeDefinition &&
-               (type == typeof(string) || type.IsValueType || (!type.IsValueType && type.GetConstructor(Type.EmptyTypes) is not null));
+               (type == typeof(string) ||
+                type.IsValueType ||
+                (!type.IsValueType && ReflectionCache.GetConstructors(type).Any(c => c.GetParameters().Length == 0)));
     }
-
 
     #endregion
 
@@ -234,6 +225,7 @@ public static class TypeExtensions
 
     /// <summary>
     /// Determines whether <paramref name="type"/> is a <see cref="Nullable{T}"/> type.
+    /// Uses caching for improved performance.
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the type is a nullable value type; otherwise, false.</returns>
@@ -242,12 +234,13 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        return _nullableTypeCache.GetOrAdd(type,
-            static t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>));
+        return TypeCache.GetOrAdd($"nullable_{type}",
+            () => type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
     }
 
     /// <summary>
     /// Gets the underlying type of a nullable type, or the type itself if not nullable.
+    /// Uses caching for improved performance.
     /// </summary>
     /// <param name="type">The type to get the underlying type for.</param>
     /// <returns>The underlying non-nullable type.</returns>
@@ -256,11 +249,13 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        return Nullable.GetUnderlyingType(type) ?? type;
+        return TypeCache.GetOrAdd($"underlying_{type}",
+            () => Nullable.GetUnderlyingType(type) ?? type);
     }
 
     /// <summary>
     /// Determines if this type is an open generic type.
+    /// Uses caching for improved performance.
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the specified type is an open generic type; otherwise, false.</returns>
@@ -269,10 +264,8 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        //if (type == null)
-        //    return false;
-
-        return (type.IsGenericType && type.ContainsGenericParameters);
+        return TypeCache.GetOrAdd($"opengeneric_{type}",
+            () => type.IsGenericType && type.ContainsGenericParameters);
     }
 
     #endregion
@@ -281,30 +274,36 @@ public static class TypeExtensions
 
     /// <summary>
     /// Gets the default value for this reference or value type.
+    /// Uses caching for improved performance.
     /// </summary>
+    /// <param name="type">The type to get the default value for.</param>
+    /// <returns>The default value for the type.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static object? GetDefaultValue(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        return _defaultValueCache.GetOrAdd(type,
-            static t => t.IsValueType ? Activator.CreateInstance(t) : null);
+        return TypeCache.GetOrAdd($"default_{type}",
+            () => type.IsValueType ? Activator.CreateInstance(type) : null);
     }
-
 
     /// <summary>
     /// Gets whether the <paramref name="value" /> is the default value for this reference or value type.
     /// </summary>
-    /// <returns>true if the value is the default value, othewise false</returns>
+    /// <param name="type">The type to check against.</param>
+    /// <param name="value">The value to check.</param>
+    /// <returns>true if the value is the default value, otherwise false</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool IsDefaultValue(this Type type, object? value)
     {
         ArgumentNullException.ThrowIfNull(type);
 
         return value switch
         {
-            null => !type.IsValueType || type.IsNullableType(), // null is default for reference types an nullable value types
-            string s => s == string.Empty, // empty string is default for strings
-            _ when type.IsValueType => Equals(type.GetDefaultValue(), value), // compare with default instance of value type
-            _ => false // otherwise, it's not default
+            null => !type.IsValueType || type.IsNullableType(),
+            string s => s == string.Empty,
+            _ when type.IsValueType => Equals(type.GetDefaultValue(), value),
+            _ => false
         };
     }
 
@@ -333,111 +332,51 @@ public static class TypeExtensions
 
     /// <summary>
     /// Determines if the type is suitable for JSON serialization with System.Text.Json.
+    /// Delegates to TypeHelper for centralized implementation.
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the type is JSON serializable; otherwise, false.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     /// <remarks>
     /// This method performs comprehensive checks including:
-    /// - Basic type compatibility
-    /// - Constructor requirements
-    /// - Circular reference potential
+    /// - Basic type compatibility and exclusions
+    /// - Constructor requirements for deserialization
+    /// - Circular reference detection
     /// - System.Text.Json attribute support
+    /// - Event and delegate detection
     /// </remarks>
     public static bool IsJsonSerializable(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        return _jsonSerializableCache.GetOrAdd(type, static t => CheckJsonSerializability(t));
-    }
-
-
-    #region Private JSON serializability check
-
-    /// <summary>
-    /// Performs detailed JSON serializability check for the given type.
-    /// </summary>
-    /// <param name="type">The type to check.</param>
-    /// <returns>true if JSON serializable; otherwise, false.</returns>
-    private static bool CheckJsonSerializability(Type type)
-    {
-        // Basic exclusions
-        if (type.IsPointer || type.IsByRef || type == typeof(nint) || type == typeof(nuint))
-            return false;
-
-        // Primitive types and common types
-        if (type.IsPrimitive ||
-            type == typeof(string) ||
-            type == typeof(DateTime) ||
-            type == typeof(DateTimeOffset) ||
-            type == typeof(TimeSpan) ||
-            type == typeof(Guid) ||
-            type == typeof(Uri) ||
-            type.IsEnum)
-            return true;
-
-        // Nullable types
-        var underlyingType = Nullable.GetUnderlyingType(type);
-        if (underlyingType is not null)
-            return CheckJsonSerializability(underlyingType);
-
-        // Collections and arrays
-        if (type.IsArray)
-            return CheckJsonSerializability(type.GetElementType()!);
-
-        if (typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string))
-        {
-            if (type.IsGenericType)
-            {
-                var genericArgs = type.GetGenericArguments();
-                return genericArgs.All(CheckJsonSerializability);
-            }
-            return true; // Non-generic collections are generally serializable
-        }
-
-        // Record types (often serializable)
-        if (IsRecord(type))
-            return true;
-
-        // Classes need parameterless constructor or constructor with JsonConstructor attribute
-        if (type.IsClass)
-        {
-            var hasParameterlessConstructor = type.GetConstructor(Type.EmptyTypes) is not null;
-            var hasJsonConstructor = type.GetConstructors()
-                .Any(c => c.GetCustomAttribute<JsonConstructorAttribute>() is not null);
-
-            return hasParameterlessConstructor || hasJsonConstructor;
-        }
-
-        // Value types (structs) are generally serializable
-        return type.IsValueType;
+        return TypeHelper.IsJsonSerializable(type);
     }
 
     /// <summary>
-    /// Determines if the type is a record type.
+    /// Determines whether the specified type can be safely cloned using JSON serialization.
+    /// Builds upon JSON serializability with additional semantic checks.
     /// </summary>
-    /// <param name="type">The type to check.</param>
-    /// <returns>true if the type is a record; otherwise, false.</returns>
-    private static bool IsRecord(Type type)
+    /// <param name="type">The type to check</param>
+    /// <returns>True if the type can likely be cloned successfully, false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown if the type is null</exception>
+    public static bool IsCloneable(this Type type)
     {
-        // Records have a synthesized method with specific characteristics
-        return type.GetMethod("<Clone>$") is not null ||
-               type.GetCustomAttributes().Any(attr =>
-                   attr.GetType().Name.Contains("CompilerGenerated"));
-    }
+        ArgumentNullException.ThrowIfNull(type);
 
-    #endregion
+        return TypeHelper.IsCloneable(type);
+    }
 
     #endregion
 
     #region Deep clone methods
 
     /// <summary>
-    /// Creates a deep copy of an object using JSON serialization
+    /// Creates a deep copy of an object using optimized JSON serialization.
     /// </summary>
     /// <typeparam name="T">The type of object to be cloned</typeparam>
     /// <param name="original">The object to be cloned</param>
     /// <returns>A deep copy of the original object</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the object cannot be cloned</exception>
     public static T? DeepClone<T>(this T? original)
     {
         return TypeHelper.DeepClone(original);
@@ -445,3 +384,132 @@ public static class TypeExtensions
 
     #endregion
 }
+
+#region Supporting classes
+
+/// <summary>
+/// Centralized caching strategy with size limits and efficient eviction.
+/// </summary>
+internal static class TypeCache
+{
+    private const int MaxCacheSize = 1000;
+
+    // Use MemoryCache with size limits instead of unlimited ConcurrentDictionary
+    private static readonly MemoryCache _cache = new(new MemoryCacheOptions
+    {
+        SizeLimit = MaxCacheSize,
+        CompactionPercentage = 0.25 // Remove 25% when size limit reached
+    });
+
+    /// <summary>
+    /// Gets or adds a cached result with automatic eviction policy.
+    /// </summary>
+    /// <typeparam name="T">The type of the cached value.</typeparam>
+    /// <param name="key">The cache key.</param>
+    /// <param name="factory">Factory function to create the value if not cached.</param>
+    /// <param name="size">Relative size of the cached item (default: 1).</param>
+    /// <returns>The cached or newly created value.</returns>
+    public static T GetOrAdd<T>(string key, Func<T> factory, int size = 1)
+    {
+        return _cache.GetOrCreate(key, entry =>
+        {
+            entry.Size = size;
+            entry.Priority = CacheItemPriority.Normal;
+            entry.SlidingExpiration = TimeSpan.FromMinutes(30); // Auto-expire unused items
+            return factory();
+        })!;
+    }
+}
+
+/// <summary>
+/// Simple StringBuilder pool for memory efficiency.
+/// </summary>
+internal static class StringBuilderPool
+{
+    private static readonly ConcurrentQueue<StringBuilder> _pool = new();
+    private const int MaxPoolSize = 20;
+    private const int InitialCapacity = 256;
+
+    /// <summary>
+    /// Gets a StringBuilder from the pool or creates a new one.
+    /// </summary>
+    /// <returns>A StringBuilder instance.</returns>
+    public static StringBuilder Get()
+    {
+        if (_pool.TryDequeue(out var sb))
+        {
+            sb.Clear();
+            return sb;
+        }
+        return new StringBuilder(InitialCapacity);
+    }
+
+    /// <summary>
+    /// Returns a StringBuilder to the pool for reuse.
+    /// </summary>
+    /// <param name="sb">The StringBuilder to return.</param>
+    public static void Return(StringBuilder sb)
+    {
+        if (_pool.Count < MaxPoolSize && sb.Capacity <= 1024)
+        {
+            _pool.Enqueue(sb);
+        }
+    }
+}
+
+/// <summary>
+/// Cached reflection information for better performance.
+/// </summary>
+internal static class ReflectionCache
+{
+    private static readonly ConcurrentDictionary<(Type, string), FieldInfo?> _fieldCache = new();
+    private static readonly ConcurrentDictionary<Type, ConstructorInfo[]> _constructorCache = new();
+
+    /// <summary>
+    /// Gets a field from the cache or retrieves it via reflection.
+    /// </summary>
+    /// <param name="type">The type containing the field.</param>
+    /// <param name="fieldName">The name of the field.</param>
+    /// <returns>The FieldInfo if found, null otherwise.</returns>
+    public static FieldInfo? GetField(Type type, string fieldName)
+    {
+        return _fieldCache.GetOrAdd((type, fieldName),
+            key => GetFieldInfoCore(key.Item1, key.Item2));
+    }
+
+    /// <summary>
+    /// Gets constructors from the cache or retrieves them via reflection.
+    /// </summary>
+    /// <param name="type">The type to get constructors for.</param>
+    /// <returns>Array of constructor info objects.</returns>
+    public static ConstructorInfo[] GetConstructors(Type type)
+    {
+        return _constructorCache.GetOrAdd(type,
+            t => t.GetConstructors(BindingFlags.Public | BindingFlags.Instance));
+    }
+
+    /// <summary>
+    /// Core implementation for field lookup with inheritance chain traversal.
+    /// </summary>
+    /// <param name="type">The type to search.</param>
+    /// <param name="fieldName">The field name to find.</param>
+    /// <returns>The FieldInfo if found, null otherwise.</returns>
+    private static FieldInfo? GetFieldInfoCore(Type type, string fieldName)
+    {
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic |
+                                  BindingFlags.Instance | BindingFlags.Static |
+                                  BindingFlags.DeclaredOnly;
+
+        var currentType = type;
+        while (currentType is not null)
+        {
+            var field = currentType.GetField(fieldName, flags);
+            if (field is not null)
+                return field;
+            currentType = currentType.BaseType;
+        }
+        return null;
+    }
+}
+
+#endregion

@@ -1,6 +1,7 @@
 using AnBo.Core;
 using FluentAssertions;
 using System.Collections;
+using System.Text;
 using System.Text.Json.Serialization;
 using Xunit.Sdk;
 
@@ -186,6 +187,27 @@ public class TypeHelperUnitTest
     }
 
     [Fact]
+    public void DeepClone_With_Array_Should_Create_Deep_Copy()
+    {
+        // Arrange
+        TestClass[] original = [
+            new TestClass { Id = 1, Name = "First" },
+            new TestClass { Id = 2, Name = "Second" }
+        ];
+
+        // Act
+        var result = TypeHelper.DeepClone(original);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().NotBeSameAs(original);
+        result.Length.Should().Be(2);
+        result[0].Should().NotBeSameAs(original[0]);
+        result[0].Id.Should().Be(original[0].Id);
+        result[0].Name.Should().Be(original[0].Name);
+    }
+
+    [Fact]
     public void DeepClone_Object_With_Non_Serializable_Type_Should_Throw_InvalidOperationException()
     {
         // Arrange
@@ -193,7 +215,7 @@ public class TypeHelperUnitTest
 
         // Act & Assert
         var exception = Assert.Throws<InvalidOperationException>(() => TypeHelper.DeepClone(original, typeof(NonSerializableClass)));
-        exception.Message.Should().Contain("is known to be non-serializable and cannot be deep cloned");
+        exception.Message.Should().Contain("is not suitable for JSON-based deep cloning");
     }
 
     [Fact]
@@ -204,7 +226,7 @@ public class TypeHelperUnitTest
 
         // Act & Assert
         var exception = Assert.Throws<InvalidOperationException>(() => TypeHelper.DeepClone(original));
-        exception.Message.Should().Contain("is known to be non-serializable and cannot be deep cloned");
+        exception.Message.Should().Contain("is not suitable for JSON-based deep cloning");
         Console.Out.WriteLine(exception.Message);
     }
 
@@ -1136,6 +1158,22 @@ public class TypeHelperUnitTest
         result.Should().BeTrue($"array of cloneable type '{arrayType.Name}' should be cloneable");
     }
 
+    [Fact]
+    public void IsCloneable_WithArraysOfCloneableTypes_2_ShouldReturnTrue()
+    {
+        // Arrange
+        TestClass[] items = [
+            new TestClass { Id = 1, Name = "First" },
+            new TestClass { Id = 2, Name = "Second" }
+        ];
+
+        // Act
+        var result = TypeHelper.IsCloneable(items);
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
     [Theory]
     [InlineData(typeof(Action[]))]
     [InlineData(typeof(Func<int>[]))]
@@ -1234,6 +1272,16 @@ public class TypeHelperUnitTest
 
         // Assert
         result.Should().BeTrue("non-generic IEnumerable should be cloneable");
+    }
+
+    [Fact]
+    public void IsCloneable_WithRecord_ShouldReturnTrue()
+    {
+        // Act
+        var result = TypeHelper.IsCloneable(typeof(TestRecord));
+
+        // Assert
+        result.Should().BeTrue("Records should be cloneable");
     }
 
     #endregion
@@ -1672,6 +1720,8 @@ public class TypeHelperUnitTest
             IsDisposed = true;
         }
     }
+
+    public record TestRecord(string Name, int Value);
 
     /// <summary>
     /// Test class that implements IAsyncDisposable for async disposal testing

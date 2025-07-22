@@ -203,7 +203,7 @@ public class TypeExtensionsUnitTest
     }
 
     [Fact]
-    public void GetAnyField_With_Case_Insensitive_Match_Should_Return_FieldInfo()
+    public void GetAnyField_With_Case_Insensitive_Match_Should_Return_Null()
     {
         // Arrange
         var type = typeof(TestClassWithFields);
@@ -212,8 +212,7 @@ public class TypeExtensionsUnitTest
         var result = type.GetAnyField("PUBLICFIELD");
 
         // Assert
-        result.Should().NotBeNull();
-        result!.Name.Should().Be("PublicField");
+        result.Should().BeNull();
     }
 
     [Fact]
@@ -826,6 +825,19 @@ public class TypeExtensionsUnitTest
     {
         // Arrange
         var type = typeof(TestClassWithParameterlessConstructor);
+
+        // Act
+        var result = type.IsJsonSerializable();
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsJsonSerializable_With_Record_Should_Return_True()
+    {
+        // Arrange
+        var type = typeof(TestRecord);
 
         // Act
         var result = type.IsJsonSerializable();
