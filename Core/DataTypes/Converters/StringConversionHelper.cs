@@ -472,7 +472,7 @@ public static class StringConversionHelper
     /// <typeparam name="T">The parsing result type.</typeparam>
     /// <param name="value">The value to parse.</param>
     /// <returns>The parsing result of Type T.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="value"/> is null.</exception>"
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> is null.</exception>"
     public static T? ParseInvariantString<T>(this string value)
     {
         ArgumentNullException.ThrowIfNull(value);
@@ -487,7 +487,7 @@ public static class StringConversionHelper
     /// <param name="value">The value to parse.</param>
     /// <param name="type">The target type.</param>
     /// <returns>The parsed object result.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="value"/> or <paramref name="type"/> is null.</exception>"
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="value"/> or <paramref name="type"/> is null.</exception>"
     public static object? ParseInvariantString(this string value, Type type)
     {
         ArgumentNullException.ThrowIfNull(value);

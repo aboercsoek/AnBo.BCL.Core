@@ -162,7 +162,7 @@ public sealed class Crc32Helper
     /// Use <see cref="Checksum"/> property to get the final CRC value.
     /// </summary>
     /// <param name="data">The data to add to the CRC calculation. Must not be null.</param>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="data"/> is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="data"/> is null</exception>
     public void Update(byte[] data)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -198,7 +198,7 @@ public sealed class Crc32Helper
     /// </summary>
     /// <param name="data">The data to compute the checksum for. Must not be null.</param>
     /// <returns>The computed CRC32 checksum</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="data"/> is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="data"/> is null</exception>
     public static uint Compute(byte[] data)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -224,7 +224,7 @@ public sealed class Crc32Helper
     /// </summary>
     /// <param name="text">The string to compute the checksum for. Must not be null.</param>
     /// <returns>The computed CRC32 checksum</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="text"/> is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> is null</exception>
     public static uint Compute(string text)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -238,7 +238,7 @@ public sealed class Crc32Helper
     /// <param name="text">The string to compute the checksum for. Must not be null.</param>
     /// <param name="encoding">The encoding to use for converting the string to bytes. Must not be null.</param>
     /// <returns>The computed CRC32 checksum</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="text"/> or <paramref name="encoding"/> is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="text"/> or <paramref name="encoding"/> is null</exception>
     public static uint Compute(string text, Encoding encoding)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -266,7 +266,7 @@ public sealed class Crc32Helper
     /// </summary>
     /// <param name="stream">The stream to read from. Must not be null and must be readable.</param>
     /// <returns>The computed CRC32 checksum</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="stream"/> is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="stream"/> is null</exception>
     /// <exception cref="ArgException">Thrown when the stream is not readable</exception>
     public static uint Compute(Stream stream)
     {
@@ -344,8 +344,8 @@ public sealed class Crc32Helper
     /// </summary>
     /// <param name="filePath">The path to the file. Must not be null or empty.</param>
     /// <returns>The computed CRC32 checksum</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="filePath"/> is null</exception>
-    /// <exception cref="ArgEmptyException">Thrown when <paramref name="filePath"/> empty</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="filePath"/> empty</exception>
     /// <exception cref="ArgFilePathException">Thrown when the file does not exist</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown when access to the file is denied</exception>
     /// <exception cref="IOException">Thrown when an I/O error occurs</exception>
@@ -363,8 +363,8 @@ public sealed class Crc32Helper
     /// <param name="filePath">The path to the file. Must not be null or empty.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests</param>
     /// <returns>A task representing the asynchronous operation with the computed CRC32 checksum as result</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="filePath"/> is null</exception>
-    /// <exception cref="ArgEmptyException">Thrown when <paramref name="filePath"/> empty</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="filePath"/> empty</exception>
     /// <exception cref="ArgFilePathException">Thrown when the file does not exist</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown when access to the file is denied</exception>
     /// <exception cref="IOException">Thrown when an I/O error occurs</exception>

@@ -31,15 +31,15 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeEmpty_String_With_Empty_String_Should_Throw_ArgEmptyException()
+    public void ShouldNotBeEmpty_String_With_Empty_String_Should_Throw_ArgumentException()
     {
         // Arrange
         var value = string.Empty;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value);
-        action.Should().Throw<ArgEmptyException>()
-            .WithMessage("Argument value may not be empty.");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("*Argument value may not be empty*");
     }
 
     [Fact]
@@ -51,8 +51,8 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value, customMessage);
-        action.Should().Throw<ArgEmptyException>()
-            .WithMessage(customMessage);
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("*Custom empty error message*");
     }
 
     #endregion
@@ -71,15 +71,15 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeEmpty_Guid_With_Empty_Guid_Should_Throw_ArgEmptyException()
+    public void ShouldNotBeEmpty_Guid_With_Empty_Guid_Should_Throw_ArgumentException()
     {
         // Arrange
         var value = Guid.Empty;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value);
-        action.Should().Throw<ArgEmptyException>()
-            .WithMessage("Argument value may not be empty.");
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("*Argument value may not be empty*");
     }
 
     [Fact]
@@ -91,8 +91,8 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value, customMessage);
-        action.Should().Throw<ArgEmptyException>()
-            .WithMessage(customMessage);
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("Custom Guid empty error message (Parameter 'value')");
     }
 
     #endregion
@@ -111,14 +111,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeEmpty_StringBuilder_With_Empty_StringBuilder_Should_Throw_ArgEmptyException()
+    public void ShouldNotBeEmpty_StringBuilder_With_Empty_StringBuilder_Should_Throw_ArgumentException()
     {
         // Arrange
         var value = new StringBuilder();
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value);
-        action.Should().Throw<ArgEmptyException>()
+        action.Should().Throw<ArgumentException>()
             .WithMessage("*may not be empty*");
     }
 
@@ -131,8 +131,8 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value, customMessage);
-        action.Should().Throw<ArgEmptyException>()
-            .WithMessage(customMessage);
+        action.Should().Throw<ArgumentException>()
+            .WithMessage("*Custom StringBuilder empty error message*");
     }
 
     #endregion
@@ -151,14 +151,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeEmpty_IEnumerable_With_Empty_Collection_Should_Throw_ArgEmptyException()
+    public void ShouldNotBeEmpty_IEnumerable_With_Empty_Collection_Should_Throw_ArgumentException()
     {
         // Arrange
         var value = new List<string>();
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(value);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     private IEnumerable GetTestEnumerable()
@@ -243,14 +243,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeNullOrEmpty_String_With_Empty_Should_Throw_ArgEmptyException()
+    public void ShouldNotBeNullOrEmpty_String_With_Empty_Should_Throw_ArgumentException()
     {
         // Arrange
         var value = string.Empty;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     #endregion
@@ -280,14 +280,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeNullOrEmpty_Guid_With_Empty_Should_Throw_ArgEmptyException()
+    public void ShouldNotBeNullOrEmpty_Guid_With_Empty_Should_Throw_ArgumentException()
     {
         // Arrange
         Guid? value = Guid.Empty;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     #endregion
@@ -317,14 +317,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeNullOrEmpty_StringBuilder_With_Empty_Should_Throw_ArgEmptyException()
+    public void ShouldNotBeNullOrEmpty_StringBuilder_With_Empty_Should_Throw_ArgumentException()
     {
         // Arrange
         StringBuilder? value = new StringBuilder();
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     #endregion
@@ -354,14 +354,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldNotBeNullOrEmpty_IEnumerable_With_Empty_Should_Throw_ArgEmptyException()
+    public void ShouldNotBeNullOrEmpty_IEnumerable_With_Empty_Should_Throw_ArgumentException()
     {
         // Arrange
         IEnumerable? value = new List<string>();
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeNullOrEmpty(value);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     #endregion
@@ -568,14 +568,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeExistingFile_String_With_Empty_Should_Throw_ArgEmptyException()
+    public void ShouldBeExistingFile_String_With_Empty_Should_Throw_ArgumentException()
     {
         // Arrange
         string filePath = string.Empty;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingFile(filePath);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -684,14 +684,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeExistingDirectory_With_Empty_Should_Throw_ArgEmptyException()
+    public void ShouldBeExistingDirectory_With_Empty_Should_Throw_ArgumentException()
     {
         // Arrange
         string directoryPath = string.Empty;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeExistingDirectory(directoryPath);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]
@@ -1153,7 +1153,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldNotBeEmpty(customEnumerable);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]

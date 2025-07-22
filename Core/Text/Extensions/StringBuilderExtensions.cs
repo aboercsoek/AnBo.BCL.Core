@@ -28,7 +28,7 @@ public static class StringBuilderExtensions
     /// </summary>
     /// <param name="builder">The string builder to clear. Cannot be null.</param>
     /// <returns>The same StringBuilder instance for method chaining.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder ClearBuilder(this StringBuilder builder)
     {
@@ -59,7 +59,7 @@ public static class StringBuilderExtensions
     /// </summary>
     /// <param name="builder">The string builder to check. Cannot be null.</param>
     /// <returns><see langword="true"/> if the builder has zero length; otherwise, <see langword="false"/>.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsEmpty(this StringBuilder builder)
     {
@@ -198,7 +198,7 @@ public static class StringBuilderExtensions
     /// <param name="separator">The separator to use between values.</param>
     /// <param name="values">The values to join and append.</param>
     /// <returns>The same StringBuilder instance for method chaining.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> or <paramref name="values"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> or <paramref name="values"/> is null.</exception>
     public static StringBuilder AppendJoinCollection<T>(this StringBuilder builder, string? separator, IEnumerable<T> values)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -230,7 +230,7 @@ public static class StringBuilderExtensions
     /// <param name="separator">The separator character to use between values.</param>
     /// <param name="values">The values to join and append.</param>
     /// <returns>The same StringBuilder instance for method chaining.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> or <paramref name="values"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> or <paramref name="values"/> is null.</exception>
     public static StringBuilder AppendJoinCollection<T>(this StringBuilder builder, char separator, IEnumerable<T> values)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -262,7 +262,7 @@ public static class StringBuilderExtensions
     /// </summary>
     /// <param name="builder">The string builder. Cannot be null.</param>
     /// <returns>The same StringBuilder instance for method chaining.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder AppendLineIf(this StringBuilder builder)
     {
@@ -277,7 +277,7 @@ public static class StringBuilderExtensions
     /// <param name="condition">The condition to evaluate.</param>
     /// <param name="value">The value to append if condition is true.</param>
     /// <returns>The same StringBuilder instance for method chaining.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static StringBuilder AppendLineIf(this StringBuilder builder, bool condition, string? value)
     {
@@ -294,7 +294,7 @@ public static class StringBuilderExtensions
     /// </summary>
     /// <param name="builder">The string builder. Cannot be null.</param>
     /// <returns>The same StringBuilder instance for method chaining.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     public static StringBuilder TrimEnd(this StringBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
@@ -319,7 +319,7 @@ public static class StringBuilderExtensions
     /// </summary>
     /// <param name="builder">The string builder. Cannot be null.</param>
     /// <returns>A read-only span of characters representing the builder's content.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<char> AsSpan(this StringBuilder builder)
     {
@@ -334,7 +334,7 @@ public static class StringBuilderExtensions
     /// <param name="start">The starting index.</param>
     /// <param name="length">The number of characters to include.</param>
     /// <returns>A read-only span of characters representing the specified portion.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="builder"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="builder"/> is null.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when start or length are invalid.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ReadOnlySpan<char> AsSpan(this StringBuilder builder, int start, int length)

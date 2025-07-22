@@ -50,7 +50,7 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns>input string that ends with a slash "\" char.</returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="input"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="input"/> is <see langword="null"/>.</exception>
         public static string AppendSlash(string input)
         {
             ArgumentNullException.ThrowIfNull(input);
@@ -66,7 +66,7 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="input">The input string.</param>
         /// <returns>input string that starts with a slash "\" char.</returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="input"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="input"/> is <see langword="null"/>.</exception>
         public static string AppendFrontSlash(string input)
         {
             ArgumentNullException.ThrowIfNull(input);
@@ -82,8 +82,8 @@ namespace AnBo.Core
         /// <param name="path">The directory path.</param>
         /// <param name="mask">The file mask.</param>
         /// <returns>The list of files in specified path.</returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
         public static List<FileInfo> GetFileInfoList(string path, string mask)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(path);
@@ -103,8 +103,8 @@ namespace AnBo.Core
         /// <param name="mask">The file mask.</param>
         /// <param name="subDir">If set to <see langword="true"/> all subdirectories are also processed.</param>
         /// <returns>The list of files in specified path (files in sub directories are included if subDir is set to true.</returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
         public static List<FileInfo> GetFileInfoList(string path, string mask, bool subDir)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(path);
@@ -132,8 +132,8 @@ namespace AnBo.Core
         /// <param name="path">The directory path.</param>
         /// <param name="mask">The file mask.</param>
         /// <returns>The list of files in specified path.</returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
         public static List<string> GetFiles(string path, string mask)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(path);
@@ -152,8 +152,8 @@ namespace AnBo.Core
         /// <param name="mask">The file mask.</param>
         /// <param name="subDir">If set to <see langword="true"/> all subdirectories are also processed.</param>
         /// <returns>The list of files in specified path (files in sub directories are included if subDir is set to true.</returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="path"/> or <paramref name="mask"/> is empty.</exception>
         public static List<string> GetFiles(string path, string mask, bool subDir)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(path);
@@ -180,7 +180,7 @@ namespace AnBo.Core
         /// <param name="path">The directory path.</param>
         /// <returns>List of sub directories in the specified path.</returns>
         /// <param name="subDir">If set to <see langword="true"/> the complete subdirectory hierachy is returned.</param>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
         public static List<string> GetSubDirectories(string path, bool subDir)
         {
             ArgumentNullException.ThrowIfNull(path);
@@ -212,7 +212,7 @@ namespace AnBo.Core
         /// <returns>
         /// 	<see langword="true"/> if the specified path is an URL; otherwise, <see langword="false"/>.
         /// </returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
         public static bool IsUrl(string path)
         {
             ArgumentNullException.ThrowIfNull(path);
@@ -226,7 +226,7 @@ namespace AnBo.Core
         /// <param name="basePath">The base path.</param>
         /// <param name="paths">The path segments.</param>
         /// <returns>A string containing the combined paths.</returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="basePath"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="basePath"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgException{TValue}">
         /// Is thrown if <paramref name="basePath"/> or any item of <paramref name="paths"/> contains invalid path characters.
         /// </exception>
@@ -259,10 +259,10 @@ namespace AnBo.Core
         /// <param name="baseDirectoryPath">The base directory</param>
         /// <param name="absPath">The absolute path.</param>
         /// <returns>The path of absPath relative to baseDirectoryPath.</returns>
-        /// <exception cref="ArgNullException">
+        /// <exception cref="ArgumentNullException">
         /// Is thrown if <paramref name="baseDirectoryPath"/> or <paramref name="absPath"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgEmptyException">
+        /// <exception cref="ArgumentException">
         /// Is thrown if <paramref name="baseDirectoryPath"/> or <paramref name="absPath"/> is empty.
         /// </exception>
         public static string GetRelativePath(string baseDirectoryPath, string absPath)
@@ -313,10 +313,10 @@ namespace AnBo.Core
         /// <param name="baseDirectoryPath">The base directory</param>
         /// <param name="relPath">The relative path.</param>
         /// <returns>The absolute path of relPath.</returns>
-        /// <exception cref="ArgNullException">
+        /// <exception cref="ArgumentNullException">
         /// Is thrown if <paramref name="baseDirectoryPath"/> or <paramref name="relPath"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgEmptyException">
+        /// <exception cref="ArgumentException">
         /// Is thrown if <paramref name="baseDirectoryPath"/> is empty.
         /// </exception>
         public static string GetAbsolutePath(string baseDirectoryPath, string relPath)
@@ -331,7 +331,7 @@ namespace AnBo.Core
         /// Creates the directory. CreateDirectory creates the directory only if it not exist.
         /// </summary>
         /// <param name="path">The path.</param>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
         public static void CreateDirectory(string path)
         {
             ArgumentNullException.ThrowIfNull(path);
@@ -347,7 +347,7 @@ namespace AnBo.Core
         /// Deletes the directory. DeleteDirectory checks if the directory exist before deleting all files an subdirectories.
         /// </summary>
         /// <param name="path">The path.</param>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="path"/> is <see langword="null"/>.</exception>
         public static void DeleteDirectory(string path)
         {
             ArgumentNullException.ThrowIfNull(path);
@@ -371,8 +371,8 @@ namespace AnBo.Core
         /// Deletes a file. DeleteFile checks if the file exist and removes the ReadOnly-Attribute before deleting the file.
         /// </summary>
         /// <param name="pathName">The file path.</param>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="pathName"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">Is thrown if <paramref name="pathName"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="pathName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="pathName"/> is empty.</exception>
         public static void DeleteFile(string pathName)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(pathName);
@@ -392,8 +392,8 @@ namespace AnBo.Core
         /// <returns>
         /// 	<see langword="true"/> if directory is empty; otherwise <see langword="false"/>.
         /// </returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="dirName"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">Is thrown if <paramref name="dirName"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="dirName"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="dirName"/> is empty.</exception>
         public static bool IsDirectoryEmpty(string dirName)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(dirName);
@@ -414,9 +414,9 @@ namespace AnBo.Core
         /// <param name="sourceDirectory">The source directory.</param>
         /// <param name="destinationDirectory">The destination directory.</param>
         /// <param name="overwrite">if set to <see langword="true"/> overwrites existing files in the destination directory.</param>
-        /// <exception cref="ArgNullException">
+        /// <exception cref="ArgumentNullException">
         ///		Is thrown if <paramref name="sourceDirectory"/> or <paramref name="destinationDirectory"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">
+        /// <exception cref="ArgumentException">
         ///		Is thrown if <paramref name="sourceDirectory"/> or <paramref name="destinationDirectory"/> is empty.</exception>
         public static void DeepCopy(string sourceDirectory, string destinationDirectory, bool overwrite)
         {
@@ -665,8 +665,8 @@ namespace AnBo.Core
         /// </summary>
         /// <param name="filename">The filename.</param>
         /// <returns>A valid filename.</returns>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="filename"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">Is thrown if <paramref name="filename"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="filename"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="filename"/> is empty.</exception>
         public static string GetValidFilename(string filename)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(filename);
@@ -724,8 +724,8 @@ namespace AnBo.Core
         ///    + 2009-09-02
         ///    + ...
         /// </pre></remarks>
-        /// <exception cref="ArgNullException">Is thrown if <paramref name="baseFolder"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgEmptyException">Is thrown if <paramref name="baseFolder"/> is empty.</exception>
+        /// <exception cref="ArgumentNullException">Is thrown if <paramref name="baseFolder"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">Is thrown if <paramref name="baseFolder"/> is empty.</exception>
         public static void CreateDateFolder(string baseFolder, DateTime startDate, DateTime endDate)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(baseFolder);

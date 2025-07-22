@@ -39,7 +39,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to process.</param>
     /// <returns>The assembly qualified name, quoted if necessary.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static string QuoteAssemblyQualifiedNameIfNeeded(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -52,7 +52,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to get the name for.</param>
     /// <returns>A user-friendly type name with generic parameters in readable format.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     /// <remarks>
     /// Supports generic type names in a user-friendly way without backticks and resolves nested generic types.
     /// Example: Dictionary&lt;string,int&gt; becomes "Dictionary[of string,int]"
@@ -103,8 +103,8 @@ public static class TypeExtensions
     /// <param name="type">The type to search in.</param>
     /// <param name="fieldName">The name of the field to find.</param>
     /// <returns>The <see cref="FieldInfo"/> if found; otherwise, null.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> or <paramref name="fieldName"/> is null.</exception>
-    /// <exception cref="ArgEmptyException">Thrown when <paramref name="fieldName"/> is empty.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> or <paramref name="fieldName"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="fieldName"/> is empty.</exception>
     public static FieldInfo? GetAnyField(this Type type, string fieldName)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -118,7 +118,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to get fields from.</param>
     /// <returns>An enumerable of all fields in the type hierarchy.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static IEnumerable<FieldInfo> GetAllFields(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -183,7 +183,7 @@ public static class TypeExtensions
     /// <typeparam name="TInterface">The interface type to check for.</typeparam>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the type implements the specified interface; otherwise, false.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool ImplementsInterface<TInterface>(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -203,7 +203,7 @@ public static class TypeExtensions
     /// <returns>
     /// <see langword="true"/> if the type has the <see cref="RequiredMemberAttribute"/>; otherwise, <see langword="false"/>.
     /// </returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool HasRequiredMembers(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -216,7 +216,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the type can be instantiated; otherwise, false.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool CanBeInstantiated(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -237,7 +237,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the type is a nullable value type; otherwise, false.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool IsNullableType(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -251,7 +251,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to get the underlying type for.</param>
     /// <returns>The underlying non-nullable type.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static Type GetUnderlyingType(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -264,7 +264,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the specified type is an open generic type; otherwise, false.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool IsOpenGenericType(this Type type)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -314,7 +314,7 @@ public static class TypeExtensions
     /// <param name="type">The type to check against.</param>
     /// <param name="value">The value to check.</param>
     /// <returns>true if the value is the default value or empty string; otherwise, false.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     public static bool IsDefaultValueOrEmptyString(this Type type, object? value)
     {
         ArgumentNullException.ThrowIfNull(type);
@@ -336,7 +336,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type">The type to check.</param>
     /// <returns>true if the type is JSON serializable; otherwise, false.</returns>
-    /// <exception cref="ArgNullException">Thrown when <paramref name="type"/> is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="type"/> is null.</exception>
     /// <remarks>
     /// This method performs comprehensive checks including:
     /// - Basic type compatibility

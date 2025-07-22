@@ -609,14 +609,14 @@ public class Crc32HelperUnitTest
     }
 
     [Fact]
-    public void ComputeFile_With_Empty_Path_Should_Throw_ArgEmptyException()
+    public void ComputeFile_With_Empty_Path_Should_Throw_ArgumentException()
     {
         // Arrange
         string emptyPath = string.Empty;
 
         // Act & Assert
         var action = () => Crc32Helper.ComputeFile(emptyPath);
-        action.Should().Throw<ArgEmptyException>();
+        action.Should().Throw<ArgumentException>();
     }
 
     [Fact]

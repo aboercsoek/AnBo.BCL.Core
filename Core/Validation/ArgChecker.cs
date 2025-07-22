@@ -48,33 +48,33 @@ public static class ArgChecker
     /// <param name="argValue">The argument value.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty string.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is an empty string.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeEmpty(string argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
-        if (argValue!.Length == 0)
+        if (argValue == string.Empty)
         {
-            throw new ArgEmptyException(argName!, string.IsNullOrEmpty(errorMessage)
-                                                      ? StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg
-                                                      : errorMessage);
+            throw new ArgumentException(string.IsNullOrEmpty(errorMessage)
+                ? StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg.SafeFormatWith(argName) : errorMessage, argName!);
         }
     }
 
     /// <summary>
     /// Checks if the Guid argument is not empty.
     /// </summary>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty Guid.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is an empty Guid.</exception>
     /// <param name="argValue">The argument value.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is an empty Guid.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeEmpty(Guid argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
+        //ArgumentException.ThrowIfNullOrEmpty(argValue, argName);
         if (argValue == Guid.Empty)
         {
-            throw new ArgEmptyException(argName!, string.IsNullOrEmpty(errorMessage)
-                                                      ? StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg
-                                                      : errorMessage);
+            throw new ArgumentException(string.IsNullOrEmpty(errorMessage)
+                ? StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg.SafeFormatWith(argName) : errorMessage, argName!);
         }
     }
 
@@ -84,15 +84,14 @@ public static class ArgChecker
     /// <param name="argValue">The argument value.</param>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is empty.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeEmpty(StringBuilder argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
         if (argValue!.Length == 0)
         {
-            throw new ArgEmptyException(argName!, string.IsNullOrEmpty(errorMessage)
-                                                    ? StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg
-                                                    : errorMessage);
+            throw new ArgumentException(string.IsNullOrEmpty(errorMessage)
+                ? StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg.SafeFormatWith(argName) : errorMessage, argName!);
         }
     }
 
@@ -101,7 +100,7 @@ public static class ArgChecker
     /// </summary>
     /// <param name="argValue">The argument value.</param>
     /// <param name="argName">The name of the argument.</param>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty collection.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is an empty collection.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeEmpty(IEnumerable argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
@@ -109,12 +108,12 @@ public static class ArgChecker
         if (argValue is ICollection collection)
         {
             if (collection.Count == 0)
-                throw new ArgEmptyException(argName!);
+                throw new ArgumentException(StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg.SafeFormatWith(argName), argName!);
             return;
         }
 
         if (!argValue!.CastSequence<object>().Any())
-            throw new ArgEmptyException(argName!);
+            throw new ArgumentException(StringResources.ErrorArgumentNotEmptyValidationTemplate1Arg.SafeFormatWith(argName), argName!);
     }
 
     #endregion ShouldNotBeEmpty methods
@@ -128,12 +127,11 @@ public static class ArgChecker
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty string.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is an empty string.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeNullOrEmpty([NotNull] string? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
         ArgumentNullException.ThrowIfNull(argValue, argName);
-        //ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
 
         ShouldNotBeEmpty(argValue: argValue!, errorMessage: errorMessage, argName: argName);
     }
@@ -145,12 +143,11 @@ public static class ArgChecker
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty Guid.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is an empty Guid.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeNullOrEmpty([NotNull] Guid? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
         ArgumentNullException.ThrowIfNull(argValue, argName);
-        //ShouldNotBeNull(argValue: argValue, errorMessage: errorMessage, argName: argName);
 
         ShouldNotBeEmpty(argValue: argValue!.Value, errorMessage: errorMessage, argName: argName);
     }
@@ -162,7 +159,7 @@ public static class ArgChecker
     /// <param name="errorMessage">The error message.</param>
     /// <param name="argName">The name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty StringBuilder.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is an empty StringBuilder.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeNullOrEmpty([NotNull] StringBuilder? argValue, string? errorMessage = null, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
@@ -178,7 +175,7 @@ public static class ArgChecker
     /// <param name="argValue">The argument value.</param>
     /// <param name="argName">The name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argValue"/> is <see langword="null"</exception>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argValue"/> is an empty collection.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argValue"/> is an empty collection.</exception>
     [DebuggerStepThrough]
     public static void ShouldNotBeNullOrEmpty([NotNull] IEnumerable? argValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
     {
@@ -258,7 +255,7 @@ public static class ArgChecker
     /// <param name="argFilePath">The argument file path value.</param>
     /// <param name="argName">The Name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argFilePath"/> is <see langword="null"/></exception>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argFilePath"/> is an empty string.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argFilePath"/> is an empty string.</exception>
     /// <exception cref="FilePathTooLongException">Is thrown if <paramref name="argFilePath"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
     /// <exception cref="ArgFilePathException">Is thrown if the <paramref name="argFilePath"/> value is not a path to a existing file.</exception>
     [DebuggerStepThrough]
@@ -288,7 +285,7 @@ public static class ArgChecker
     /// <param name="argFileInfo">The file info to check.</param>
     /// <param name="argName">The Name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argFileInfo"/> is <see langword="null"/></exception>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argFileInfo"/> is an empty string.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argFileInfo"/> is an empty string.</exception>
     /// <exception cref="FilePathTooLongException">Is thrown if <paramref name="argFileInfo"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
     /// <exception cref="ArgFilePathException">Is thrown if the <paramref name="argFileInfo"/> value is not a path to a existing file.</exception>
     [DebuggerStepThrough]
@@ -307,7 +304,7 @@ public static class ArgChecker
     /// <param name="argDirectoryPath">The argument directory path value.</param>
     /// <param name="argName">The Name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argDirectoryPath"/> is <see langword="null"/></exception>
-    /// <exception cref="ArgEmptyException">Is thrown if <paramref name="argDirectoryPath"/> is an empty string.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argDirectoryPath"/> is an empty string.</exception>
     /// <exception cref="DirectoryPathTooLongException">Is thrown if <paramref name="argDirectoryPath"/> length is too long (see <see cref="FileHelper.MAXIMUM_FOLDER_NAME_LENGTH"/>).</exception>
     /// <exception cref="ArgDirectoryPathException">Is thrown if the <paramref name="argDirectoryPath"/> value is not a path to a existing directory.</exception>
     [DebuggerStepThrough]

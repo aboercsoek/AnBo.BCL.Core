@@ -268,7 +268,7 @@ public static class ObjectEx
     /// <typeparam name="T">The disposable type</typeparam>
     /// <param name="disposable">The disposable object</param>
     /// <param name="action">The action to execute</param>
-    /// <exception cref="ArgNullException">Thrown when disposable or action is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when disposable or action is null</exception>
     public static void Using<T>(this T disposable, Action<T> action) where T : IDisposable
     {
         ArgumentNullException.ThrowIfNull(disposable);
@@ -333,7 +333,7 @@ public static class ObjectEx
     /// <typeparam name="T">The disposable element type</typeparam>
     /// <param name="sequence">The sequence of disposable objects</param>
     /// <param name="action">The action to execute for each element before disposal</param>
-    /// <exception cref="ArgNullException">Thrown when sequence or action is null</exception>
+    /// <exception cref="ArgumentNullException">Thrown when sequence or action is null</exception>
     public static void UsingEach<T>(this IEnumerable<T> sequence, Action<T> action) where T : IDisposable
     {
         ArgumentNullException.ThrowIfNull(sequence);

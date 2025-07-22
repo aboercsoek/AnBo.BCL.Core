@@ -223,7 +223,7 @@ public static partial class StringHelper
     /// <param name="separator">The separator to use between items.</param>
     /// <param name="items">The items to join.</param>
     /// <returns>The joined string representation of all items.</returns>
-    /// <exception cref="ArgNullException">Thrown when separator is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when separator is null.</exception>
     public static string JoinParams(string separator, params object?[] items)
     {
         ArgumentNullException.ThrowIfNull(separator);
@@ -239,7 +239,7 @@ public static partial class StringHelper
     /// <param name="items">The items to join.</param>
     /// <param name="converter">Function to convert each item to its string representation.</param>
     /// <returns>The joined string using the custom converter.</returns>
-    /// <exception cref="ArgNullException">Thrown when separator or items is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when separator or items is null.</exception>
     public static string Join<T>(string separator, IEnumerable<T> items, Func<T, string>? converter = null)
     {
         ArgumentNullException.ThrowIfNull(separator);
@@ -273,7 +273,7 @@ public static partial class StringHelper
     /// </summary>
     /// <param name="data">The byte array to convert.</param>
     /// <returns>The decoded string.</returns>
-    /// <exception cref="ArgNullException">Thrown when data is null.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when data is null.</exception>
     public static string GetStringFromBytes(byte[] data)
     {
         ArgumentNullException.ThrowIfNull(data);
