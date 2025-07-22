@@ -31,10 +31,11 @@ public static class TypeHelper
     /// </summary>
     /// <param name="original">The object to be cloned</param>
     /// <param name="type">The type of object to be cloned. If null, uses the runtime type of the object</param>
+    /// <param name="options">Optional JSON serializer options for customization. If null, uses default optimized options</param>
     /// <returns>A deep copy of the original object, or null if the original was null</returns>
     /// <exception cref="InvalidOperationException">Thrown when the object cannot be cloned due to serialization errors</exception>
     /// <exception cref="ArgumentException">Thrown when the provided type is incompatible with the object</exception>
-    public static object? DeepClone(object? original, Type? type = null)
+    public static object? DeepClone(object? original, Type type, JsonSerializerOptions? options = null)
     {
         if (original is null)
             return null;
@@ -59,7 +60,6 @@ public static class TypeHelper
 
         try
         {
-            var options = GetOrCreateJsonOptions(targetType);
             return PerformJsonClone(original, targetType, options);
         }
         catch (JsonException ex)
@@ -85,9 +85,10 @@ public static class TypeHelper
     /// </summary>
     /// <typeparam name="T">The type of object to be cloned</typeparam>
     /// <param name="original">The object to be cloned</param>
+    /// <param name="options">Optional JSON serializer options for customization. If null, uses default optimized options</param>
     /// <returns>A deep copy of the original object, or default(T) if the original was null/default</returns>
     /// <exception cref="InvalidOperationException">Thrown when the object cannot be cloned due to serialization errors</exception>
-    public static T? DeepClone<T>(T? original)
+    public static T? DeepClone<T>(T? original, JsonSerializerOptions? options = null)
     {
         // Handle value types and null references efficiently
         if (original is null)
@@ -98,29 +99,7 @@ public static class TypeHelper
 
         var type = typeof(T);
 
-        // Use the consolidated serializability check
-        if (!CheckJsonSerializabilityComprehensive(type))
-        {
-            throw new InvalidOperationException(
-                $"Type '{type.GetTypeName()}' is not suitable for JSON-based deep cloning. " +
-                $"Consider implementing ICloneable or using a different cloning strategy.");
-        }
-
-        try
-        {
-            var options = GetOrCreateJsonOptions(type);
-            return PerformJsonClone<T>(original, options);
-        }
-        catch (JsonException ex)
-        {
-            throw new InvalidOperationException(
-                $"JSON serialization failed during deep clone of type '{type.GetTypeName()}': {ex.Message}", ex);
-        }
-        catch (NotSupportedException ex)
-        {
-            throw new InvalidOperationException(
-                $"Type '{type.GetTypeName()}' contains unsupported members for JSON serialization: {ex.Message}", ex);
-        }
+        return (T?)DeepClone(original, type, options);
     }
 
     /// <summary>
@@ -129,12 +108,13 @@ public static class TypeHelper
     /// <typeparam name="T">The type of object to be cloned</typeparam>
     /// <param name="original">The object to be cloned</param>
     /// <param name="clone">The cloned object if successful, default(T) otherwise</param>
+    /// <param name="options">Optional JSON serializer options for customization. If null, uses default optimized options</param>
     /// <returns>True if cloning was successful, false otherwise</returns>
-    public static bool TryDeepClone<T>(T? original, out T? clone)
+    public static bool TryDeepClone<T>(T? original, out T? clone, JsonSerializerOptions? options = null)
     {
         try
         {
-            clone = DeepClone(original);
+            clone = DeepClone(original, options);
             return true;
         }
         catch
@@ -151,10 +131,13 @@ public static class TypeHelper
     /// </summary>
     /// <param name="type">The type for which to get options</param>
     /// <returns>JsonSerializerOptions configured for the specified type</returns>
-    private static JsonSerializerOptions GetOrCreateJsonOptions(Type type)
-    {
-        return TypeCache.GetOrAdd($"clone_options_{type}", CreateCloneOptions);
-    }
+    //private static JsonSerializerOptions GetOrCreateJsonOptions(Type type)
+    //{
+    //    return TypeCache.GetOrAdd($"clone_options_{type}", CreateCloneOptions);
+    //}
+
+    // Statische, wiederverwendbare Options
+    private static readonly JsonSerializerOptions _cloneOptions = CreateCloneOptions();
 
     /// <summary>
     /// Creates optimized JsonSerializerOptions for cloning operations.
@@ -164,7 +147,7 @@ public static class TypeHelper
     {
         return new JsonSerializerOptions
         {
-            ReferenceHandler = ReferenceHandler.Preserve,
+            ReferenceHandler = ReferenceHandler.Preserve, // Can handle circular references
             IncludeFields = true,
             IgnoreReadOnlyProperties = false,
             NumberHandling = JsonNumberHandling.AllowReadingFromString,
@@ -184,8 +167,9 @@ public static class TypeHelper
     /// <param name="type">The type of the object</param>
     /// <param name="options">JSON serializer options</param>
     /// <returns>The cloned object</returns>
-    private static object? PerformJsonClone(object original, Type type, JsonSerializerOptions options)
+    private static object? PerformJsonClone(object original, Type type, JsonSerializerOptions? options = null)
     {
+        options ??= _cloneOptions;
         var jsonString = JsonSerializer.Serialize(original, type, options);
         return JsonSerializer.Deserialize(jsonString, type, options);
     }
@@ -197,11 +181,11 @@ public static class TypeHelper
     /// <param name="original">The original object</param>
     /// <param name="options">JSON serializer options</param>
     /// <returns>The cloned object</returns>
-    private static T? PerformJsonClone<T>(T original, JsonSerializerOptions options)
-    {
-        var jsonString = JsonSerializer.Serialize(original, options);
-        return JsonSerializer.Deserialize<T>(jsonString, options);
-    }
+    //private static T? PerformJsonClone<T>(T original, JsonSerializerOptions options)
+    //{
+    //    var jsonString = JsonSerializer.Serialize(original, options);
+    //    return JsonSerializer.Deserialize<T>(jsonString, options);
+    //}
 
     #endregion
 

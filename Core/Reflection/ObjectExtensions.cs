@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics.X86;
 using static System.Collections.Specialized.BitVector32;
 
 #endregion
@@ -459,34 +460,7 @@ public static class ObjectEx
     {
         if (value is null) return true;
 
-        var type = value.GetType();
-
-        // Reference types: only null is default
-        if (!type.IsValueType) return false;
-
-        // Fast path for common value types
-        return value switch
-        {
-            bool b => b == default(bool),
-            byte b => b == default(byte),
-            sbyte sb => sb == default(sbyte),
-            char c => c == default(char),
-            short s => s == default(short),
-            ushort us => us == default(ushort),
-            int i => i == default(int),
-            uint ui => ui == default(uint),
-            long l => l == default(long),
-            ulong ul => ul == default(ulong),
-            float f => f == default(float),
-            double d => d == default(double),
-            decimal m => m == default(decimal),
-            DateTime dt => dt == default(DateTime),
-            TimeSpan ts => ts == default(TimeSpan),
-            DateOnly dateOnly => dateOnly == default(DateOnly),
-            TimeOnly timeOnly => timeOnly == default(TimeOnly),
-            Guid g => g == default(Guid),
-            _ => Equals(Activator.CreateInstance(type), value)
-        };
+        return value.GetType().IsDefaultValue(value);
     }
 
     /// Determines whether a value is the default value for its type or an empty string.
@@ -496,7 +470,11 @@ public static class ObjectEx
     /// <returns>true if the value is default or an empty string; otherwise false</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsDefaultOrEmpty(this object? value)
-        => value is null or "" || (value.GetType().IsValueType && value.IsDefaultValue());
+    {
+        if (value is null) return true;
+
+        return value.GetType().IsDefaultValueOrEmptyString(value);
+    }
 
     #endregion
 

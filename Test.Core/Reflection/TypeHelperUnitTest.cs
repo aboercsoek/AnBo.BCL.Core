@@ -2,6 +2,7 @@ using AnBo.Core;
 using FluentAssertions;
 using System.Collections;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Xunit.Sdk;
 
@@ -228,6 +229,62 @@ public class TypeHelperUnitTest
         var exception = Assert.Throws<InvalidOperationException>(() => TypeHelper.DeepClone(original));
         exception.Message.Should().Contain("is not suitable for JSON-based deep cloning");
         Console.Out.WriteLine(exception.Message);
+    }
+
+    [Fact]
+    public void DeepClone_Object_With_Circular_Reference_Should_Throw_JsonException()
+    {
+        // Arrange
+        var root = new Node { Name = "Root" };
+        var child = new Node { Name = "Child", Child = root };
+        root.Child = child; // Circular reference
+
+        var options = new JsonSerializerOptions
+        {
+            //ReferenceHandler = ReferenceHandler.Preserve, // Uncomment if you want to handle circular references
+            IncludeFields = true,
+            IgnoreReadOnlyProperties = false,
+            NumberHandling = JsonNumberHandling.AllowReadingFromString,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+            // Optimize for cloning performance
+            WriteIndented = false,
+            PropertyNamingPolicy = null
+        };
+
+        // Act & Assert
+        var exception = Assert.Throws<InvalidOperationException>(() => TypeHelper.DeepClone(root, typeof(Node), options));
+        exception.Message.Should().Contain("JSON serialization failed during deep clone");
+        //Console.Out.WriteLine(exception.Message);
+    }
+
+    [Fact]
+    public void DeepClone_Object_With_Circular_Reference_Should_Create_DeepCopy()
+    {
+        // Arrange
+        var root = new Node { Name = "Root" };
+        var child = new Node { Name = "Child", Child = root };
+        root.Child = child; // Circular reference
+
+        var options = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.Preserve, // Uncomment if you want to handle circular references
+            IncludeFields = true,
+            IgnoreReadOnlyProperties = false,
+            NumberHandling = JsonNumberHandling.AllowReadingFromString,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.Never,
+            // Optimize for cloning performance
+            WriteIndented = false,
+            PropertyNamingPolicy = null
+        };
+
+        // Act & Assert
+        var result = TypeHelper.DeepClone(root, typeof(Node), options);
+        result.Should().NotBeNull();
+        result.Should().NotBeSameAs(root);
     }
 
     #endregion
@@ -1911,6 +1968,12 @@ public class TypeHelperUnitTest
     {
         public int Value { get; set; }
         public Action? Callback { get; set; }
+    }
+
+    class Node
+    {
+        public string? Name { get; set; }
+        public Node? Child { get; set; }
     }
 
     #endregion

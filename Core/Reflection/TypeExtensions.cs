@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Caching.Memory;
 
 #endregion
@@ -296,12 +297,35 @@ public static class TypeExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
+        if (value is null) return true;
+
+        //var type = value.GetType();
+
+        // Reference types: only null is default
+        if (!type.IsValueType) return false;
+
+        // Fast path for common value types
         return value switch
         {
-            null => !type.IsValueType || type.IsNullableType(),
-            string s => s == string.Empty,
-            _ when type.IsValueType => Equals(type.GetDefaultValue(), value),
-            _ => false
+            bool b => b == default(bool),
+            byte b => b == default(byte),
+            sbyte sb => sb == default(sbyte),
+            char c => c == default(char),
+            short s => s == default(short),
+            ushort us => us == default(ushort),
+            int i => i == default(int),
+            uint ui => ui == default(uint),
+            long l => l == default(long),
+            ulong ul => ul == default(ulong),
+            float f => f == default(float),
+            double d => d == default(double),
+            decimal m => m == default(decimal),
+            DateTime dt => dt == default(DateTime),
+            TimeSpan ts => ts == default(TimeSpan),
+            DateOnly dateOnly => dateOnly == default(DateOnly),
+            TimeOnly timeOnly => timeOnly == default(TimeOnly),
+            Guid g => g == default(Guid),
+            _ => Equals(Activator.CreateInstance(type), value)
         };
     }
 
@@ -373,11 +397,42 @@ public static class TypeExtensions
     /// </summary>
     /// <typeparam name="T">The type of object to be cloned</typeparam>
     /// <param name="original">The object to be cloned</param>
+    /// <param name="options">Optional JSON serializer options for customization. If null, uses default optimized options</param>
     /// <returns>A deep copy of the original object</returns>
     /// <exception cref="InvalidOperationException">Thrown when the object cannot be cloned</exception>
-    public static T? DeepClone<T>(this T? original)
+    public static T? DeepClone<T>(this T? original, JsonSerializerOptions? options = null)
     {
-        return TypeHelper.DeepClone(original);
+        return TypeHelper.DeepClone(original, options);
+    }
+
+    /// <summary>
+    /// Attempts to create a deep copy of an object, returning a success indicator and the cloned object.
+    /// Delegates to TypeHelper.TryDeepClone for consistent error handling.
+    /// </summary>
+    /// <typeparam name="T">The type of object to be cloned</typeparam>
+    /// <param name="original">The object to be cloned</param>
+    /// <param name="clone">The cloned object if successful, default(T) otherwise</param>
+    /// <param name="options">Optional JSON serializer options for customization. If null, uses default optimized options</param>
+    /// <returns>True if cloning was successful, false otherwise</returns>
+    /// <example>
+    /// <code>
+    /// var complexObject = GetComplexObject();
+    /// if (complexObject.TryDeepClone(out var clone))
+    /// {
+    ///     // Use the successfully cloned object
+    ///     ProcessClone(clone);
+    /// }
+    /// else
+    /// {
+    ///     // Handle cloning failure
+    ///     HandleCloningFailure();
+    /// }
+    /// </code>
+    /// </example>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryDeepClone<T>(this T? original, out T? clone, JsonSerializerOptions? options = null)
+    {
+        return TypeHelper.TryDeepClone(original, out clone, options);
     }
 
     #endregion

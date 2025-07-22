@@ -926,6 +926,43 @@ public class TypeExtensionsUnitTest
 
     #endregion
 
+    #region IsCloneable(Type) Tests
+
+    [Fact]
+    public void IsCloneable_WithNullType_ShouldThrowArgumentNullException()
+    {
+        Type? type = null;
+        // Arrange & Act
+        var action = () => type!.IsCloneable();
+
+        // Assert
+        action.Should().Throw<ArgumentNullException>()
+            .WithParameterName("type");
+    }
+
+    [Theory]
+    [InlineData(typeof(int))]
+    [InlineData(typeof(double))]
+    [InlineData(typeof(bool))]
+    [InlineData(typeof(char))]
+    [InlineData(typeof(byte))]
+    [InlineData(typeof(long))]
+    [InlineData(typeof(decimal))]
+    [InlineData(typeof(DateTime))]
+    [InlineData(typeof(DateTimeOffset))]
+    [InlineData(typeof(TimeSpan))]
+    [InlineData(typeof(Guid))]
+    public void IsCloneable_WithValueTypes_ShouldReturnTrue(Type valueType)
+    {
+        // Act
+        var result = valueType.IsCloneable();
+
+        // Assert
+        result.Should().BeTrue($"value type '{valueType.Name}' should be cloneable");
+    }
+    
+    #endregion
+
     #region DeepClone Tests
 
     [Fact]
@@ -989,6 +1026,85 @@ public class TypeExtensionsUnitTest
 
         // Assert
         result.Should().Be(42);
+    }
+
+    #endregion
+
+    #region TryDeepClone Tests
+
+    [Fact]
+    public void TryDeepClone_Generic_With_Complex_Object_Should_Create_Deep_Copy()
+    {
+        // Arrange
+        var original = new TestClassForCloning
+        {
+            Id = 1,
+            Name = "Test",
+            NestedObject = new NestedTestClassForCloning { Value = "Nested" }
+        };
+
+        // Act
+        var success = original.TryDeepClone(out var result);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().NotBeSameAs(original);
+        result.Id.Should().Be(original.Id);
+        result.Name.Should().Be(original.Name);
+        result.NestedObject.Should().NotBeSameAs(original.NestedObject);
+        result.NestedObject.Value.Should().Be(original.NestedObject.Value);
+        success.Should().BeTrue();
+    }
+
+    [Fact]
+    public void TryDeepClone_With_Value_Types_Should_Work()
+    {
+        // Arrange
+        int original = 42;
+
+        // Act
+        var success = original.TryDeepClone(out var result);
+
+        // Assert
+        result.Should().Be(42);
+        success.Should().BeTrue();
+    }
+
+    [Fact]
+    public void TryDeepClone_With_Collections_Should_Create_Deep_Copy()
+    {
+        // Arrange
+        var original = new List<TestClassForCloning>
+        {
+            new TestClassForCloning { Id = 1, Name = "First" },
+            new TestClassForCloning { Id = 2, Name = "Second" }
+        };
+
+        // Act
+        var success = original.TryDeepClone(out var result);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().NotBeSameAs(original);
+        result.Count.Should().Be(2);
+        result[0].Should().NotBeSameAs(original[0]);
+        result[0].Id.Should().Be(original[0].Id);
+        result[0].Name.Should().Be(original[0].Name);
+        success.Should().BeTrue();
+    }
+
+    [Fact]
+    public void TryDeepClone_Generic_With_Non_Serializable_Type_Should_Throw_InvalidOperationException()
+    {
+        // Arrange
+        var original = new NonSerializableClass();
+
+        // Act & Assert
+        var success = original.TryDeepClone(out var result);
+
+        // Assert
+        result.Should().BeNull();
+        success.Should().BeFalse();
     }
 
     #endregion
@@ -1246,11 +1362,36 @@ public class TypeExtensionsUnitTest
         }
     }
 
+    /// <summary>
+    /// Simple cloneable test class with basic properties
+    /// </summary>
+    public class CloneableTestClass
+    {
+        public string? Name { get; set; }
+        public int Age { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    /// <summary>
+    /// Custom struct for value type testing
+    /// </summary>
+    public struct CloneableStruct
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public string Label { get; set; }
+    }
+
     public record TestRecord(string Name, int Value);
 
     public struct TestStruct
     {
         public int Value { get; set; }
+    }
+
+    public class NonSerializableClass
+    {
+        public IntPtr Pointer { get; set; } = new IntPtr(123);
     }
 
     #endregion
