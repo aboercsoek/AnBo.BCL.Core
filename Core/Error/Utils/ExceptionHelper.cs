@@ -39,6 +39,7 @@ public static class ExceptionHelper
     /// <item><see cref="SEHException"/></item>
     /// <item><see cref="StackOverflowException"/></item>
     /// <item><see cref="AppDomainUnloadedException"/></item>
+    /// <item><see cref="SystemException"/> with <see cref="SystemException.HResult"/> equal to -2146233036 (CriticalFinalizerObject)</item>
     /// </list>
     /// </summary>
     /// <param name="exception">The exception to check.</param>
@@ -52,7 +53,13 @@ public static class ExceptionHelper
     {
         while (exception != null)
         {
-            if (exception is OutOfMemoryException and not InsufficientMemoryException or ThreadAbortException or AccessViolationException or SEHException or StackOverflowException or AppDomainUnloadedException)
+            if (exception is OutOfMemoryException and not InsufficientMemoryException 
+                or ThreadAbortException 
+                or AccessViolationException 
+                or SEHException 
+                or StackOverflowException 
+                or AppDomainUnloadedException
+                or SystemException { HResult: -2146233036 }) // CriticalFinalizerObject
             {
                 return true;
             }
