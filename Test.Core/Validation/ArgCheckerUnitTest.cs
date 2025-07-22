@@ -448,114 +448,6 @@ public class ArgCheckerUnitTest
 
     #endregion
 
-    #region ShouldBeInRange Method Tests
-
-    [Fact]
-    public void ShouldBeInRange_With_Value_In_Range_Should_Not_Throw()
-    {
-        // Arrange
-        int value = 5;
-        int min = 1;
-        int max = 10;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, min, max);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
-    public void ShouldBeInRange_With_Value_At_Min_Boundary_Should_Not_Throw()
-    {
-        // Arrange
-        int value = 1;
-        int min = 1;
-        int max = 10;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, min, max);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
-    public void ShouldBeInRange_With_Value_At_Max_Boundary_Should_Not_Throw()
-    {
-        // Arrange
-        int value = 10;
-        int min = 1;
-        int max = 10;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, min, max);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
-    public void ShouldBeInRange_With_Value_Below_Min_Should_Throw_ArgOutOfRangeException()
-    {
-        // Arrange
-        int value = 0;
-        int min = 1;
-        int max = 10;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, min, max);
-        action.Should().Throw<ArgOutOfRangeException<int>>();
-    }
-
-    [Fact]
-    public void ShouldBeInRange_With_Value_Above_Max_Should_Throw_ArgOutOfRangeException()
-    {
-        // Arrange
-        int value = 11;
-        int min = 1;
-        int max = 10;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, min, max);
-        action.Should().Throw<ArgOutOfRangeException<int>>();
-    }
-
-    [Fact]
-    public void ShouldBeInRange_With_Reversed_Min_Max_Should_Work()
-    {
-        // Arrange
-        int value = 5;
-        int min = 10;  // Intentionally reversed
-        int max = 1;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, min, max);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
-    public void ShouldBeInRange_With_Double_Values_Should_Work()
-    {
-        // Arrange
-        double value = 5.5;
-        double min = 1.0;
-        double max = 10.0;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, min, max);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
-    public void ShouldBeInRange_With_DateTime_Values_Should_Work()
-    {
-        // Arrange
-        var value = new DateTime(2025, 6, 15);
-        var min = new DateTime(2025, 1, 1);
-        var max = new DateTime(2025, 12, 31);
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, min, max);
-        action.Should().NotThrow();
-    }
-
-    #endregion
-
     #region ShouldBeExistingFile String Method Tests
 
     [Fact]
@@ -1159,18 +1051,6 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeInRange_With_Equal_Min_Max_Values_Should_Work()
-    {
-        // Arrange
-        int value = 5;
-        int minMax = 5;
-
-        // Act & Assert
-        var action = () => ArgChecker.ShouldBeInRange(value, minMax, minMax);
-        action.Should().NotThrow();
-    }
-
-    [Fact]
     public void ShouldMatch_With_Complex_Regex_Pattern_Should_Work()
     {
         // Arrange
@@ -1200,14 +1080,12 @@ public class ArgCheckerUnitTest
         // Arrange
         string value = "TestValue";
         var list = new List<string> { "item1", "item2" };
-        int number = 50;
 
         // Act & Assert
         var action = () =>
         {
             ArgChecker.ShouldNotBeNullOrEmpty(value);
             ArgChecker.ShouldNotBeNullOrEmpty(list);
-            ArgChecker.ShouldBeInRange(number, 1, 100);
             ArgChecker.ShouldBeTrue(value.Length > 5);
         };
 

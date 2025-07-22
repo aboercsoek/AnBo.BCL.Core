@@ -875,25 +875,25 @@ public class StringHelperUnitTest
     }
 
     [Fact]
-    public void RandomString_With_Negative_Size_Should_Throw_ArgOutOfRangeException()
+    public void RandomString_With_Negative_Size_Should_Throw_ArgumentOutOfRangeException()
     {
         // Arrange
         int size = -1;
 
         // Act & Assert
         Action action = () => StringHelper.RandomString(size);
-        action.Should().Throw<ArgOutOfRangeException<int>>();
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
-    public void RandomString_With_Size_Too_Large_Should_Throw_ArgOutOfRangeException()
+    public void RandomString_With_Size_Too_Large_Should_Throw_ArgumentOutOfRangeException()
     {
         // Arrange
         int size = 5000; // Greater than 4096
 
         // Act & Assert
         Action action = () => StringHelper.RandomString(size);
-        action.Should().Throw<ArgOutOfRangeException<int>>();
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]

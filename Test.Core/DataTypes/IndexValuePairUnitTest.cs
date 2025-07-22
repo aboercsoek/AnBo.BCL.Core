@@ -61,7 +61,7 @@ public class IndexValuePairUnitTest
     }
 
     [Fact]
-    public void Constructor_With_Negative_Index_Should_Throw_ArgOutOfRangeException()
+    public void Constructor_With_Negative_Index_Should_Throw_ArgumentOutOfRangeException()
     {
         // Arrange
         string value = "test";
@@ -69,7 +69,7 @@ public class IndexValuePairUnitTest
 
         // Act & Assert
         var action = () => new IndexValuePair<string>(value, index);
-        action.Should().Throw<ArgOutOfRangeException<int>>();
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
@@ -591,7 +591,7 @@ public class IndexValuePairUnitTest
     }
 
     [Fact]
-    public void Create_With_Negative_Index_Should_Throw_ArgOutOfRangeException()
+    public void Create_With_Negative_Index_Should_Throw_ArgumentOutOfRangeException()
     {
         // Arrange
         string value = "test";
@@ -599,7 +599,7 @@ public class IndexValuePairUnitTest
 
         // Act & Assert
         var action = () => IndexValuePair.Create(value, index);
-        action.Should().Throw<ArgOutOfRangeException<int>>();
+        action.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]

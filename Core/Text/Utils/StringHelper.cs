@@ -7,6 +7,7 @@
 //--------------------------------------------------------------------------
 #region Using directives
 
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -467,10 +468,12 @@ public static partial class StringHelper
     /// <param name="size">The length of the string to generate.</param>
     /// <param name="lowerCase">If true, uses only lowercase letters (a-z); otherwise uses both upper and lowercase (A-Z, a-z).</param>
     /// <returns>A randomly generated string of the specified length.</returns>
-    /// <exception cref="ArgOutOfRangeException">Thrown when size is less than 0 or greater than 4096.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when size is less than 0 or greater than 4096.</exception>
     public static string RandomString(int size, bool lowerCase = false)
     {
-        ArgChecker.ShouldBeInRange(size, 0, 4096);
+        ArgumentOutOfRangeException.ThrowIfLessThan(size, 0);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(size, 4096);
+
 
         if (size == 0)
             return string.Empty;

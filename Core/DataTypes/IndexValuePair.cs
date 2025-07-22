@@ -47,12 +47,13 @@ public struct IndexValuePair<T> : IEquatable<IndexValuePair<T>>
     /// </summary>
     /// <param name="value">The value to store.</param>
     /// <param name="index">The zero-based index of the value.</param>
-    /// <exception cref="ArgOutOfRangeException">
+    /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when <paramref name="index"/> is negative.
     /// </exception>
     public IndexValuePair(T value, int index)
     {
-        ArgChecker.ShouldBeInRange(index, 0, int.MaxValue);
+        ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(index, int.MaxValue);
 
         Value = value;
         Index = index;

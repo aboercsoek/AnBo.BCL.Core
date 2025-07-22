@@ -409,7 +409,7 @@ public static class DateTimeHelper
     /// <para>File sortable DateTime string format (with msec): yyyyMMdd'T'HHmmssfff</para>
     /// </remarks>
     /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="value"/> is <see langword="null"/> or empty.</exception>
-    /// <exception cref="ArgOutOfRangeException{TValue}">Is thrown if <paramref name="value"/> has the wrong length.</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="value"/> has the wrong length.</exception>
     public static DateTime FromFileSortableDateTime(string value)
     {
         ArgChecker.ShouldNotBeNullOrEmpty(value);
@@ -417,7 +417,9 @@ public static class DateTimeHelper
         string dateTimeString = value.Trim();
 
         if ((dateTimeString.Length == 17 || dateTimeString.Length == 20) == false)
-            throw new ArgOutOfRangeException<string>(value, "value", "Argument {0} error: Wrong datetime string length! (value={1})");
+            throw new ArgumentException(
+                "Argument {0} error: Wrong datetime string length! (value={1})".SafeFormatWith(value, dateTimeString), 
+                nameof(value));
 
         if (dateTimeString.Length == 17)
             return DateTime.ParseExact(dateTimeString, "yyyyMMdd'T'HHmmss", CultureInfo.CurrentCulture);
@@ -436,7 +438,7 @@ public static class DateTimeHelper
     /// <para>File sortable DateTime string format (with msec): yyyyMMdd'T'HHmmssfff</para>
     /// </remarks>
     /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="value"/> is <see langword="null"/> or empty.</exception>
-    /// <exception cref="ArgOutOfRangeException{T}">Is thrown if <paramref name="value"/> has the wrong length.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Is thrown if <paramref name="value"/> has the wrong length.</exception>
     public static DateTime FromFileSortableDateTime(string value, bool hasMilliseconds)
     {
         ArgChecker.ShouldNotBeNullOrEmpty(value);
@@ -444,10 +446,14 @@ public static class DateTimeHelper
         string dateTimeString = value.Trim();
 
         if (dateTimeString.Length != 17 && hasMilliseconds == false)
-            throw new ArgOutOfRangeException<string>(value, "value", "Argument {0} error: Wrong datetime string length! (value={1})");
+            throw new ArgumentException(
+                "Argument {0} error: Wrong datetime string length! (value={1})".SafeFormatWith(value, dateTimeString),
+                nameof(value));
 
         if (dateTimeString.Length != 20 && hasMilliseconds == true)
-            throw new ArgOutOfRangeException<string>(value, "value", "Argument {0} error: Wrong datetime string length! (value={1})");
+            throw new ArgumentException(
+                "Argument {0} error: Wrong datetime string length! (value={1})".SafeFormatWith(value, dateTimeString),
+                nameof(value));
 
         if (hasMilliseconds)
             return DateTime.ParseExact(dateTimeString, "yyyyMMdd'T'HHmmssfff", CultureInfo.CurrentCulture);
@@ -567,14 +573,13 @@ public static class DateTimeHelper
     /// <param name="year">The year.</param>
     /// <param name="month">The month.</param>
     /// <returns>Last day of the specified year\month combination.</returns>
-    /// <exception cref="ArgOutOfRangeException{T}">Is thrown if <paramref name="year"/> or <paramref name="month"/> are out of range.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Is thrown if <paramref name="year"/> or <paramref name="month"/> are out of range.</exception>
     /// <remarks>Uses the <see cref="GregorianCalendar"/> to determine the last day.</remarks>
     public static DateTime GetLastDay(int year, int month)
     {
-        if (year < 0)
-            throw new ArgOutOfRangeException<int>(year, "year", "Argument {0} error: year value must be greater or equal 0. (value = {1})");
-        if (month < 1 || month > 12)
-            throw new ArgOutOfRangeException<int>(month, "month", 1, 12);
+        ArgumentOutOfRangeException.ThrowIfLessThan(year, 0);
+        ArgumentOutOfRangeException.ThrowIfLessThan(month, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
 
         // Start at the last day of the month, until we get to the day of the week
         // we were looking for

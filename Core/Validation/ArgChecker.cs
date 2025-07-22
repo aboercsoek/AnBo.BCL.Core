@@ -223,30 +223,6 @@ public static class ArgChecker
 
     #endregion ShouldBeTrue, ShouldBeFalse methods
 
-    #region ShouldBeInRange methods
-
-    /// <summary>
-    /// Checks if the argument is in a specified range. Specified minValue and maxValue are valid values of argValue.
-    /// </summary>
-    /// <typeparam name="T">The argument type.</typeparam>
-    /// <param name="argValue">The argument value.</param>
-    /// <param name="argName">The name of the argument.</param>
-    /// <param name="minValue">The valid min value.</param>
-    /// <param name="maxValue">The valid max value.</param>
-    /// <exception cref="ArgOutOfRangeException{T}">Is thrown if <paramref name="argValue"/> is less than <paramref name="minValue"/> or greater than <paramref name="maxValue"</exception>
-    [DebuggerStepThrough]
-    public static void ShouldBeInRange<T>(T argValue, T minValue, T maxValue, [CallerArgumentExpression(nameof(argValue))] string? argName = null)
-        where T : struct, IComparable<T>
-    {
-        // Ensure min/max are in correct order
-        var (actualMin, actualMax) = minValue.CompareTo(maxValue) <= 0 ? (minValue, maxValue) : (maxValue, minValue);
-
-        if (argValue.CompareTo(actualMin) < 0 || argValue.CompareTo(actualMax) > 0)
-            throw new ArgOutOfRangeException<T>(argValue, argName!, minValue, maxValue);
-    }
-
-    #endregion
-
     #region Filesystem validation methods
 
     /// <summary>
