@@ -808,7 +808,7 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeAssignableFrom_Type_With_Non_Assignable_Types_Should_Throw_InvalidTypeCastException()
+    public void ShouldBeAssignableFrom_Type_With_Non_Assignable_Types_Should_Throw_InvalidCastException()
     {
         // Arrange
         Type sourceType = typeof(int);
@@ -816,7 +816,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeAssignableFrom(sourceType, targetType, "sourceType");
-        action.Should().Throw<InvalidTypeCastException>();
+        action.Should().Throw<InvalidCastException>();
     }
 
     [Fact]
@@ -844,11 +844,11 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeAssignableFrom_Generic_With_Non_Assignable_Types_Should_Throw_InvalidTypeCastException()
+    public void ShouldBeAssignableFrom_Generic_With_Non_Assignable_Types_Should_Throw_InvalidCastException()
     {
         // Act & Assert
         var action = () => ArgChecker.ShouldBeAssignableFrom<int, string>("testParam");
-        action.Should().Throw<InvalidTypeCastException>();
+        action.Should().Throw<InvalidCastException>();
     }
 
     [Fact]
@@ -902,7 +902,7 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeInstanceOfType_Type_With_Invalid_Instance_Should_Throw_InvalidTypeCastException()
+    public void ShouldBeInstanceOfType_Type_With_Invalid_Instance_Should_Throw_InvalidCastException()
     {
         // Arrange
         object instance = 42;
@@ -910,7 +910,7 @@ public class ArgCheckerUnitTest
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeInstanceOfType(targetType, instance, "testParam");
-        action.Should().Throw<InvalidTypeCastException>();
+        action.Should().Throw<InvalidCastException>();
     }
 
     [Fact]
@@ -952,14 +952,14 @@ public class ArgCheckerUnitTest
     }
 
     [Fact]
-    public void ShouldBeInstanceOfType_Generic_With_Invalid_Instance_Should_Throw_InvalidTypeCastException()
+    public void ShouldBeInstanceOfType_Generic_With_Invalid_Instance_Should_Throw_InvalidCastException()
     {
         // Arrange
         object instance = 42;
 
         // Act & Assert
         var action = () => ArgChecker.ShouldBeInstanceOfType<string>(instance);
-        action.Should().Throw<InvalidTypeCastException>();
+        action.Should().Throw<InvalidCastException>();
     }
 
     [Fact]

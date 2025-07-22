@@ -364,7 +364,7 @@ public static class ArgChecker
     /// <param name="sourceType">The type of the value being assigned.</param>
     /// <param name="sourceArgumentName">Argument name.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="sourceType"/> or <paramref name="targetType"/> is <see langword="null"</exception>
-    /// <exception cref="InvalidTypeCastException">Is thrown if <paramref name="targetType"/> is not assignable from <paramref name="sourceType"</exception>
+    /// <exception cref="InvalidCastException">Is thrown if <paramref name="targetType"/> is not assignable from <paramref name="sourceType"</exception>
     [DebuggerStepThrough]
     public static void ShouldBeAssignableFrom(Type? sourceType, Type? targetType, string sourceArgumentName)
     {
@@ -372,7 +372,7 @@ public static class ArgChecker
         ArgumentNullException.ThrowIfNull(targetType);
         if (!targetType.IsAssignableFrom(sourceType))
         {
-            throw new InvalidTypeCastException("Argument {0} error. {1}".SafeFormatWith(sourceArgumentName.SafeString(), StringResources.ErrorTypesAreNotAssignableTemplate2Args.SafeFormatWith(sourceType, targetType)));
+            throw new InvalidCastException("Argument {0} error. {1}".SafeFormatWith(sourceArgumentName.SafeString(), StringResources.ErrorTypesAreNotAssignableTemplate2Args.SafeFormatWith(sourceType, targetType)));
         }
     }
 
@@ -383,7 +383,7 @@ public static class ArgChecker
     /// <typeparam name="TSource">The argument type that will be assigned to.</typeparam>
     /// <typeparam name="TTarget">The type of the value being assigned.</typeparam>
     /// <param name="sourceArgumentName">Argument name.</param>
-    /// <exception cref="InvalidTypeCastException">Is thrown if <typeparamref name="TTarget"/> is not assignable from <typeparamref name="TSource"</exception>
+    /// <exception cref="InvalidCastException">Is thrown if <typeparamref name="TTarget"/> is not assignable from <typeparamref name="TSource"</exception>
     [DebuggerStepThrough]
     public static void ShouldBeAssignableFrom<TSource, TTarget>(string sourceArgumentName)
     {
@@ -399,7 +399,7 @@ public static class ArgChecker
     /// <param name="instance">The instance that will be assigned.</param>
     /// <param name="argName">Argument name.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="instance"/> or <paramref name="targetType"/> is <see langword="null"</exception>
-    /// <exception cref="InvalidTypeCastException">Is thrown if <paramref name="assignmentInstance"/> is not an instance of <paramref name="targetType"</exception>
+    /// <exception cref="InvalidCastException">Is thrown if <paramref name="assignmentInstance"/> is not an instance of <paramref name="targetType"</exception>
     [DebuggerStepThrough]
     public static void ShouldBeInstanceOfType(Type targetType, object instance, string argName)
     {
@@ -414,7 +414,7 @@ public static class ArgChecker
 
         if (targetType.IsInstanceOfType(instance) == false)
         {
-            throw new InvalidTypeCastException("Argument {0} error. {1}".SafeFormatWith(argName.SafeString(),
+            throw new InvalidCastException("Argument {0} error. {1}".SafeFormatWith(argName.SafeString(),
                 StringResources.ErrorTypesAreNotAssignableTemplate2Args.SafeFormatWith(GetTypeName(instance), targetType)));
         }
     }
@@ -427,7 +427,7 @@ public static class ArgChecker
     /// <param name="instance">The instance that will be assigned.</param>
     /// <param name="argName">Argument name.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="instance"/> is <see langword="null"</exception>
-    /// <exception cref="InvalidTypeCastException">Is thrown if <paramref name="instance"/> is not an instance of <typeparamref name="TTarget"</exception>
+    /// <exception cref="InvalidCastException">Is thrown if <paramref name="instance"/> is not an instance of <typeparamref name="TTarget"</exception>
     [DebuggerStepThrough]
     public static void ShouldBeInstanceOfType<TTarget>(object? instance, [CallerArgumentExpression(nameof(instance))] string? argName = null)
     {
@@ -436,7 +436,7 @@ public static class ArgChecker
 
         if (instance is not TTarget)
         {
-            throw new InvalidTypeCastException("Argument {0} error. {1}"
+            throw new InvalidCastException("Argument {0} error. {1}"
                 .SafeFormatWith(argName!.SafeString(),
                 StringResources.ErrorTypesAreNotAssignableTemplate2Args.SafeFormatWith(GetTypeName(instance), typeof(TTarget))));
         }
