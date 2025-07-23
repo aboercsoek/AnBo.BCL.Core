@@ -165,47 +165,6 @@ public static partial class StringExtensions
         });
     }
 
-    /// <summary>
-    /// Keeps only alphanumeric characters.
-    /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <returns>A string containing only alphanumeric characters.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string AlphaNumericOnly(this string? input)
-    {
-        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-        return RegexPatterns.AlphaNumeric().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
-            .ToString();
-    }
-
-    /// <summary>
-    /// Keeps only alphabetic characters.
-    /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <returns>A string containing only alphabetic characters.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string AlphaCharactersOnly(this string? input)
-    {
-        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-        return RegexPatterns.AlphaCharacters().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
-            .ToString();
-    }
-
-    /// <summary>
-    /// Keeps only numeric characters, optionally including decimal punctuation.
-    /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <param name="keepNumericPunctuation">Whether to keep decimal points and commas.</param>
-    /// <returns>A string containing only numeric characters.</returns>
-    public static string NumericOnly(this string? input, bool keepNumericPunctuation = false)
-    {
-        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-
-        var regex = keepNumericPunctuation ? RegexPatterns.NumericWithPunctuation() : RegexPatterns.NumericOnly();
-        return regex.Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
-            .ToString();
-    }
-
     #endregion
 
 }

@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,305 +20,478 @@ using System.Threading.Tasks;
 namespace AnBo.Core;
 
 /// <summary>
-/// The Regex replacement callback delegate.
+/// Delegate for regex replacement callbacks that allows custom replacement logic.
 /// </summary>
-/// <param name="capturedIndex">The current captured index.</param>
-/// <param name="capturedValue">The current captured value.</param>
-/// <returns>The value that replaces the captured value.</returns>
+/// <param name="capturedIndex">The index of the captured group</param>
+/// <param name="capturedValue">The value of the captured group</param>
+/// <returns>The replacement string for the captured value</returns>
 public delegate string CallbackRegexReplacement(int capturedIndex, string capturedValue);
 
 /// <summary>
-/// Common regular expressions.
+/// Modern regex helper class providing comprehensive string pattern matching and manipulation utilities.
+/// Optimized for .NET 8+ with source-generated regex patterns for maximum performance.
 /// </summary>
 public static class RegexHelper
 {
-    #region Regex Constants
+    #region Validation Methods
 
     /// <summary>
-    /// 
+    /// Validates if the input string contains only alphabetic characters.
     /// </summary>
-    public static readonly Regex Email = new Regex(RegexExpressionStrings.EmailExpression, RegexOptions.Compiled);
+    /// <param name="input">The string to validate</param>
+    /// <returns>True if input contains only letters (a-z, A-Z), false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool IsAlphaOnly(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return input.Length > 0 && RegexPatterns.AlphaOnly().IsMatch(input);
+    }
 
     /// <summary>
-    /// 
+    /// Validates if the input string contains only uppercase alphabetic characters.
     /// </summary>
-    public static readonly Regex Url = new Regex(RegexExpressionStrings.UrlExpression, RegexOptions.Compiled);
+    /// <param name="input">The string to validate</param>
+    /// <returns>True if input contains only uppercase letters (A-Z), false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool IsAlphaUpperCaseOnly(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return input.Length > 0 && RegexPatterns.AlphaUpperCaseOnly().IsMatch(input);
+    }
 
     /// <summary>
-    /// 
+    /// Validates if the input string contains only lowercase alphabetic characters.
     /// </summary>
-    public static readonly Regex NonWordDigitRegex = new Regex(@"[^a-zA-Z0-9]+", RegexOptions.Compiled);
+    /// <param name="input">The string to validate</param>
+    /// <returns>True if input contains only lowercase letters (a-z), false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool IsAlphaLowerCaseOnly(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return input.Length > 0 && RegexPatterns.AlphaLowerCaseOnly().IsMatch(input);
+    }
 
     /// <summary>
-    /// 
+    /// Validates if the input string contains only alphanumeric characters.
     /// </summary>
-    public static readonly Regex Uri = new Regex(@"\w+://" + RegexExpressionStrings.UriChars, RegexOptions.Compiled);
+    /// <param name="input">The string to validate</param>
+    /// <returns>True if input contains only letters and digits, false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool IsAlphaNumericOnly(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return input.Length > 0 && RegexPatterns.AlphaNumericOnly().IsMatch(input);
+    }
 
     /// <summary>
-    /// 
+    /// Validates if the input string contains only alphanumeric characters and spaces.
     /// </summary>
-    public static readonly Regex UriLenient = new Regex(@"(\w+://)?" + RegexExpressionStrings.UriChars, RegexOptions.Compiled);
+    /// <param name="input">The string to validate</param>
+    /// <returns>True if input contains only letters, digits, and spaces, false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool IsAlphaNumericSpaceOnly(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return input.Length > 0 && RegexPatterns.AlphaNumericSpaceOnly().IsMatch(input);
+    }
 
     /// <summary>
-    /// 
+    /// Validates if the input string represents a valid numeric value (including decimals and negative numbers).
     /// </summary>
-    public static Regex HtmlBreak = new Regex(RegexExpressionStrings.HtmlBreakExpression, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    /// <param name="input">The string to validate</param>
+    /// <param name="useGermanFormat">If true, uses comma as decimal separator; otherwise uses period</param>
+    /// <returns>True if input represents a valid number, false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool IsNumeric(string input, bool useGermanFormat = false)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return input.Length > 0 && (useGermanFormat
+            ? RegexPatterns.NumericGerman().IsMatch(input)
+            : RegexPatterns.Numeric().IsMatch(input));
+    }
 
     /// <summary>
-    /// 
+    /// Validates if the input string represents a valid email address.
     /// </summary>
-    public static Regex HtmlBreakOrParagraph = new Regex(RegexExpressionStrings.HtmlBreakOrParagraphExpression,
-                                                         RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    /// <param name="input">The string to validate</param>
+    /// <returns>True if input is a valid email format, false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool IsValidEmail(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return input.Length > 0 && RegexPatterns.Email().IsMatch(input);
+    }
 
     /// <summary>
-    /// 
+    /// Validates if the input string represents a valid URL.
     /// </summary>
-    public static Regex HtmlBreakOrParagraphTrim =
-        new Regex(
-            string.Format("({0})|({1})", RegexExpressionStrings.HtmlBreakOrParagraphTrimLeftExpression, RegexExpressionStrings.HtmlBreakOrParagraphTrimRightExpression),
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public static Regex HtmlParagraph = new Regex(RegexExpressionStrings.HtmlParagraphExpression, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    /// <param name="input">The string to validate</param>
+    /// <returns>True if input is a valid URL format, false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool IsValidUrl(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return input.Length > 0 && RegexPatterns.Url().IsMatch(input);
+    }
 
     #endregion
 
-    #region Public Static Methods
+    #region Extraction Methods
 
     /// <summary>
-    /// Gets the capture. Group number 0 is the entire match. Group
-    /// number 1 is the first matched group from the left, and so on.
+    /// Extracts the value of a specific capture group from the first match.
     /// </summary>
-    /// <param name="match">The match.</param>
-    /// <param name="groupNumber">The group number.</param>
-    /// <returns>The capture (matching group content) at the specified group number, 
-    /// or null if match.Success is false, or groupNumber is greater or equal group count.</returns>
-    public static string? GetCapture(Match match, int groupNumber)
+    /// <param name="input">The input string to search in</param>
+    /// <param name="pattern">The regex pattern to match</param>
+    /// <param name="groupIndex">The capture group index (0 = entire match, 1+ = numbered groups)</param>
+    /// <param name="options">Optional regex options to apply</param>
+    /// <returns>The captured value or null if no match found or group doesn't exist</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input or pattern is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when groupIndex is negative</exception>
+    public static string? Extract(string input, string pattern, int groupIndex = 0, RegexOptions options = RegexOptions.None)
     {
-        if (match.Success && match.Groups.Count > groupNumber)
+        ArgumentNullException.ThrowIfNull(input);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentOutOfRangeException.ThrowIfNegative(groupIndex);
+
+        var match = Regex.Match(input, pattern, options);
+        return GetCapture(match, groupIndex);
+    }
+
+    /// <summary>
+    /// Extracts all matches of a specific capture group from the input string.
+    /// </summary>
+    /// <param name="input">The input string to search in</param>
+    /// <param name="pattern">The regex pattern to match</param>
+    /// <param name="groupIndex">The capture group index (0 = entire match, 1+ = numbered groups)</param>
+    /// <param name="options">Optional regex options to apply</param>
+    /// <returns>Collection of all captured values for the specified group</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input or pattern is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when groupIndex is negative</exception>
+    public static IEnumerable<string> ExtractAll(string input, string pattern, int groupIndex = 0, RegexOptions options = RegexOptions.None)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentOutOfRangeException.ThrowIfNegative(groupIndex);
+
+        var matches = Regex.Matches(input, pattern, options);
+        foreach (Match match in matches)
         {
-            return match.Groups[groupNumber].ToString();
+            var capture = GetCapture(match, groupIndex);
+            if (capture != null)
+                yield return capture;
         }
-
-        return null;
     }
 
     /// <summary>
-    /// Gets the last capture.
+    /// Extracts all email addresses found in the input string.
     /// </summary>
-    /// <param name="match">The match.</param>
-    /// <returns>The last capture of the match.</returns>
-    public static string? GetLastCapture(Match match)
+    /// <param name="input">The input string to search in</param>
+    /// <returns>Collection of all email addresses found</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static IEnumerable<string> ExtractEmails(string input)
     {
-        return GetLastCapture(match, 0);
+        ArgumentNullException.ThrowIfNull(input);
+        return RegexPatterns.EmailOnly().Matches(input).Select(m => m.Value);
     }
 
     /// <summary>
-    /// Gets the last Nth capture, specified by <paramref name="offset"/>.
-    /// If <paramref name="offset"/> is 0, then this will return the last
-    /// capture. If it is 1, then this will return the second-to-last
-    /// capture and so on.
+    /// Extracts all URLs found in the input string.
     /// </summary>
-    /// <param name="match">The Regex match result.</param>
-    /// <param name="offset">The Nth last capture. If 0, then this will return the last
-    /// capture. If it is 1, then this will return the second-to-last
-    /// capture and so on.</param>
-    /// <returns>The last capture of the match.</returns>
-    public static string? GetLastCapture(Match match, int offset)
+    /// <param name="input">The input string to search in</param>
+    /// <param name="lenient">If true, uses lenient URL matching that doesn't require protocol</param>
+    /// <returns>Collection of all URLs found</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static IEnumerable<string> ExtractUrls(string input, bool lenient = false)
     {
-        return GetCapture(match, match.Groups.Count - 1 - offset);
+        ArgumentNullException.ThrowIfNull(input);
+        var pattern = lenient ? RegexPatterns.UriLenient() : RegexPatterns.Uri();
+        return pattern.Matches(input).Select(m => m.Value);
     }
 
-    /// <summary>
-    /// Matches any.
-    /// </summary>
-    /// <param name="input">The input.</param>
-    /// <param name="regexs">The regexs.</param>
-    /// <returns>The <paramref name="regexs"/> index of the first successful match or -1 if <paramref name="input"/> does not match at all.</returns>
-    public static int MatchAny(string input, params Regex[] regexs)
-    {
-        return MatchAny(input, out _, regexs);
-    }
+    #endregion
+
+    #region Replacement Methods
 
     /// <summary>
-    /// Checks if <paramref name="input"/> matches any regex expressions
+    /// Replaces all matches of a pattern with a static replacement string.
     /// </summary>
-    /// <param name="input">The input.</param>
-    /// <param name="successfulMatch">[Out] Contains the successful match or null if MatchAny returns -1.</param>
-    /// <param name="regexs">The regexs.</param>
-    /// <returns>The <paramref name="regexs"/> index of the first successful match or -1 if <paramref name="input"/> does not match at all.</returns>
-    public static int MatchAny(string input, out Match? successfulMatch, params Regex[] regexs)
+    /// <param name="input">The input string</param>
+    /// <param name="pattern">The regex pattern to match</param>
+    /// <param name="replacement">The replacement string</param>
+    /// <param name="options">Optional regex options to apply</param>
+    /// <returns>String with all matches replaced</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input, pattern, or replacement is null</exception>
+    public static string ReplaceAll(string input, string pattern, string replacement, RegexOptions options = RegexOptions.None)
     {
-        successfulMatch = null;
-        if (regexs != null)
+        ArgumentNullException.ThrowIfNull(input);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentNullException.ThrowIfNull(replacement);
+
+        try
         {
-            for (int i = 0; i < regexs.Length; i++)
+            return Regex.Replace(input, pattern, replacement, options);
+        }
+        catch (ArgumentException)
+        {
+            // Invalid regex pattern - return original string
+            return input;
+        }
+    }
+
+    /// <summary>
+    /// Replaces matches of a specific capture group with a replacement string.
+    /// </summary>
+    /// <param name="input">The input string</param>
+    /// <param name="pattern">The regex pattern to match</param>
+    /// <param name="groupIndex">The capture group index to replace</param>
+    /// <param name="replacement">The replacement string</param>
+    /// <param name="options">Optional regex options to apply</param>
+    /// <returns>String with specified capture groups replaced</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input, pattern, or replacement is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when groupIndex is negative</exception>
+    public static string ReplaceGroup(string input, string pattern, int groupIndex, string replacement, RegexOptions options = RegexOptions.None)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentNullException.ThrowIfNull(replacement);
+        ArgumentOutOfRangeException.ThrowIfNegative(groupIndex);
+
+        return ReplaceGroup(input, pattern, groupIndex, new StaticStringReplacer(replacement).Replace, options);
+    }
+
+    /// <summary>
+    /// Replaces matches of a specific capture group using a callback function.
+    /// </summary>
+    /// <param name="input">The input string</param>
+    /// <param name="pattern">The regex pattern to match</param>
+    /// <param name="groupIndex">The capture group index to replace</param>
+    /// <param name="replacement">The callback function that generates replacement strings</param>
+    /// <param name="options">Optional regex options to apply</param>
+    /// <returns>String with specified capture groups replaced</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input, pattern, or replacement is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when groupIndex is negative</exception>
+    public static string ReplaceGroup(string input, string pattern, int groupIndex, CallbackRegexReplacement replacement, RegexOptions options = RegexOptions.None)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        ArgumentNullException.ThrowIfNull(pattern);
+        ArgumentNullException.ThrowIfNull(replacement);
+        ArgumentOutOfRangeException.ThrowIfNegative(groupIndex);
+
+        return Regex.Replace(input, pattern, match =>
+        {
+            if (match.Groups.Count > groupIndex)
             {
-                Match m = regexs[i].Match(input);
-                if (!m.Success) continue;
-                successfulMatch = m;
+                var group = match.Groups[groupIndex];
+                var replacementValue = replacement(groupIndex, group.Value);
+                return match.Value.Replace(group.Value, replacementValue);
+            }
+            return match.Value;
+        }, options);
+    }
+
+    /// <summary>
+    /// Removes all HTML break tags and paragraph tags from the input string.
+    /// </summary>
+    /// <param name="input">The input string containing HTML</param>
+    /// <returns>String with HTML break and paragraph tags removed</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static string RemoveHtmlBreaks(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return RegexPatterns.HtmlBreakOrParagraph().Replace(input, string.Empty);
+    }
+
+    /// <summary>
+    /// Trims HTML break and paragraph tags from the beginning and end of the string.
+    /// </summary>
+    /// <param name="input">The input string containing HTML</param>
+    /// <returns>String with leading and trailing HTML tags removed</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static string TrimHtmlBreaks(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return RegexPatterns.HtmlBreakOrParagraphTrim().Replace(input, string.Empty);
+    }
+
+    /// <summary>
+    /// Removes all non-alphanumeric characters from the input string.
+    /// </summary>
+    /// <param name="input">The input string</param>
+    /// <returns>String containing only letters and digits</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static string RemoveNonAlphaNumeric(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return RegexPatterns.NonWordDigit().Replace(input, string.Empty);
+    }
+
+    /// <summary>
+    /// Keeps only alphanumeric characters.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <returns>A string containing only alphanumeric characters.</returns>
+    public static string KeepAlphaNumeric(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+        return RegexPatterns.AlphaNumeric().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
+            .ToString();
+    }
+
+    /// <summary>
+    /// Keeps only alphabetic characters.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <returns>A string containing only alphabetic characters.</returns>
+    public static string KeepAlphaCharacters(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+        return RegexPatterns.AlphaCharacters().Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
+            .ToString();
+    }
+
+    /// <summary>
+    /// Keeps only numeric characters, optionally including decimal punctuation.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <param name="keepNumericPunctuation">Whether to keep decimal points and commas.</param>
+    /// <returns>A string containing only numeric characters.</returns>
+    public static string KeepNumericDigitsOnly(string? input, bool keepNumericPunctuation = false)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+
+        var regex = keepNumericPunctuation ? RegexPatterns.NumericWithPunctuation() : RegexPatterns.NumericDigitsOnly();
+        return regex.Matches(input).Aggregate(new StringBuilder(), (sb, match) => sb.Append(match.Value))
+            .ToString();
+    }
+
+    #endregion
+
+    #region Matching Methods
+
+    /// <summary>
+    /// Checks if the input matches any of the provided regex patterns.
+    /// </summary>
+    /// <param name="input">The input string to test</param>
+    /// <param name="patterns">Array of regex patterns to test against</param>
+    /// <returns>Index of the first matching pattern, or -1 if no matches found</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input or patterns is null</exception>
+    public static int MatchAny(string input, params Regex[] patterns)
+    {
+        return MatchAny(input, out _, patterns);
+    }
+
+    /// <summary>
+    /// Checks if the input matches any of the provided regex patterns and returns the successful match.
+    /// </summary>
+    /// <param name="input">The input string to test</param>
+    /// <param name="successfulMatch">The first successful match result, or null if no matches</param>
+    /// <param name="patterns">Array of regex patterns to test against</param>
+    /// <returns>Index of the first matching pattern, or -1 if no matches found</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null, or a patterns item is null</exception>
+    public static int MatchAny(string input, out Match? successfulMatch, params Regex[] patterns)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+
+        successfulMatch = null;
+
+        if (patterns.Any(pattern => pattern == null))
+            throw new ArgumentNullException(nameof(patterns), "One or more patterns are null.");
+
+        for (int i = 0; i < patterns.Length; i++)
+        {
+            var match = patterns[i].Match(input);
+            if (match.Success)
+            {
+                successfulMatch = match;
                 return i;
             }
         }
+
         return -1;
     }
 
     /// <summary>
-    /// Checks if <paramref name="input"/> matches all regex expressions
+    /// Checks if the input matches all of the provided regex patterns.
     /// </summary>
-    /// <param name="input">The input.</param>
-    /// <param name="regexs">The regexs.</param>
-    /// <returns>Returns <see langword="true"/> if <paramref name="input"/> matches all <paramref name="regexs"/>, otherwise <see langword="false"/></returns>
-    public static bool MatchAll(string input, params Regex[] regexs)
+    /// <param name="input">The input string to test</param>
+    /// <param name="patterns">Array of regex patterns that must all match</param>
+    /// <returns>True if input matches all patterns, false otherwise</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    public static bool MatchAll(string input, params Regex[] patterns)
     {
-        bool matchAllResult = true;
-        if (regexs != null)
-        {
-            matchAllResult = regexs.Select(t => t.Match(input)).All(m => m.Success);
-        }
-        return matchAllResult;
+        ArgumentNullException.ThrowIfNull(input);
+
+        return patterns.All(pattern => pattern.IsMatch(input));
+    }
+
+    #endregion
+
+    #region Helper Methods
+
+    /// <summary>
+    /// Safely extracts a capture group value from a regex match.
+    /// </summary>
+    /// <param name="match">The regex match result</param>
+    /// <param name="groupIndex">The capture group index to extract</param>
+    /// <returns>The capture group value or null if match failed or group doesn't exist</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when groupIndex is negative</exception>
+    public static string? GetCapture(Match match, int groupIndex)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(groupIndex);
+
+        return match.Success && match.Groups.Count > groupIndex
+            ? match.Groups[groupIndex].Value
+            : null;
     }
 
     /// <summary>
-    /// Returns the capture value of a specific capture index.
+    /// Gets the Nth last capture group from a regex match.
     /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <param name="regularExpression">The regular expression.</param>
-    /// <param name="captureIndex">The capture index to return.</param>
-    /// <returns>The capture value of a specific capture index or <see langword="null"/> if no match was found.</returns>
-    /// <remarks>Capture index number 0 is the entire match. capture index 1 is the first matched group from the left, and so on.</remarks>
-    public static string? Extract(string input, string regularExpression, int captureIndex)
+    /// <param name="match">The regex match result</param>
+    /// <param name="offset">Offset from the last group (0 = last, 1 = second-to-last, etc.) (default is 0)</param>
+    /// <returns>The value of the specified capture group or null if match failed or offset invalid</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when offset is negative</exception>
+    public static string? GetLastCapture(Match match, int offset = 0)
     {
-        Match m = Regex.Match(input, regularExpression);
-        if (m.Success)
-        {
-            return GetCapture(m, captureIndex);
-        }
-        return null;
+        ArgumentOutOfRangeException.ThrowIfNegative(offset);
+
+        return match.Success && match.Groups.Count > offset
+            ? GetCapture(match, match.Groups.Count - 1 - offset)
+            : null;
     }
 
     /// <summary>
-    /// Returns the capture value of a specific capture index.
+    /// Splits a string at the specified index position.
     /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <param name="regularExpression">The regular expression.</param>
-    /// <param name="captureIndex">The capture index to return.</param>
-    /// <param name="options">The regex options that should be used.</param>
-    /// <returns>The capture value of a specific capture index or <see langword="null"/> if no match was found.</returns>
-    /// <remarks>Capture index number 0 is the entire match. capture index 1 is the first matched group from the left, and so on.</remarks>
-    public static string? Extract(string input, string regularExpression, int captureIndex, RegexOptions options)
+    /// <param name="input">The input string to split</param>
+    /// <param name="index">The zero-based index where to split</param>
+    /// <param name="includeIndexCharInLeft">If true, includes the character at index in the left part</param>
+    /// <returns>Array with two elements: [0] = left part, [1] = right part</returns>
+    /// <exception cref="ArgumentNullException">Thrown when input is null</exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when index is out of bounds</exception>
+    public static string[] SplitAt(string input, int index, bool includeIndexCharInLeft = false)
     {
-        Match m = Regex.Match(input, regularExpression, options);
-        if (m.Success)
-        {
-            return GetCapture(m, captureIndex);
-        }
-        return null;
-    }
+        ArgumentNullException.ThrowIfNull(input);
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(index, input.Length);
 
-    /// <summary>
-    /// Replace matches with replace expression.
-    /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <param name="regularExpression">The regular expression.</param>
-    /// <param name="replaceExpression">The replacement expression.</param>
-    /// <returns>The RegEx replace result string.</returns>
-    /// <example>
-    /// <para>Input:  "TestColumn.Value"</para>
-    /// <para>Output: "TestColumn.Value as TestColumn"</para>
-    /// <code>
-    /// string result = RegexUtilities.ReplaceAll("TestColumn.Value", @"^(?&lt;ValueExp&gt;[\s]*(?&lt;ValueName&gt;[\S]*)\.Value)", "${ValueExp} as ${ValueName}");
-    /// </code>
-    /// </example>
-    public static string ReplaceAll(string input, string regularExpression, string replaceExpression)
-    {
-        string resultString = string.Empty;
-        try
-        {
-            Regex regexObj = new Regex(regularExpression, RegexOptions.Multiline);
-            resultString = regexObj.Replace(input, replaceExpression);
-        }
-        catch (ArgumentException)
-        {
-            // Syntax error in the regular expression
-        }
-        return resultString;
-    }
-
-    /// <summary>
-    /// Replaces the capture value of a specific capture index in all matching groups with the specified static replacement.
-    /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <param name="regularExpression">The regular expression.</param>
-    /// <param name="captureIndex">The capture index that should be replaced.</param>
-    /// <param name="replacement">The replacement string.</param>
-    /// <returns>The RegEx replaced input string.</returns>
-    public static string Replace(string input, string regularExpression, int captureIndex, string replacement)
-    {
-        return Replace(input, regularExpression, captureIndex, new StaticStringReplacer(replacement).Replace);
-    }
-
-    /// <summary>
-    /// Replaces the capture value of a specific capture index in all matching groups with the value returned by the replacemant delegate.
-    /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <param name="regularExpression">The regular expression.</param>
-    /// <param name="captureIndex">The capture index to replace.</param>
-    /// <param name="replacement">The replacement delegate.</param>
-    /// <returns>The RegEx replaced input string.</returns>
-    public static string Replace(string input, string regularExpression, int captureIndex, CallbackRegexReplacement replacement)
-    {
-        Match m = Regex.Match(input, regularExpression);
-        StringBuilder result = new StringBuilder(input.Length);
-        while (m.Success)
-        {
-            Group g = m.Groups[captureIndex];
-            string[] pieces = StringHelper.SplitOn(input, g.Index, false);
-            result.Append(pieces[0]);
-            result.Append(replacement(captureIndex, g.ToString()));
-            input = pieces[1].Substring(g.Length);
-
-            // Get the next match
-            m = Regex.Match(input, regularExpression);
-        }
-        result.Append(input);
-        return result.ToString();
-    }
-
-    /// <summary>
-    /// Remove all non word characters from the input string
-    /// </summary>
-    /// <param name="input">The input string.</param>
-    /// <returns>Output string where all non word characters have been removed.</returns>
-    public static string RemoveNonWordCharacters(string input)
-    {
-        string result = string.Empty;
-        if (!string.IsNullOrEmpty(input))
-        {
-            result = NonWordDigitRegex.Replace(input, "");
-        }
-        return result;
+        int splitIndex = includeIndexCharInLeft ? index + 1 : index;
+        return [
+            input[..splitIndex],
+            input[splitIndex..]
+        ];
     }
 
     #endregion
 
     #region Nested type: StaticStringReplacer
 
-    private class StaticStringReplacer
+    private class StaticStringReplacer(string replacement)
     {
-        private string m_Replacement;
+        private readonly string replacement = replacement;
 
-        public StaticStringReplacer(string replacement)
-        {
-            m_Replacement = replacement;
-        }
-
-        public string Replace(int capturedIndex, string capturedValue)
-        {
-            return m_Replacement;
-        }
+        public string Replace(int capturedIndex, string capturedValue) => replacement;
     }
 
     #endregion
