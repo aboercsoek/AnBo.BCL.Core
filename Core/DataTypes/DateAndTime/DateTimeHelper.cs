@@ -20,604 +20,408 @@ namespace AnBo.Core;
 /// </summary>
 public static class DateTimeHelper
 {
-
-    #region DateTime & TimeSpan Enums
+    #region Constants and Static Fields
 
     /// <summary>
-    /// Enumeration for day part
+    /// Common DateTime format patterns supported by the parser
     /// </summary>
-    public enum DayPartType
+    private static readonly string[] CommonDateTimeFormats = [
+        "yyyyMMdd'T'HHmmssfff",
+        "yyyy-MM-dd'T'HH:mm:ss.fff",
+        "yyyy-MM-dd'T'HHmmssfff",
+        "yyyyMMddHHmmssfff",
+        "yyyyMMdd'T'HHmmss",
+        "yyyy-MM-dd'T'HH:mm:ss",
+        "yyyy-MM-dd'T'HHmmss",
+        "yyyyMMddHHmmss",
+        "dd.MM.yyyy HH:mm:ss",
+        "MM/dd/yyyy HH:mm:ss"
+    ];
+
+    /// <summary>
+    /// Common Date format patterns supported by the parser
+    /// </summary>
+    private static readonly string[] CommonDateFormats = [
+        "yyyy-MM-dd",
+        "dd.MM.yyyy",
+        "MM/dd/yyyy",
+        "dd.MM.yy",
+        "ddMMMyy",
+        "ddMMMyyyy",
+        "dd MMM yy",
+        "dd MMM yyyy"
+    ];
+
+    /// <summary>
+    /// Unix epoch start time (January 1, 1970, 00:00:00 UTC)
+    /// </summary>
+    private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+    #endregion
+
+    #region Enumerations
+
+    /// <summary>
+    /// Enumeration for day part specification
+    /// </summary>
+    public enum DayPart
     {
-        /// <summary>Beginn of day = 00:00:00</summary>
+        /// <summary>Beginning of day = 00:00:00</summary>
         BeginOfDay,
         /// <summary>High Noon = 12:00:00</summary>
         HighNoon,
-        /// <summary>End of day = 23:59:59</summary>
-        EndOfDay,
+        /// <summary>End of day = 23:59:59.999</summary>
+        EndOfDay
     }
 
     /// <summary>
-    /// 
+    /// TimeSpan component assumption for parsing strings without delimiters
     /// </summary>
-    public enum TimeSpanAssumption
+    public enum TimeSpanComponent
     {
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>No assumption - parse as-is</summary>
         None,
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Assume the value represents days</summary>
         Days,
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Assume the value represents hours</summary>
         Hours,
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Assume the value represents minutes</summary>
         Minutes,
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary>Assume the value represents seconds</summary>
         Seconds
     }
 
     #endregion
 
-    #region Day, Month Helper Methods
+    #region DateTime Parsing and Creation
 
     /// <summary>
-    /// Parses the month.
+    /// Attempts to parse a DateTime string into a DateTime object using various common formats.
     /// </summary>
-    /// <param name="str">The STR.</param>
-    /// <returns></returns>
-    public static Month ParseMonth(string str)
-    {
-        if (string.IsNullOrEmpty(str))
-        {
-            throw new ArgumentNullException("str");
-        }
-        if (str.Length < 3)
-        {
-            throw new ArgumentException("Month should be at least 3 characters (" + str + ")");
-        }
-        str = str.ToLower().Trim().Substring(0, 3);
-        switch (str)
-        {
-            case "jan":
-                return Month.January;
-            case "feb":
-                return Month.February;
-            case "mar":
-                return Month.March;
-            case "apr":
-                return Month.April;
-            case "may":
-                return Month.May;
-            case "jun":
-                return Month.June;
-            case "jul":
-                return Month.July;
-            case "aug":
-                return Month.August;
-            case "sep":
-                return Month.September;
-            case "oct":
-                return Month.October;
-            case "nov":
-                return Month.November;
-            case "dec":
-                return Month.December;
-            default:
-                throw new ArgumentOutOfRangeException("str", str, "Unknown month " + str);
-        }
-    }
-
-    /// <summary>
-    /// Parses the day of week.
-    /// </summary>
-    /// <param name="str">The STR.</param>
-    /// <returns></returns>
-    public static DayOfWeek ParseDayOfWeek(string str)
-    {
-        if (string.IsNullOrEmpty(str))
-        {
-            throw new ArgumentNullException("str");
-        }
-        if (str.Length < 3)
-        {
-            throw new ArgumentException("Day of week should be at least 3 characters (" + str + ")");
-        }
-        str = str.ToLower().Trim().Substring(0, 3);
-        switch (str)
-        {
-            case "sun":
-                return DayOfWeek.Sunday;
-            case "mon":
-                return DayOfWeek.Monday;
-            case "tue":
-                return DayOfWeek.Tuesday;
-            case "wed":
-                return DayOfWeek.Wednesday;
-            case "thu":
-                return DayOfWeek.Thursday;
-            case "fri":
-                return DayOfWeek.Friday;
-            case "sat":
-                return DayOfWeek.Saturday;
-            default:
-                throw new ArgumentOutOfRangeException("str", str, "Unknown day of week " + str);
-
-        }
-    }
-
-    #endregion
-
-    #region DateTime Helper Methods
-
-    /// <summary>
-    /// Trys to parse an DateTime string into a DateTime-object
-    /// </summary>
-    /// <param name="value">DateTime string</param>
-    /// <returns>The converted DateTime object</returns>
+    /// <param name="value">The DateTime string to parse</param>
+    /// <returns>The parsed DateTime object</returns>
+    /// <exception cref="ArgumentException">Thrown when the value cannot be parsed</exception>
+    /// <exception cref="ArgumentNullException">Thrown when value is null</exception>
     public static DateTime Create(string value)
     {
-        DateTime result;
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
 
-        //  DateTime format parsing
-        if (value.Length >= 14)
+        if (TryCreate(value, out DateTime result))
         {
-            if (DateTime.TryParseExact(value, "yyyyMMdd'T'HHmmssfff", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
-            if (DateTime.TryParseExact(value, "yyyy-MM-dd'T'HH:mm:ss.fff", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
-            if (DateTime.TryParseExact(value, "yyyy-MM-dd'T'HHmmssfff", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
-            if (DateTime.TryParseExact(value, "yyyyMMddHHmmssfff", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
-            if (DateTime.TryParseExact(value, "yyyyMMdd'T'HHmmss", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
-            if (DateTime.TryParseExact(value, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
-            if (DateTime.TryParseExact(value, "yyyy-MM-dd'T'HHmmss", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
-            if (DateTime.TryParseExact(value, "yyyyMMddHHmmss", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
+            return result;
+        }
 
-            if (DateTime.TryParseExact(value, "dd.MM.yyyy HH:mm:ss", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
+        throw new ArgumentException($"Unable to parse DateTime from value: '{value}'", nameof(value));
+    }
 
-            if (DateTime.TryParseExact(value, "MM/dd/yyyy HH:mm:ss", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result;
+    /// <summary>
+    /// Attempts to parse a DateTime string into a DateTime object using various common formats.
+    /// </summary>
+    /// <param name="value">The DateTime string to parse</param>
+    /// <param name="result">The parsed DateTime object if successful</param>
+    /// <returns>True if parsing was successful, false otherwise</returns>
+    public static bool TryCreate(string? value, out DateTime result)
+    {
+        result = default;
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return false;
+        }
+
+        ReadOnlySpan<char> span = value.AsSpan().Trim();
+
+        // Try DateTime formats first (longer strings)
+        if (span.Length >= 14)
+        {
+            foreach (string format in CommonDateTimeFormats)
+            {
+                if (DateTime.TryParseExact(span, format, CultureInfo.CurrentCulture, DateTimeStyles.None, out result))
+                {
+                    return true;
+                }
+
+                // TO-DO: Consider using InvariantCulture for international formats
+            }
         }
         else
         {
-            // Date format parsing
-            if (DateTime.TryParseExact(value, "dd.MM.yy", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result.Date;
+            // Try Date formats
+            foreach (string format in CommonDateFormats)
+            {
+                if (DateTime.TryParseExact(span, format, CultureInfo.CurrentCulture, DateTimeStyles.None, out result))
+                {
+                    result = result.Date;
+                    return true;
+                }
 
-            if (DateTime.TryParseExact(value, "yyyy-MM-dd", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "dd.MM.yy", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "MM/dd/yyyy", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "dd.MM.yyyy", CultureInfo.CurrentCulture,
-                    DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "ddMMMyy", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "ddMMMyy", CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "ddMMMyyyy", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-                return result;
-
-            if (DateTime.TryParseExact(value, "ddMMMyyyy", CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "dd MMM yy", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "dd MMM yy", CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "dd MMM yyyy", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-                return result.Date;
-
-            if (DateTime.TryParseExact(value, "dd MMM yyyy", CultureInfo.InvariantCulture,
-                DateTimeStyles.None, out result) == true)
-                return result.Date;
+                // Also try with InvariantCulture for international formats
+                if (DateTime.TryParseExact(span, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                {
+                    result = result.Date;
+                    return true;
+                }
+            }
         }
 
-        return DateTime.Parse(value);
+        // Fall back to standard parsing
+        return DateTime.TryParse(value, out result);
     }
 
     /// <summary>
-    /// Creates timestamp from date and day part value
+    /// Creates a DateTime from a date string and sets the time to a specific part of the day.
     /// </summary>
-    /// <param name="date">Date</param>
-    /// <param name="dayPart">part of day</param>
-    /// <returns>The converted Timestamp.</returns>
-    public static DateTime CreateTimestampFromDate(string date, DayPartType dayPart)
+    /// <param name="dateString">The date string to parse</param>
+    /// <param name="dayPart">The part of the day to set</param>
+    /// <returns>DateTime with the specified day part</returns>
+    /// <exception cref="ArgumentException">Thrown when dateString cannot be parsed</exception>
+    public static DateTime CreateWithDayPart(string dateString, DayPart dayPart)
     {
-        DateTime result;
+        ArgumentException.ThrowIfNullOrWhiteSpace(dateString);
 
-        // Date format parsing
-        if (DateTime.TryParseExact(date, "dd.MM.yy", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "dd.MM.yy", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "MM/dd/yyyy", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "dd.MM.yyyy", CultureInfo.CurrentCulture,
-                DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "ddMMMyy", CultureInfo.CurrentCulture,
-            DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "ddMMMyy", CultureInfo.InvariantCulture,
-            DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "ddMMMyyyy", CultureInfo.CurrentCulture,
-            DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "ddMMMyyyy", CultureInfo.InvariantCulture,
-            DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "dd MMM yy", CultureInfo.CurrentCulture,
-            DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "dd MMM yy", CultureInfo.InvariantCulture,
-            DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "dd MMM yyyy", CultureInfo.CurrentCulture,
-            DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        if (DateTime.TryParseExact(date, "dd MMM yyyy", CultureInfo.InvariantCulture,
-            DateTimeStyles.None, out result) == true)
-            return SetTimeOfDay(result.Date, dayPart);
-
-        return SetTimeOfDay(DateTime.Parse(date), dayPart);
-    }
-
-    /// <summary>
-    /// Sets the time of the date object to a specific time. Witch time is specified through the <see cref="DayPartType">dayPart</see> parameter
-    /// </summary>
-    /// <param name="date">Date object</param>
-    /// <param name="dayPart">Day part enumeration (BeginOfDay, HighNoon, EndOfDay)</param>
-    /// <returns>The converted DateTime object.</returns>
-    private static DateTime SetTimeOfDay(DateTime date, DayPartType dayPart)
-    {
-        DateTime result;
-
-        switch (dayPart)
+        if (!TryCreate(dateString, out DateTime date))
         {
-            case DayPartType.BeginOfDay:
-                result = date.Date + new TimeSpan(0, 0, 0, 0, 0);
-                break;
-            case DayPartType.HighNoon:
-                result = date.Date + new TimeSpan(0, 12, 0, 0, 0);
-                break;
-            case DayPartType.EndOfDay:
-                result = date.Date + new TimeSpan(0, 23, 59, 59, 0);
-                break;
-            default:
-                result = date.Date + new TimeSpan(0, 0, 0, 0, 0);
-                break;
+            throw new ArgumentException($"Unable to parse date from value: '{dateString}'", nameof(dateString));
         }
 
-        return result;
+        return SetDayPart(date.Date, dayPart);
     }
 
+    /// <summary>
+    /// Attempts to create a DateTime from a date string and sets the time to a specific part of the day.
+    /// </summary>
+    /// <param name="dateString">The date string to parse</param>
+    /// <param name="dayPart">The part of the day to set</param>
+    /// <param name="result">The resulting DateTime if successful</param>
+    /// <returns>True if successful, false otherwise</returns>
+    public static bool TryCreateWithDayPart(string? dateString, DayPart dayPart, out DateTime result)
+    {
+        result = default;
+
+        if (!TryCreate(dateString, out DateTime date))
+        {
+            return false;
+        }
+
+        result = SetDayPart(date.Date, dayPart);
+        return true;
+    }
+
+    /// <summary>
+    /// Sets the time component of a DateTime to represent a specific part of the day.
+    /// </summary>
+    /// <param name="date">The date to modify</param>
+    /// <param name="dayPart">The part of the day to set</param>
+    /// <returns>DateTime with the specified time component</returns>
+    private static DateTime SetDayPart(DateTime date, DayPart dayPart) => dayPart switch
+    {
+        DayPart.BeginOfDay => date.Date,
+        DayPart.HighNoon => date.Date.AddHours(12),
+        DayPart.EndOfDay => date.Date.AddDays(1).AddTicks(-1), // 23:59:59.9999999
+        _ => date.Date
+    };
+
+    #endregion
+
+    #region DateTime Formatting
 
     /// <summary>
     /// Converts a DateTime object into a ISO 8601 conform date time string.
     /// </summary>
     /// <param name="value">DateTime object to convert.</param>
     /// <returns>ISO 8601 DateTime string</returns>
-    public static string ToISO8601DateTime(DateTime value)
-    {
-        return XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc);
-    }
-
-    /// <summary>
-    /// Converts a <see cref="DateTime"/> object into a file sortable string format
-    /// </summary>
-    /// <param name="value"><see cref="DateTime"/> object to convert.</param>
-    /// <returns>File sortable DateTime string</returns>
-    /// <remarks>File sortable DateTime string format: yyyyMMdd'T'HHmmss</remarks>
-    public static string ToFileSortableDateTime(DateTime value)
-    {
-        return ToFileSortableDateTime(value, false);
-    }
-
-    /// <summary>
-    /// Converts a <see cref="DateTime"/> object into a file sortable string format
-    /// </summary>
-    /// <param name="value"><see cref="DateTime"/> object to convert.</param>
-    /// <param name="addMilliseconds">if <see langword="true"/> milliseconds are added to the DateTime string</param>
-    /// <returns>File sortable DateTime string</returns>
-    /// <remarks>
-    /// <para>File sortable DateTime string format (no msec): yyyyMMdd'T'HHmmss</para>
-    /// <para>File sortable DateTime string format (with msec): yyyyMMdd'T'HHmmssfff</para>
-    /// </remarks>
-    public static string ToFileSortableDateTime(DateTime value, bool addMilliseconds)
-    {
-        if (addMilliseconds)
-            return value.ToString("yyyyMMdd'T'HHmmssfff", CultureInfo.CurrentCulture);
-
-        return value.ToString("yyyyMMdd'T'HHmmss", CultureInfo.CurrentCulture);
-    }
-
-    /// <summary>
-    /// Converts an file sortable DateTime string into a <see cref="DateTime"/> object.
-    /// </summary>
-    /// <param name="value">File sortable DateTime string.</param>
-    /// <returns>Converted <see cref="DateTime"/> object</returns>
-    /// <remarks>
-    /// <para>File sortable DateTime string format (no msec): yyyyMMdd'T'HHmmss</para>
-    /// <para>File sortable DateTime string format (with msec): yyyyMMdd'T'HHmmssfff</para>
-    /// </remarks>
-    /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="value"/> is <see langword="null"/> or empty.</exception>
-    /// <exception cref="ArgumentException">Is thrown if <paramref name="value"/> has the wrong length.</exception>
-    public static DateTime FromFileSortableDateTime(string value)
-    {
-        ArgChecker.ShouldNotBeNullOrEmpty(value);
-
-        string dateTimeString = value.Trim();
-
-        if ((dateTimeString.Length == 17 || dateTimeString.Length == 20) == false)
-            throw new ArgumentException(
-                "Argument {0} error: Wrong datetime string length! (value={1})".SafeFormatWith(value, dateTimeString), 
-                nameof(value));
-
-        if (dateTimeString.Length == 17)
-            return DateTime.ParseExact(dateTimeString, "yyyyMMdd'T'HHmmss", CultureInfo.CurrentCulture);
-
-        return DateTime.ParseExact(dateTimeString, "yyyyMMdd'T'HHmmssfff", CultureInfo.CurrentCulture);
-    }
-
-    /// <summary>
-    /// Converts an file sortable DateTime string into a <see cref="DateTime"/> object.
-    /// </summary>
-    /// <param name="value">File sortable DateTime string</param>
-    /// <param name="hasMilliseconds">If <see langword="true"/> the <see cref="DateTime"/> string contains milliseconds</param>
-    /// <returns>Converted <see cref="DateTime"/> object</returns>
-    /// <remarks>
-    /// <para>File sortable DateTime string format (no msec): yyyyMMdd'T'HHmmss</para>
-    /// <para>File sortable DateTime string format (with msec): yyyyMMdd'T'HHmmssfff</para>
-    /// </remarks>
-    /// <exception cref="ArgNullOrEmptyException">Is thrown if <paramref name="value"/> is <see langword="null"/> or empty.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">Is thrown if <paramref name="value"/> has the wrong length.</exception>
-    public static DateTime FromFileSortableDateTime(string value, bool hasMilliseconds)
-    {
-        ArgChecker.ShouldNotBeNullOrEmpty(value);
-
-        string dateTimeString = value.Trim();
-
-        if (dateTimeString.Length != 17 && hasMilliseconds == false)
-            throw new ArgumentException(
-                "Argument {0} error: Wrong datetime string length! (value={1})".SafeFormatWith(value, dateTimeString),
-                nameof(value));
-
-        if (dateTimeString.Length != 20 && hasMilliseconds == true)
-            throw new ArgumentException(
-                "Argument {0} error: Wrong datetime string length! (value={1})".SafeFormatWith(value, dateTimeString),
-                nameof(value));
-
-        if (hasMilliseconds)
-            return DateTime.ParseExact(dateTimeString, "yyyyMMdd'T'HHmmssfff", CultureInfo.CurrentCulture);
-
-        return DateTime.ParseExact(dateTimeString, "yyyyMMdd'T'HHmmss", CultureInfo.CurrentCulture);
-    }
+    public static string ToIso8601DateTime(DateTime value) =>
+       XmlConvert.ToString(value, XmlDateTimeSerializationMode.Utc);
 
     /// <summary>
     /// Converts a DateTime value into a <see cref="DateTime"/> value with a precision of a <see cref="SqlDateTime">SQL Server DateTime type</see>.
     /// </summary>
     /// <param name="value"><see cref="DateTime"/> object that should be converted</param>
     /// <returns>DateTime object with <see cref="SqlDateTime">SQL Server DateTime</see> precision</returns>
-    public static DateTime ToSqlServerPrecision(DateTime value)
-    {
-        SqlDateTime sqlValue = new SqlDateTime(value);
+    public static DateTime ToSqlServerPrecision(DateTime value) =>
+        new SqlDateTime(value).Value;
 
-        return sqlValue.Value;
+    /// <summary>
+    /// Converts a DateTime object to a file-sortable string format.
+    /// </summary>
+    /// <param name="value">The DateTime to convert</param>
+    /// <param name="includeMilliseconds">Whether to include milliseconds in the output</param>
+    /// <returns>File-sortable DateTime string (yyyyMMddTHHmmss or yyyyMMddTHHmmssfff)</returns>
+    public static string ToFileSortableString(DateTime value, bool includeMilliseconds = false)
+    {
+        string format = includeMilliseconds ? "yyyyMMdd'T'HHmmssfff" : "yyyyMMdd'T'HHmmss";
+        return value.ToString(format, CultureInfo.InvariantCulture);
     }
 
     /// <summary>
-    /// Convert a DOS datetime to a <see cref="DateTime"/> object.
+    /// Parses a file-sortable DateTime string back to a DateTime object.
     /// </summary>
-    /// <param name="dosDate">DOS date value (starting 1980)</param>
-    /// <param name="dosTime">DOS time value</param>
-    /// <returns>The converted <see cref="DateTime"/> object.</returns>
-    public static DateTime DosDateToDateTime(UInt16 dosDate, UInt16 dosTime)
+    /// <param name="value">The file-sortable DateTime string</param>
+    /// <returns>The parsed DateTime object</returns>
+    /// <exception cref="ArgumentException">Thrown when the string format is invalid</exception>
+    public static DateTime FromFileSortableString(string value)
     {
-        int year = dosDate / 512 + 1980;
-        int month = dosDate % 512 / 32;
-        int day = dosDate % 512 % 32;
-        int hour = dosTime / 2048;
-        int minute = dosTime % 2048 / 32;
-        int second = dosTime % 2048 % 32 * 2;
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
 
-        if (dosDate == UInt16.MaxValue || month == 0 || day == 0)
+        if (TryFromFileSortableString(value, out DateTime result))
         {
-            year = 1980;
-            month = 1;
-            day = 1;
+            return result;
         }
 
-        if (dosTime == UInt16.MaxValue)
+        throw new ArgumentException($"Invalid file-sortable DateTime format: '{value}'", nameof(value));
+    }
+
+    /// <summary>
+    /// Attempts to parse a file-sortable DateTime string back to a DateTime object.
+    /// </summary>
+    /// <param name="value">The file-sortable DateTime string</param>
+    /// <param name="result">The parsed DateTime object if successful</param>
+    /// <returns>True if parsing was successful, false otherwise</returns>
+    public static bool TryFromFileSortableString(string? value, out DateTime result)
+    {
+        result = default;
+
+        if (string.IsNullOrWhiteSpace(value))
         {
-            hour = minute = second = 0;
+            return false;
         }
 
-        DateTime dt;
+        ReadOnlySpan<char> span = value.AsSpan().Trim();
+
+        return span.Length switch
+        {
+            15 => DateTime.TryParseExact(span, "yyyyMMdd'T'HHmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out result),
+            18 => DateTime.TryParseExact(span, "yyyyMMdd'T'HHmmssfff", CultureInfo.InvariantCulture, DateTimeStyles.None, out result),
+            _ => false
+        };
+    }
+
+    #endregion
+
+    #region DOS DateTime Conversion
+
+    /// <summary>
+    /// Converts DOS date and time values to a DateTime object.
+    /// </summary>
+    /// <param name="dosDate">DOS date value</param>
+    /// <param name="dosTime">DOS time value</param>
+    /// <returns>The converted DateTime object</returns>
+    public static DateTime FromDosDateTime(ushort dosDate, ushort dosTime)
+    {
+        /*
+         DOS date format:
+            Bits	Content	                Value Range
+            0-4	    Day of the Month	    1-31
+            5-8	    Month	                1-12 (1 = January, 2 = February, ...)
+            9-15	Year (Offset from 1980)	0-127 (is 1980-2107)
+
+            15 14 13 12 11 10 9   8  7  6  5    4  3  2  1  0
+            Y  Y  Y  Y  Y  Y  Y   M  M  M  M    D  D  D  D  D
+            \-----------------/   \-------/    \-----------/
+                    Year            Month           Day
+
+        DOS time format:
+            Bits    Content Value Range Note
+            0-4     Seconds 0-29        Value is multiplied by 2
+            5-10    Minutes 0-59
+            11-15   Hours   0-23
+
+            15 14 13 12 11   10  9  8  7  6  5   4  3  2  1  0
+             H  H  H  H  H   M   M  M  M  M  M   S  S  S  S  S
+            \-------------/  \---------------/   \-----------/
+                 Hours            Minutes          Seconds/2
+        */
         try
         {
-            dt = new DateTime(year, month, day, hour, minute, second);
+            int year = (dosDate >> 9) + 1980;
+            int month = (dosDate >> 5) & 0xF;
+            int day = dosDate & 0x1F;
+            int hour = dosTime >> 11;
+            int minute = (dosTime >> 5) & 0x3F;
+            int second = (dosTime & 0x1F) * 2;
+
+            // Handle invalid values
+            if (dosDate == 0xFFFF || month == 0 || day == 0)
+            {
+                year = 1980;
+                month = 1;
+                day = 1;
+            }
+
+            if (dosTime == 0xFFFF)
+            {
+                hour = minute = second = 0;
+            }
+
+            return new DateTime(year, month, day, hour, minute, second);
         }
         catch
         {
-            dt = new DateTime();
+            return new DateTime(1980, 1, 1);
         }
-        return dt;
     }
 
     /// <summary>
-    /// Convert a DOS datetime value into a DateTime object.
+    /// Converts a DOS timestamp to a DateTime object.
     /// </summary>
-    /// <param name="dosTimestamp">The DOS timestamp value.</param>
-    /// <returns>The converted <see cref="DateTime"/> object.</returns>
-    public static DateTime DosDateToDateTime(UInt32 dosTimestamp)
-    {
-        return DosDateToDateTime((UInt16)(dosTimestamp / 65536),
-                                 (UInt16)(dosTimestamp % 65536));
-    }
+    /// <param name="dosTimestamp">The DOS timestamp</param>
+    /// <returns>The converted DateTime object</returns>
+    public static DateTime FromDosDateTime(uint dosTimestamp) =>
+        FromDosDateTime((ushort)(dosTimestamp >> 16), (ushort)(dosTimestamp & 0xFFFF));
+
+    #endregion
+
+    #region Unix Timestamp Conversion
 
     /// <summary>
-    /// Convert a DOS datetime value into a DateTime object.
+    /// Converts a DateTime to a Unix timestamp (seconds since Unix epoch).
     /// </summary>
-    /// <param name="dosTimestamp">The DOS timestamp value.</param>
-    /// <returns>The converted <see cref="DateTime"/> object.</returns>
-    public static DateTime DosDateToDateTime(Int32 dosTimestamp)
-    {
-        return DosDateToDateTime((UInt32)dosTimestamp);
-    }
+    /// <param name="dateTime">The DateTime to convert</param>
+    /// <returns>Unix timestamp as a long</returns>
+    public static long ToUnixTimestamp(DateTime dateTime) =>
+        ((DateTimeOffset)dateTime.ToUniversalTime()).ToUnixTimeSeconds();
 
     /// <summary>
-    /// Converts a DateTime value into a UNIX timestamp.
+    /// Converts a Unix timestamp to a DateTime.
     /// </summary>
-    /// <param name="timestamp">The DateTime to convert.</param>
-    /// <returns>UNIX timestamp.</returns>
-    public static int ToUnixTimestamp(DateTime timestamp)
-    {
-        DateTime unixStartTimestamp = new DateTime(1970, 1, 1, 0, 0, 0);
-
-        return (int)((timestamp.ToUniversalTime().Ticks - unixStartTimestamp.Ticks) / 10000000);
-    }
+    /// <param name="unixTimestamp">The Unix timestamp</param>
+    /// <returns>The corresponding DateTime in local time</returns>
+    public static DateTime FromUnixTimestamp(long unixTimestamp) =>
+        DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).ToLocalTime().DateTime;
 
     /// <summary>
-    /// Converts a UNIX timestamp into a DateTime value.
+    /// Converts a DateTime to a Unix timestamp in milliseconds.
     /// </summary>
-    /// <param name="timestamp">The UNIX timestamp to convert.</param>
-    /// <returns>The converted DateTime value.</returns>
-    public static DateTime FromUnixTimestamp(int timestamp)
-    {
-        DateTime unixStartTimestamp = new DateTime(1970, 1, 1, 0, 0, 0);
-        return unixStartTimestamp.AddSeconds(timestamp).ToLocalTime();
-    }
+    /// <param name="dateTime">The DateTime to convert</param>
+    /// <returns>Unix timestamp in milliseconds as a long</returns>
+    public static long ToUnixTimestampMilliseconds(DateTime dateTime) =>
+        ((DateTimeOffset)dateTime.ToUniversalTime()).ToUnixTimeMilliseconds();
 
     /// <summary>
-    /// Clones the date time as UTC.
+    /// Converts a Unix timestamp in milliseconds to a DateTime.
     /// </summary>
-    /// <param name="timestamp">The timestamp to clone.</param>
-    /// <returns>The cloned <see cref="DateTime"/> object.</returns>
-    public static DateTime CloneDateTimeAsUTC(DateTime timestamp)
-    {
-        return new DateTime(timestamp.Ticks, DateTimeKind.Utc);
-    }
-
-
-    /// <summary>
-    /// Gets the last day of the specified year\month combination.
-    /// </summary>
-    /// <param name="year">The year.</param>
-    /// <param name="month">The month.</param>
-    /// <returns>Last day of the specified year\month combination.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Is thrown if <paramref name="year"/> or <paramref name="month"/> are out of range.</exception>
-    /// <remarks>Uses the <see cref="GregorianCalendar"/> to determine the last day.</remarks>
-    public static DateTime GetLastDay(int year, int month)
-    {
-        ArgumentOutOfRangeException.ThrowIfLessThan(year, 0);
-        ArgumentOutOfRangeException.ThrowIfLessThan(month, 1);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
-
-        // Start at the last day of the month, until we get to the day of the week
-        // we were looking for
-        DateTime lastDay = new DateTime(year, month, new GregorianCalendar().GetDaysInMonth(year, month));
-        return lastDay.Date;
-    }
+    /// <param name="unixTimestampMs">The Unix timestamp in milliseconds</param>
+    /// <returns>The corresponding DateTime in local time</returns>
+    public static DateTime FromUnixTimestampMilliseconds(long unixTimestampMs) =>
+        DateTimeOffset.FromUnixTimeMilliseconds(unixTimestampMs).ToLocalTime().DateTime;
 
     #endregion
 
     #region TimeSpan Helper Methods
 
     /// <summary>
-    /// Returns the absolute value of the specified TimeSpan.
+    /// Returns the absolute value of a TimeSpan.
     /// </summary>
-    /// <param name="val">The val.</param>
-    /// <returns></returns>
-    public static TimeSpan AbsTimeSpan(TimeSpan val)
-    {
-        if (IsTimeSpanNegative(val))
-        {
-            val = val.Negate();
-        }
-        return val;
-    }
-
-
+    /// <param name="timeSpan">The TimeSpan</param>
+    /// <returns>The absolute TimeSpan value</returns>
+    public static TimeSpan Abs(TimeSpan timeSpan) => timeSpan.Duration();
 
     /// <summary>
-    /// Determines whether [is time span negative] [the specified time span].
+    /// Determines if a TimeSpan is negative.
     /// </summary>
-    /// <param name="timeSpan">The time span.</param>
-    /// <returns>
-    /// 	<see langword="true"/> if [is time span negative] [the specified time span]; otherwise, <see langword="false"/>.
-    /// </returns>
-    public static bool IsTimeSpanNegative(TimeSpan timeSpan)
-    {
-        return timeSpan.ToString().IndexOf('-') != -1;
-    }
+    /// <param name="timeSpan">The TimeSpan to check</param>
+    /// <returns>True if the TimeSpan is negative, false otherwise</returns>
+    public static bool IsNegative(TimeSpan timeSpan) => timeSpan < TimeSpan.Zero;
 
     /// <summary>
     /// Converts the time span to double.
@@ -640,147 +444,149 @@ public static class DateTimeHelper
     }
 
     /// <summary>
-    /// Tries the parse time span.
+    /// Attempts to parse a TimeSpan string with optional component assumption.
     /// </summary>
-    /// <param name="timeSpan">The time span.</param>
-    /// <param name="result">The result.</param>
-    /// <returns></returns>
-    public static bool TryParseTimeSpan(string timeSpan, out TimeSpan result)
+    /// <param name="value">The string to parse</param>
+    /// <param name="component">The component assumption for strings without delimiters</param>
+    /// <param name="result">The parsed TimeSpan if successful</param>
+    /// <returns>True if parsing was successful, false otherwise</returns>
+    public static bool TryParseTimeSpan(string? value, TimeSpanComponent component, out TimeSpan result)
     {
-        return TryParseTimeSpan(timeSpan, TimeSpanAssumption.None, out result);
-    }
+        result = default;
 
-    /// <summary>
-    /// Parses the time span. TimeSpan.Parse does not accept
-    /// a plus (+) designator, only minus (-). This parse method
-    /// accepts both. Does not throw any exceptions, but returns
-    /// false on failure. Return true on success.
-    /// </summary>
-    /// <param name="timeSpan">The time span.</param>
-    /// <param name="noColonAssumption">The no colon assumption.</param>
-    /// <param name="result">The result.</param>
-    /// <returns></returns>
-    public static bool TryParseTimeSpan(string timeSpan, TimeSpanAssumption noColonAssumption, out TimeSpan result)
-    {
-        if (timeSpan.Length > 1 && timeSpan[0] == '+')
+        if (string.IsNullOrWhiteSpace(value))
         {
-            timeSpan = timeSpan.Substring(1);
+            return false;
+        }
+        
+        // Handle positive sign prefix
+        if (value.Length > 1 && value[0] == '+')
+        {
+            value = value[1..];
         }
 
-        timeSpan = ParseTimeSpanAssumptions(timeSpan, noColonAssumption);
-
-        return TimeSpan.TryParse(timeSpan, out result);
-    }
-
-    /// <summary>
-    /// Parses the time span.
-    /// </summary>
-    /// <param name="timeSpan">The time span.</param>
-    /// <returns></returns>
-    public static TimeSpan ParseTimeSpan(string timeSpan)
-    {
-        return ParseTimeSpan(timeSpan, TimeSpanAssumption.None);
-    }
-
-    /// <summary>
-    /// Parses the time span. TimeSpan.Parse does not accept
-    /// a plus (+) designator, only minus (-). This parse method
-    /// accepts both.
-    /// </summary>
-    /// <param name="timeSpan">The time span.</param>
-    /// <param name="noColonAssumption">The no colon assumption.</param>
-    /// <returns></returns>
-    public static TimeSpan ParseTimeSpan(string timeSpan, TimeSpanAssumption noColonAssumption)
-    {
-        if (timeSpan.Length > 1 && timeSpan[0] == '+')
+        switch (component)
         {
-            timeSpan = timeSpan.Substring(1);
+            case TimeSpanComponent.Seconds:
+                result = TimeSpan.FromSeconds(value.ParseInvariantString<int>());
+                return true;
+            case TimeSpanComponent.Minutes:
+                result = TimeSpan.FromMinutes(value.ParseInvariantString<int>());
+                return true;
+            case TimeSpanComponent.Hours:
+                result = TimeSpan.FromHours(value.ParseInvariantString<int>());
+                return true;
+            case TimeSpanComponent.Days:
+                result = TimeSpan.FromDays(value.ParseInvariantString<int>());
+                return true;
+            case TimeSpanComponent.None:
+                break;
         }
 
-        timeSpan = ParseTimeSpanAssumptions(timeSpan, noColonAssumption);
-
-        return TimeSpan.Parse(timeSpan);
+        return TimeSpan.TryParse(value, out result);
     }
 
-    private static string ParseTimeSpanAssumptions(string timeSpan, TimeSpanAssumption noColonAssumption)
+    /// <summary>
+    /// Parses a TimeSpan string with optional component assumption.
+    /// </summary>
+    /// <param name="value">The string to parse</param>
+    /// <param name="component">The component assumption for strings without delimiters</param>
+    /// <returns>The parsed TimeSpan</returns>
+    /// <exception cref="ArgumentException">Thrown when the value cannot be parsed</exception>
+    public static TimeSpan ParseTimeSpan(string value, TimeSpanComponent component = TimeSpanComponent.None)
     {
-        //if (timeSpan != null && noColonAssumption != TimeSpanAssumption.None && timeSpan.IndexOf(':') == -1)
-        if (noColonAssumption != TimeSpanAssumption.None && !timeSpan.Contains(':'))
+        ArgumentException.ThrowIfNullOrWhiteSpace(value);
+
+        if (TryParseTimeSpan(value, component, out TimeSpan result))
         {
-            switch (noColonAssumption)
-            {
-                case TimeSpanAssumption.Seconds:
-                    timeSpan = "00:00:" + timeSpan;
-                    break;
-                case TimeSpanAssumption.Minutes:
-                    timeSpan += ":00";
-                    break;
-                case TimeSpanAssumption.Hours:
-                    timeSpan += ":00:00";
-                    break;
-                case TimeSpanAssumption.Days:
-                    timeSpan += ".0:00:00:00";
-                    break;
-            }
+            return result;
         }
 
-        return timeSpan;
+        throw new ArgumentException($"Unable to parse TimeSpan from value: '{value}'", nameof(value));
     }
 
     /// <summary>
-    /// Returns the value of the TimeSpan as a string, and ensures
-    /// that there is a leading character specifying either whether
-    /// it is positive or negative.
+    /// Formats a TimeSpan with an explicit sign indicator.
     /// </summary>
-    /// <param name="span">The span.</param>
-    /// <returns></returns>
-    public static string ToStringTimeSpan(TimeSpan span)
+    /// <param name="timeSpan">The TimeSpan to format</param>
+    /// <returns>A string representation with explicit positive or negative sign</returns>
+    public static string FormatWithSign(TimeSpan timeSpan) =>
+        (timeSpan >= TimeSpan.Zero ? "+" : "") + timeSpan;
+
+    /// <summary>
+    /// Formats a nullable TimeSpan with an explicit sign indicator.
+    /// </summary>
+    /// <param name="timeSpan">The nullable TimeSpan to format</param>
+    /// <returns>A string representation with explicit sign, or null if the input is null</returns>
+    public static string? FormatWithSign(TimeSpan? timeSpan) =>
+        timeSpan?.Let(FormatWithSign);
+
+    /// <summary>
+    /// Extension method to enable fluent syntax for nullable operations
+    /// </summary>
+    internal static TResult Let<T, TResult>(this T value, Func<T, TResult> func) => func(value);
+
+    #endregion
+
+    #region Utility Methods
+
+    /// <summary>
+    /// Gets the last day of the specified month and year.
+    /// </summary>
+    /// <param name="year">The year</param>
+    /// <param name="month">The month (1-12)</param>
+    /// <returns>The last day of the month as a DateTime</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when year or month are out of valid range</exception>
+    public static DateTime GetLastDayOfMonth(int year, int month)
     {
-        return (IsTimeSpanNegative(span) ? "" : "+") + span;
+        ArgumentOutOfRangeException.ThrowIfLessThan(year, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(month, 1);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
+
+        int daysInMonth = DateTime.DaysInMonth(year, month);
+        return new DateTime(year, month, daysInMonth);
     }
 
     /// <summary>
-    /// Returns the value of the TimeSpan as a string, and ensures
-    /// that there is a leading character specifying either whether
-    /// it is positive or negative.
+    /// Truncates a DateTime to the specified precision.
     /// </summary>
-    /// <param name="span">The span.</param>
-    /// <returns></returns>
-    public static string? ToStringTimeSpan(TimeSpan? span)
+    /// <param name="dateTime">The DateTime to truncate</param>
+    /// <param name="precision">The TimeSpan representing the precision</param>
+    /// <returns>The truncated DateTime</returns>
+    public static DateTime Truncate(DateTime dateTime, TimeSpan precision)
     {
-        if (span == null) return null;
-        return ToStringTimeSpan(span.Value);
-    }
-
-    /// <summary>
-    /// Trims the time span.
-    /// </summary>
-    /// <param name="span">The span.</param>
-    /// <returns></returns>
-    public static string TrimTimeSpan(string span)
-    {
-        return TrimTimeSpan(span, true);
-    }
-
-    /// <summary>
-    /// Trims the time span.
-    /// </summary>
-    /// <param name="span">The span.</param>
-    /// <param name="trimZeroMinutes">if set to <see langword="true"/> [trim zero minutes].</param>
-    /// <returns></returns>
-    public static string TrimTimeSpan(string span, bool trimZeroMinutes)
-    {
-        if (span.EndsWith(":00"))
+        if (precision <= TimeSpan.Zero)
         {
-            span = span.Substring(0, span.Length - 3);
-        }
-        if (trimZeroMinutes && span.EndsWith(":00"))
-        {
-            span = span.Substring(0, span.Length - 3);
+            throw new ArgumentException("Precision must be positive", nameof(precision));
         }
 
-        return span;
+        long ticks = dateTime.Ticks / precision.Ticks * precision.Ticks;
+        return new DateTime(ticks, dateTime.Kind);
     }
+
+    #endregion
+
+    #region Obsolete Methods
+
+    ///// <summary>
+    ///// Gets the last day of the specified year\month combination.
+    ///// </summary>
+    ///// <param name="year">The year.</param>
+    ///// <param name="month">The month.</param>
+    ///// <returns>Last day of the specified year\month combination.</returns>
+    ///// <exception cref="ArgumentOutOfRangeException">Is thrown if <paramref name="year"/> or <paramref name="month"/> are out of range.</exception>
+    ///// <remarks>Uses the <see cref="GregorianCalendar"/> to determine the last day.</remarks>
+    //public static DateTime GetLastDay(int year, int month)
+    //{
+    //    ArgumentOutOfRangeException.ThrowIfLessThan(year, 0);
+    //    ArgumentOutOfRangeException.ThrowIfLessThan(month, 1);
+    //    ArgumentOutOfRangeException.ThrowIfGreaterThan(month, 12);
+
+    //    // Start at the last day of the month, until we get to the day of the week
+    //    // we were looking for
+    //    DateTime lastDay = new DateTime(year, month, new GregorianCalendar().GetDaysInMonth(year, month));
+    //    return lastDay.Date;
+    //}
 
     #endregion
 
