@@ -209,7 +209,7 @@ public static class ArgChecker
     /// <param name="argName">The Name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argFilePath"/> is <see langword="null"/></exception>
     /// <exception cref="ArgumentException">Is thrown if <paramref name="argFilePath"/> is an empty string.</exception>
-    /// <exception cref="ArgumentException">Is thrown if <paramref name="argFilePath"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argFilePath"/> length is too long (see <see cref="FileSystemManager.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
     /// <exception cref="ArgumentException">Is thrown if the <paramref name="argFilePath"/> value is not a path to a existing file.</exception>
     [DebuggerStepThrough]
     public static void ShouldBeExistingFile(string? argFilePath, [CallerArgumentExpression(nameof(argFilePath))] string? argName = null)
@@ -245,7 +245,7 @@ public static class ArgChecker
     /// <param name="argName">The Name of the argument.</param>
     /// <exception cref="ArgumentNullException">Is thrown if <paramref name="argFileInfo"/> is <see langword="null"/></exception>
     /// <exception cref="ArgumentException">Is thrown if <paramref name="argFileInfo"/> is an empty string.</exception>
-    /// <exception cref="ArgumentException">Is thrown if <paramref name="argFileInfo"/> length is too long (see <see cref="FileHelper.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
+    /// <exception cref="ArgumentException">Is thrown if <paramref name="argFileInfo"/> length is too long (see <see cref="FileSystemManager.MAXIMUM_FILE_NAME_LENGTH"/>).</exception>
     /// <exception cref="ArgumentException">Is thrown if the <paramref name="argFileInfo"/> value is not a path to a existing file.</exception>
     [DebuggerStepThrough]
     public static void ShouldBeExistingFile(FileInfo? argFileInfo, [CallerArgumentExpression(nameof(argFileInfo))] string? argName = null)

@@ -191,7 +191,7 @@ CoreMin/
 │   │   ├── StreamExtensions.cs
 │   │   └── StreamReaderExtensions.cs
 │   ├── Utils/
-│   │   ├── FileHelper.cs
+│   │   ├── **FileHelper.cs (Migration fertig + Unittests => Umbenennung in FileSystemManager.cs)
 │   │   ├── PathHelper.cs
 │   │   ├── StreamHelper.cs
 │   │   └── StreamReaderHelper.cs
