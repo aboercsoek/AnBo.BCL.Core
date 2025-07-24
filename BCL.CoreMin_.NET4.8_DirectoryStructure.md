@@ -8,13 +8,13 @@ CoreMin/
 │   │   └── PropertyBagDebugView.cs
 │   ├── Generic/
 │   │   ├── DebugViews/
-│   │   │   ├── _CollectionDebugView.cs_ (Obsolet: Is in .NET 8+ vorhanden)
-│   │   │   ├── _DictionaryDebugView.cs_ (Obsolet: Is in .NET 8+ vorhanden)
-│   │   │   └── HashSetDebugView.cs (Obsolet: Is in .NET 8+ vorhanden)
-│   │   ├── _HashSet.cs_ (Obsolet: Is in .NET 8+ vorhanden)
-│   │   ├── OrderedDictionary.cs (Obsolet: Is in .NET 8+ vorhanden)
-│   │   ├── ReadOnlyCollection.cs (Obsolet: Is in .NET 8+ vorhanden)
-│   │   ├── ReadOnlyDictionary.cs (Obsolet: Is in .NET 8+ vorhanden)
+│   │   │   ├── *CollectionDebugView.cs (Obsolet: Is in .NET 8+ vorhanden)
+│   │   │   ├── *DictionaryDebugView.cs (Obsolet: Is in .NET 8+ vorhanden)
+│   │   │   └── *HashSetDebugView.cs (Obsolet: Is in .NET 8+ vorhanden)
+│   │   ├── *HashSet.cs (Obsolet: Is in .NET 8+ vorhanden)
+│   │   ├── *OrderedDictionary.cs (Obsolet: Is in .NET 8+ vorhanden)
+│   │   ├── *ReadOnlyCollection.cs (Obsolet: Is in .NET 8+ vorhanden)
+│   │   ├── *ReadOnlyDictionary.cs (Obsolet: Is in .NET 8+ vorhanden)
 │   │   ├── TrackedList.cs
 │   │   ├── TrackedListEnumerator.cs
 │   │   ├── Tree.cs
@@ -27,14 +27,14 @@ CoreMin/
 │   ├── IPropertyBag.cs
 │   └── PropertyBag.cs
 ├── Core/
-│   ├── AppUtils/
-│   │   ├── AppHelper.cs
-│   │   └── GlobalLock.cs
-│   ├── BooleanBoxes.cs (Migrit + Unittests)
-│   ├── BoolExtensions.cs (Migrit + Unittests)
-│   ├── GarbageCollectorEx.cs (Migrit + Unittests)
-│   ├── NumberFormatter.cs (Migrit + Unittests => Verschoben nach DataTypes/Converters)
-│   └── ObjectEx.cs (Migrit + Unittests => Verschoben nach Reflection)
+│   ├── AppUtil/
+│   │   ├── AppHelper.s
+│   │   └── GlobalLock.s
+│   ├── **BooleanBoxes.cs (Migration fertig + Unittests)
+│   ├── **BoolExtensions.cs (Migration fertig + Unittests)
+│   ├── **GarbageCollectorEx.cs (Migration fertig + Unittests)
+│   ├── **NumberFormatter.cs (Migration fertig + Unittests => Verschoben nach DataTypes/Converters)
+│   └── **ObjectEx.cs (Migration fertig + Unittests => Verschoben nach Reflection)
 ├── CUI/
 │   ├── ActionBasedMenuItemCmd.cs
 │   ├── AppMenuController.cs
@@ -51,7 +51,7 @@ CoreMin/
 │       └── DbDataHelper.cs
 ├── DataTypes/
 │   ├── Algorithms/
-│   │   ├── Crc32Helper.cs
+│   │   ├── **Crc32Helper.cs (Migration fertig + Unittests)
 │   │   ├── NameGenerator.cs
 │   │   ├── PrimeFinder.cs
 │   │   └── SequenceNumberGenerator.cs
@@ -68,20 +68,20 @@ CoreMin/
 │   ├── Converters/
 │   │   ├── Base64Converter.cs
 │   │   ├── ByteArrayConverter.cs
-│   │   ├── HexConverter.cs
-│   │   └── HexStringFormatOptions.cs
+│   │   ├── **HexConverter.cs (Migration fertig + Unittests)
+│   │   └── **HexStringFormatOptions.cs (Migration fertig + Unittests)
 │   ├── Enums/
-│   │   ├── EnumExtensions.cs
-│   │   └── EnumHelper.cs
+│   │   ├── **EnumExtensions.cs (Migration fertig + Unittests)
+│   │   └── **EnumHelper.cs (Migration fertig + Unittests)
 │   ├── DisposeMethodTrigger.cs
 │   ├── DoubleUtil.cs
 │   ├── FloatUtil.cs
-│   ├── IndexValuePair.cs
+│   ├── **IndexValuePair.cs (Migration fertig + Unittests)
 │   ├── Pair.cs
 │   ├── PairEx.cs
 │   ├── Singleton.cs
 │   ├── TimestampedValue.cs
-│   └── Tuple.cs
+│   └── *Tuple.cs (Obsolet: Is in .NET 8+ vorhanden)
 ├── Diagnostics/
 │   ├── ActionScopeTracer.cs
 │   ├── CallStack.cs
@@ -117,13 +117,13 @@ CoreMin/
 │   └── KnownColors.cs
 ├── Error/
 │   ├── ArgumentExceptions/
-│   │   ├── ArgDirectoryPathException.cs
-│   │   ├── ArgEmptyException.cs
-│   │   ├── ArgException.cs
-│   │   ├── ArgFilePathException.cs
-│   │   ├── ArgNullException.cs
-│   │   ├── ArgNullOrEmptyException.cs
-│   │   └── ArgOutOfRangeException.cs
+│   │   ├── *ArgDirectoryPathException.cs (Obsolet: Wird durch ArgumentExceptions ersetzt)
+│   │   ├── *ArgEmptyException.cs (Obsolet: Wird durch ArgumentExceptions ersetzt)
+│   │   ├── *ArgException.cs (Obsolet: Wird durch ArgumentExceptions ersetzt)
+│   │   ├── *ArgFilePathException.cs (Obsolet: Wird durch ArgumentExceptions ersetzt)
+│   │   ├── *ArgNullException.cs (Obsolet: Wird durch ArgumentNullExceptions ersetzt)
+│   │   ├── *ArgNullOrEmptyException.cs (Obsolet: Wird durch ArgumentExceptions ersetzt)
+│   │   └── *ArgOutOfRangeException.cs (Obsolet: Wird durch ArgumentOutOfRangeExceptions ersetzt)
 │   ├── BusinessExceptions/
 │   │   └── BrokenBusinessRuleException.cs
 │   ├── DataTypeExceptions/
@@ -132,8 +132,8 @@ CoreMin/
 │   ├── InteropExceptions/
 │   │   └── Win32ExecutionException.cs
 │   ├── IOExceptions/
-│   │   ├── DirectoryPathTooLongException.cs
-│   │   └── FilePathTooLongException.cs
+│   │   ├── *DirectoryPathTooLongException.cs (Obsolet)
+│   │   └── *FilePathTooLongException.cs (Obsolet)
 │   ├── RuntimeExceptions/
 │   │   ├── AccessToDisposedObjectException.cs
 │   │   ├── InvalidOperationRequestException.cs
@@ -204,13 +204,13 @@ CoreMin/
 │   ├── UnclosableStream.cs
 │   └── VirtualStream.cs
 ├── Linq/
-│   ├── ArrayExtensions.cs
+│   ├── **ArrayExtensions.cs  (Migration fertig + Unittests)
 │   ├── CollectionHelper.cs
 │   ├── DictionaryExtensions.cs
 │   ├── EmptyArrayT.cs
 │   ├── EmptyCollection.cs
 │   ├── EmptyDictionary.cs
-│   ├── EnumerableExtensions.cs
+│   ├── ** EnumerableExtensions.cs (Migration fertig + Unittests)
 │   ├── IteratorHelper.cs
 │   ├── QueueExtensions.cs
 │   └── StackExtensions.cs
@@ -262,12 +262,12 @@ CoreMin/
 │   ├── MethodInfoEx.cs
 │   ├── ReflectionEx.cs
 │   ├── ReflectionUtils.cs
-│   ├── TypeEx.cs
-│   ├── TypeHelper.cs
-│   └── TypeOf.cs
+│   ├── **TypeEx.cs (Migration fertig + Unittests)
+│   ├── **TypeHelper.cs (Migration fertig + Unittests)
+│   └── **TypeOf.cs (Migration fertig + Unittests)
 ├── RegularExpression/
-│   ├── RegexExpressionStrings.cs
-│   └── RegexHelper.cs
+│   ├── *RegexExpressionStrings.cs (Obsolet: Wurde in RegexPatterns überführt)
+│   └── **RegexHelper.cs (Migration fertig + Unittests)
 ├── Resources/
 │   └── SmartExpert.ico
 ├── Security/
@@ -340,14 +340,14 @@ CoreMin/
 │   └── ServiceStartType.cs
 ├── Text/
 │   ├── Converters/
-│   │   ├── StringConverter.cs
+│   │   ├── *StringConverter.cs (Obsolet: Wurde in StringExtensions integriert)
 │   │   └── StringParser.cs
 │   ├── Extensions/
-│   │   ├── StringBuilderEx.cs
-│   │   └── StringEx.cs
+│   │   ├── **StringBuilderEx.cs (Migration fertig + Unittests)
+│   │   └── **StringEx.cs (Migration fertig + Unittests => Namensänderung: StringExtensions.cs)
 │   └── Utils/
 │       ├── StringBuilderHelper.cs
-│       └── StringHelper.cs
+│       └── **StringHelper.cs (Migration fertig + Unittests)
 ├── Threading/
 │   ├── ActiveTimeTrigger.cs
 │   ├── AsyncHelper.cs
@@ -356,10 +356,10 @@ CoreMin/
 │   └── SpinWaitLock.cs
 ├── Time/
 │   └── Utils/
-│       ├── DateTimeHelper.cs
-│       └── MonthType.cs
+│       ├── **DateTimeHelper.cs (Migration fertig + Unittests => Verschoben nach DataTypes/DateAndTime)
+│       └── **MonthType.cs (Migration fertig + Unittests => Verschoben nach DataTypes/DateAndTime)
 ├── Validation/
-│   ├── ArgChecker.cs
+│   ├── **ArgChecker.cs (Migration fertig + Unittests)
 │   ├── ResharperAnnotations.cs
 │   └── Validator.cs
 ├── Web/
@@ -388,5 +388,5 @@ CoreMin/
 ├── SmartExpert.BCL.CoreMin.netfx40.ruleset
 ├── SmartExpert.BCL.CoreMin.netfx48.csproj
 ├── SmartExpert.BCL.CoreMin.netfx48.csproj.DotSettings
-├── StringResources.cs
-└── StringResources.resx
+├── **StringResources.cs (Migration fertig)
+└── **StringResources.resx (Migration fertig)

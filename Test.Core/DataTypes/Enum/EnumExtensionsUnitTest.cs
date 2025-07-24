@@ -251,8 +251,10 @@ public class EnumExtensionsUnitTest
     [Fact]
     public void ParseFromDescription_With_Null_String_Should_Return_Null()
     {
+        // Arrange
+        string? value = null;
         // Act
-        var result = ((string?)null).ParseFromDescription<TestEnum>();
+        var result = value!.ParseFromDescription<TestEnum>();
 
         // Assert
         result.Should().BeNull();

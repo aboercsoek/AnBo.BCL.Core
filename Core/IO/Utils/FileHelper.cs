@@ -17,29 +17,24 @@ namespace AnBo.Core
     /// <summary>
 	/// A file and directory helper class.
 	/// </summary>
-	public static class FileHelper
+	public static partial class FileHelper
     {
 
         #region Private Members
 
-        private readonly static char[] m_Separators = { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar, Path.VolumeSeparatorChar };
+        private static readonly char[] PathSeparators = [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar];
 
-        #endregion
+        /// <summary>
+        /// Compiled regex for URL detection - cached for performance
+        /// </summary>
+        [GeneratedRegex(@"^[a-zA-Z][a-zA-Z0-9+.-]*://", RegexOptions.Compiled)]
+        private static partial Regex UrlPattern();
 
-        #region Public constants
-
-        // Are these constants defined anywhere in the .NET Framework?  They were
-        // taken from PathTooLongException.Message, which is this:
-        //
-        // "The specified path, file name, or both are too long. 
-        // The fully qualified file name must be less than 260 characters, 
-        // and the directory name must be less than 248 characters."
-
-        /// <summary>Maximum file name length (259).</summary>
-        public const Int32 MAXIMUM_FILE_NAME_LENGTH = 259;
-
-        /// <summary>Maximum folder name length  (247).</summary>
-        public const Int32 MAXIMUM_FOLDER_NAME_LENGTH = 247;
+        /// <summary>
+        /// Compiled regex for 3-character extension matching
+        /// </summary>
+        [GeneratedRegex(@"^\*\..{3}$", RegexOptions.Compiled)]
+        private static partial Regex ExtensionPattern();
 
         #endregion
 
@@ -277,8 +272,8 @@ namespace AnBo.Core
             baseDirectoryPath = NormalizePath(baseDirectoryPath);
             absPath = NormalizePath(absPath);
 
-            string[] bPath = baseDirectoryPath.Split(m_Separators);
-            string[] aPath = absPath.Split(m_Separators);
+            string[] bPath = baseDirectoryPath.Split(PathSeparators);
+            string[] aPath = absPath.Split(PathSeparators);
             int indx = 0;
 
             for (; indx < Math.Min(bPath.Length, aPath.Length); ++indx)

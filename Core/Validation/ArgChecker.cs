@@ -220,10 +220,10 @@ public static class ArgChecker
             // Use Path.GetFullPath for better validation
             var fullPath = Path.GetFullPath(argFilePath);
 
-            if (fullPath.Length > FileHelper.MAXIMUM_FILE_NAME_LENGTH)
-                throw new ArgumentException(
-                    StringResources.ErrorArgFilePathToLongTemplate2Args.SafeFormatWith(argName, argFilePath),
-                    argName!);
+            //if (fullPath.Length > FileHelper.MAXIMUM_FILE_NAME_LENGTH)
+            //    throw new ArgumentException(
+            //        StringResources.ErrorArgFilePathToLongTemplate2Args.SafeFormatWith(argName, argFilePath),
+            //        argName!);
 
             if (File.Exists(fullPath) == false)
                 throw new ArgumentException(
@@ -276,10 +276,10 @@ public static class ArgChecker
             // Use Path.GetFullPath for better validation
             var fullPath = Path.GetFullPath(argDirectoryPath);
 
-            if (fullPath.Length > FileHelper.MAXIMUM_FOLDER_NAME_LENGTH)
-                throw new ArgumentException(
-                    StringResources.ErrorArgDirectoryPathToLongTemplate2Args.SafeFormatWith(argName, argDirectoryPath),
-                    argName!);
+            //if (fullPath.Length > FileHelper.MAXIMUM_FOLDER_NAME_LENGTH)
+            //    throw new ArgumentException(
+            //        StringResources.ErrorArgDirectoryPathToLongTemplate2Args.SafeFormatWith(argName, argDirectoryPath),
+            //        argName!);
 
             if (Directory.Exists(fullPath) == false)
                 throw new ArgumentException(
