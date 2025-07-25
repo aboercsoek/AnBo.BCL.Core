@@ -27,6 +27,15 @@ public abstract class MenuItemCommandBase
         DoExecute();
     }
 
+    /// <summary>
+    /// Execute the menu option asynchronously
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation</returns>
+    public async Task ExecuteAsync()
+    {
+        await DoExecuteAsync();
+    }
+
     #endregion
 
     #region Abstract Members
@@ -37,9 +46,19 @@ public abstract class MenuItemCommandBase
     public abstract string Text { get; }
 
     /// <summary>
-    /// Execute the menu item operation.
+    /// Execute the menu item operation synchronously.
     /// </summary>
     protected abstract void DoExecute();
+
+    /// <summary>
+    /// Execute the menu item operation asynchronously.
+    /// Default implementation wraps synchronous execution in a task.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation</returns>
+    protected virtual async Task DoExecuteAsync()
+    {
+        await Task.Run(() => DoExecute());
+    }
 
     #endregion
 }

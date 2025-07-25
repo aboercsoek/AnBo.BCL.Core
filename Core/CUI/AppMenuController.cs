@@ -23,8 +23,8 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
 {
     #region Private Members
 
-    private readonly List<MenuItemCommandBase> m_MenuItems = new List<MenuItemCommandBase>();
-    private IAppMenuView m_View;
+    private readonly List<MenuItemCommandBase> menuItems = new List<MenuItemCommandBase>();
+    private IAppMenuView menuView;
 
     #endregion
 
@@ -36,7 +36,7 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
     /// <param name="appMenuHeaderText">The application menu header text.</param>
     public AppMenuController(string appMenuHeaderText)
     {
-        m_View = new ConsoleAppMenuView(appMenuHeaderText ?? "Console Application Menu");
+        menuView = new ConsoleAppMenuView(appMenuHeaderText ?? "Console Application Menu");
     }
 
     /// <summary>
@@ -55,21 +55,30 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
 
     #endregion
 
-    #region Application Menu Execution Method
+    #region Application Menu Execution Methods
 
     /// <summary>
-    /// Execute console application menu.
+    /// Execute console application menu synchronously.
     /// </summary>
     public void Run()
     {
-        // Initialize the view with menu items texts
-        m_View.InitView(this.Select(menuItem => menuItem.Text));
+        RunAsync().GetAwaiter().GetResult();
+    }
 
-        while (!m_View.ShouldQuit)
+    /// <summary>
+    /// Execute console application menu asynchronously.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation</returns>
+    public async Task RunAsync()
+    {
+        // Initialize the view with menu items texts
+        menuView.InitView(this.Select(menuItem => menuItem.Text));
+
+        while (!menuView.ShouldQuit)
         {
-            m_View.DisplayMenu();
-            HandleUserSelection();
-            m_View.PromptToContinue();
+            menuView.DisplayMenu();
+            await HandleUserSelectionAsync();
+            menuView.PromptToContinue();
         }
 
         // User selected to quit the application
@@ -83,25 +92,37 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
     /// <summary>
     /// Adds the specified menu item to the application menu.
     /// </summary>
-    /// <param name="menuItem">The menu item.</param>
+    /// <param name="menuItem">The menu item</param>
     public void Add(MenuItemCommandBase menuItem)
     {
         if (menuItem == null)
             return;
 
-        m_MenuItems.Add(menuItem);
+        menuItems.Add(menuItem);
     }
 
     /// <summary>
-    /// Adds the specified menu item action to the application menu.
+    /// Adds the specified synchronous menu item action to the application menu.
     /// </summary>
-    /// <param name="menuItemAction">The menu item action.</param>
+    /// <param name="menuItemAction">The synchronous menu item action</param>
     public void Add(Action menuItemAction)
     {
         if (menuItemAction == null)
             return;
 
-        m_MenuItems.Add(new ActionBasedMenuItemCmd(menuItemAction));
+        menuItems.Add(new ActionBasedMenuItemCmd(menuItemAction));
+    }
+
+    /// <summary>
+    /// Adds the specified asynchronous menu item action to the application menu.
+    /// </summary>
+    /// <param name="menuItemAsyncAction">The asynchronous menu item action</param>
+    public void Add(Func<Task> menuItemAsyncAction)
+    {
+        if (menuItemAsyncAction == null)
+            return;
+
+        menuItems.Add(new ActionBasedMenuItemCmd(menuItemAsyncAction));
     }
 
     /// <summary>
@@ -112,7 +133,7 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
     /// </returns>
     public IEnumerator<MenuItemCommandBase> GetEnumerator()
     {
-        return m_MenuItems.GetEnumerator();
+        return menuItems.GetEnumerator();
     }
 
     IEnumerator IEnumerable.GetEnumerator()
@@ -124,22 +145,35 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
 
     #region Private Methods
 
-    private void HandleUserSelection()
+    /// <summary>
+    /// Handle user selection asynchronously.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation</returns>
+    private async Task HandleUserSelectionAsync()
     {
-        int selectedOption = m_View.WaitForValidUserInput();
+        int selectedOption = menuView.WaitForValidUserInput();
         if (selectedOption != -1)
         {
-            m_View.ClearView();
-            m_View.WriteMenuOperationHeader(m_MenuItems[selectedOption].Text);
+            menuView.ClearView();
+            menuView.WriteMenuOperationHeader(menuItems[selectedOption].Text);
             try
             {
-                m_MenuItems[selectedOption].Execute();
+                // Execute async for better responsiveness
+                await menuItems[selectedOption].ExecuteAsync();
             }
             catch (Exception ex)
             {
-                m_View.ShowExceptionDetails(ex);
+                menuView.ShowExceptionDetails(ex);
             }
         }
+    }
+
+    /// <summary>
+    /// Handle user selection synchronously (legacy support).
+    /// </summary>
+    private void HandleUserSelection()
+    {
+        HandleUserSelectionAsync().GetAwaiter().GetResult();
     }
 
     #endregion
