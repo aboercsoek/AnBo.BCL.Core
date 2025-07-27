@@ -1032,7 +1032,7 @@ public class Console2FileExtensionsUnitTest : IDisposable
 
         foreach (var file in timestampedFiles)
         {
-            var content = Console2FileExtensionsUnitTest.ReadSharedFile(file);
+            var content = ReadSharedFile(file);
             content.Should().MatchRegex(@"Async task \d+ message");
         }
     }
