@@ -8,6 +8,7 @@ using Xunit.Sdk;
 
 namespace AnBo.Test;
 
+[Collection("Sequential")]
 public class TypeHelperUnitTest
 {
     #region DeepClone Tests

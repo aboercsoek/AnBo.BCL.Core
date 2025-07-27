@@ -707,6 +707,7 @@ public class Crc32HelperUnitTest
             await File.WriteAllBytesAsync(tempFile, largeData);
 
             using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(1));
+            cts.Cancel(); // Cancel immediately
 
             // Act & Assert
             var action = async () => await Crc32Helper.ComputeFileAsync(tempFile, cts.Token);
