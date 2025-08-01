@@ -28,7 +28,7 @@ public abstract class MenuItemCommandBase
     /// Executes the menu option synchronously.
     /// This method delegates to the abstract DoExecute implementation.
     /// </summary>
-    public void Execute()
+    public virtual void Execute()
     {
         DoExecute();
     }
@@ -38,7 +38,7 @@ public abstract class MenuItemCommandBase
     /// This method delegates to the virtual DoExecuteAsync implementation.
     /// </summary>
     /// <returns>A task representing the asynchronous operation</returns>
-    public async Task ExecuteAsync()
+    public virtual async Task ExecuteAsync()
     {
         await DoExecuteAsync().ConfigureAwait(false);
     }
