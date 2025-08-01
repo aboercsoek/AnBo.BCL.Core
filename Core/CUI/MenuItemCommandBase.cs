@@ -12,15 +12,21 @@
 namespace AnBo.Core;
 
 /// <summary>
-/// A class that encapsulates the behavior of a single menu item,
-/// and is responsible for it's execution.
+/// Abstract base class that encapsulates the behavior of a single menu item
+/// and provides both synchronous and asynchronous execution capabilities.
+/// Implements the Command pattern for menu operations.
+/// </summary>
+/// Abstract base class that encapsulates the behavior of a single menu item
+/// and provides both synchronous and asynchronous execution capabilities.
+/// Implements the Command pattern for menu operations.
 /// </summary>
 public abstract class MenuItemCommandBase
 {
     #region Public Methods
 
     /// <summary>
-    /// Execute the menu option
+    /// Executes the menu option synchronously.
+    /// This method delegates to the abstract DoExecute implementation.
     /// </summary>
     public void Execute()
     {
@@ -28,36 +34,41 @@ public abstract class MenuItemCommandBase
     }
 
     /// <summary>
-    /// Execute the menu option asynchronously
+    /// Executes the menu option asynchronously with optimal performance.
+    /// This method delegates to the virtual DoExecuteAsync implementation.
     /// </summary>
     /// <returns>A task representing the asynchronous operation</returns>
     public async Task ExecuteAsync()
     {
-        await DoExecuteAsync();
+        await DoExecuteAsync().ConfigureAwait(false);
     }
 
     #endregion
 
-    #region Abstract Members
+    #region Abstract and Virtual Members
 
     /// <summary>
-    /// Text to display for menu item.
+    /// Gets the display text for the menu item.
+    /// Must be implemented by derived classes to provide menu item description.
     /// </summary>
+    /// <value>The text to display in the menu interface</value>
     public abstract string Text { get; }
 
     /// <summary>
-    /// Execute the menu item operation synchronously.
+    /// Executes the menu item operation synchronously.
+    /// Must be implemented by derived classes to define the actual operation logic.
     /// </summary>
     protected abstract void DoExecute();
 
     /// <summary>
-    /// Execute the menu item operation asynchronously.
-    /// Default implementation wraps synchronous execution in a task.
+    /// Executes the menu item operation asynchronously.
+    /// Default implementation wraps the synchronous execution in a task.
+    /// Override this method in derived classes for true asynchronous operations.
     /// </summary>
     /// <returns>A task representing the asynchronous operation</returns>
     protected virtual async Task DoExecuteAsync()
     {
-        await Task.Run(() => DoExecute());
+        await Task.Run(DoExecute).ConfigureAwait(false);
     }
 
     #endregion

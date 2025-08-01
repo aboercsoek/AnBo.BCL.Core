@@ -1223,6 +1223,8 @@ public class ConsoleHelperUnitTest : IDisposable
             Task.WaitAll(tasks.ToArray());
         });
 
+        await Task.Delay(1);
+
         // Assert
         // Verify that all messages appear in output
         for (int i = 0; i < messageCount; i++)

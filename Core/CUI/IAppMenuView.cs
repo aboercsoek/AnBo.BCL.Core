@@ -12,54 +12,85 @@
 namespace AnBo.Core;
 
 /// <summary>
-/// Application Menu View Contract
+/// Defines the contract for application menu view implementations.
+/// This interface abstracts the presentation layer from the menu logic,
+/// allowing for different UI implementations (console, GUI, web, etc.).
 /// </summary>
 public interface IAppMenuView
 {
+    #region Properties
+
     /// <summary>
     /// Gets a value indicating whether the user wants to quit the application.
+    /// This property is checked by the menu controller to determine when to exit.
     /// </summary>
     /// <value>
-    ///   <c>true</c> if user hitted ESC to quit the application; otherwise, <c>false</c>.
+    /// true if the user has requested to quit the application (e.g., pressed ESC);
+    /// otherwise, false
     /// </value>
     bool ShouldQuit { get; }
 
-    /// <summary>
-    /// Inits the view.
-    /// </summary>
-    /// <param name="menuItems">The menu items.</param>
-    void InitView(IEnumerable<string> menuItems);
+    #endregion
+
+    #region Initialization Methods
 
     /// <summary>
-    /// Displays the menu.
+    /// Initializes the view with the provided menu items.
+    /// This method prepares the view for displaying the menu options.
+    /// </summary>
+    /// <param name="menuItems">
+    /// A collection of menu item text strings to be displayed
+    /// </param>
+    void InitView(IEnumerable<string> menuItems);
+
+    #endregion
+
+    #region Display Methods
+
+    /// <summary>
+    /// Displays the complete menu interface to the user.
+    /// This includes headers, menu options, and user instruction prompts.
     /// </summary>
     void DisplayMenu();
 
     /// <summary>
-    /// Clears the view.
+    /// Clears the current view content.
+    /// Used to refresh the display or prepare for new content.
     /// </summary>
     void ClearView();
 
     /// <summary>
-    /// Writes the menu operation header.
+    /// Displays a header for the currently executing menu operation.
+    /// This provides user feedback about which operation is running.
     /// </summary>
-    /// <param name="headerText">The menu operation header text.</param>
+    /// <param name="headerText">The header text to display</param>
     void WriteMenuOperationHeader(string headerText);
 
     /// <summary>
-    /// Shows the exception details.
+    /// Displays detailed exception information to the user.
+    /// This method handles error presentation in a user-friendly format.
     /// </summary>
-    /// <param name="exception">The exception to show.</param>
+    /// <param name="exception">The exception details to display</param>
     void ShowExceptionDetails(Exception exception);
 
+    #endregion
+
+    #region User Interaction Methods
+
     /// <summary>
-    /// Waits for valid user menu item selection.
+    /// Waits for and validates user menu item selection.
+    /// This method handles input validation and user interaction logic.
     /// </summary>
-    /// <returns>Selected meu item index or -1 if user selected quit option.</returns>
+    /// <returns>
+    /// The selected menu item index (0-based), or -1 if the user chose to quit
+    /// </returns>
     int WaitForValidUserInput();
 
     /// <summary>
-    /// Prompts to continue after menu item operation execution.
+    /// Prompts the user to continue after menu operation execution.
+    /// This provides a pause mechanism and allows users to review results.
     /// </summary>
     void PromptToContinue();
+
+    #endregion
 }
