@@ -21,6 +21,7 @@ namespace AnBo.Test.Unit;
 public class AppMenuControllerUnitTests
 {
     private readonly Mock<IAppMenuView> _mockView;
+    private readonly Mock<IEnvironmentService> _mockEnvironment;
     private readonly AppMenuController _controller;
     private bool _testActionExecuted;
 
@@ -30,7 +31,8 @@ public class AppMenuControllerUnitTests
     public AppMenuControllerUnitTests()
     {
         _mockView = new Mock<IAppMenuView>();
-        _controller = new AppMenuController("Test Menu");
+        _mockEnvironment = new Mock<IEnvironmentService>();
+        _controller = new AppMenuController("Test Menu", _mockEnvironment.Object);
         _controller.MenuView = _mockView.Object;
         _testActionExecuted = false;
     }
@@ -249,16 +251,68 @@ public class AppMenuControllerUnitTests
     #region Run Method Tests
 
     [Fact]
-    public void Run_ShouldUseCorrectMenuView()
+    public void Run_WithImmediateQuit_ShouldInitializeViewAndExit()
     {
         // Arrange
         _mockView.Setup(v => v.ShouldQuit).Returns(true); // Exit immediately
         _mockView.Setup(v => v.InitView(It.IsAny<IEnumerable<string>>()));
 
+        _controller.Add(TestAction1);
+
         // Act & Assert
-        // Note: Cannot easily test Run() due to Environment.Exit
-        // We verify the setup instead
-        _controller.MenuView.Should().Be(_mockView.Object);
+        _controller.Run();
+
+        // Verify the workflow
+        _mockView.Verify(v => v.InitView(It.IsAny<IEnumerable<string>>()), Times.Once);
+        _mockView.Verify(v => v.ShouldQuit, Times.Once);
+
+        // Display and prompt should not be called since ShouldQuit is true immediately
+        _mockView.Verify(v => v.DisplayMenu(), Times.Never);
+        _mockView.Verify(v => v.PromptToContinue(), Times.Never);
+
+        // Most importantly: Environment.Exit should be called
+        _mockEnvironment.Verify(e => e.Exit(0), Times.Once);
+
+    }
+
+    [Fact]
+    public void Run_WithSingleMenuInteraction_ShouldExecuteCompleteWorkflow()
+    {
+        var actionExecuted = false;
+
+        _controller.Add(() => actionExecuted = true );
+
+        // Setup view to simulate one menu interaction
+        _mockView.SetupSequence(v => v.ShouldQuit)
+            .Returns(false) // First call: continue
+            .Returns(true); // Second call: exit
+
+        _mockView.Setup(v => v.WaitForValidUserInput()).Returns(0); // Select first option
+        _mockView.Setup(v => v.InitView(It.IsAny<IEnumerable<string>>()));
+        _mockView.Setup(v => v.DisplayMenu());
+        _mockView.Setup(v => v.ClearView());
+        _mockView.Setup(v => v.WriteMenuOperationHeader(It.IsAny<string>()));
+        _mockView.Setup(v => v.PromptToContinue());
+
+        _controller.Run();
+
+        // Assert - Verify complete workflow execution
+        // 1. Initialization
+        _mockView.Verify(v => v.InitView(It.IsAny<IEnumerable<string>>()), Times.Once);
+
+        // 2. Menu interaction
+        _mockView.Verify(v => v.ShouldQuit, Times.Exactly(2));
+        _mockView.Verify(v => v.DisplayMenu(), Times.Once);
+        _mockView.Verify(v => v.WaitForValidUserInput(), Times.Once);
+        _mockView.Verify(v => v.ClearView(), Times.Once);
+        _mockView.Verify(v => v.WriteMenuOperationHeader(It.IsAny<string>()), Times.Once);
+        _mockView.Verify(v => v.PromptToContinue(), Times.Once);
+
+        // 3. Menu action execution
+        actionExecuted.Should().BeTrue();
+
+        // 4. Exit
+        _mockEnvironment.Verify(e => e.Exit(0), Times.Once);
     }
 
     [Fact]
@@ -315,39 +369,6 @@ public class AppMenuControllerUnitTests
 
     #endregion
 
-    #region Integration Test with Real Components
-
-    [Fact]
-    public void MenuController_WithRealComponents_ShouldWorkCorrectly()
-    {
-        // Arrange - Use real ConsoleAppMenuView for integration testing
-        var realController = new AppMenuController("Integration Test Menu");
-        var executionCount = 0;
-
-        realController.Add(() => executionCount++);
-        realController.Add(async () =>
-        {
-            await Task.Delay(1);
-            executionCount++;
-        });
-
-        // Act - Test direct menu item execution
-        var menuItems = realController.ToList();
-
-        // Execute sync item
-        menuItems[0].Execute();
-
-        // Execute async item
-        menuItems[1].ExecuteAsync().GetAwaiter().GetResult();
-
-        // Assert
-        executionCount.Should().Be(2);
-        realController.Count.Should().Be(2);
-        realController.MenuView.Should().BeOfType<ConsoleAppMenuView>();
-    }
-
-    #endregion
-
     #region Test Helper Methods
 
     /// <summary>
@@ -381,100 +402,3 @@ public class AppMenuControllerUnitTests
     #endregion
 }
 
-/// <summary>
-/// Integration tests for AppMenuController with real view
-/// Tests the complete workflow without excessive mocking
-/// </summary>
-public class AppMenuControllerIntegrationTests
-{
-    [Fact]
-    public void AppMenuController_WithRealView_ShouldInitializeCorrectly()
-    {
-        // Arrange & Act
-        var controller = new AppMenuController("Integration Test Menu");
-        controller.Add(() => Console.WriteLine("Test"));
-
-        // Assert
-        controller.Count.Should().Be(1);
-        controller.MenuView.Should().BeOfType<ConsoleAppMenuView>();
-    }
-
-    [Fact]
-    public void MenuItems_ShouldHaveCorrectTextFromDescriptionAttributes()
-    {
-        // Arrange
-        var controller = new AppMenuController("Test Menu");
-
-        // Act
-        controller.Add(TestMenuAction);
-        var menuItem = controller.First();
-
-        // Assert
-        menuItem.Text.Should().Be("Integration Test Menu Action");
-    }
-
-    [Fact]
-    public async Task MenuExecution_CompleteWorkflow_ShouldWork()
-    {
-        // Arrange
-        var controller = new AppMenuController("Workflow Test");
-        var results = new List<string>();
-
-        controller.Add(() => results.Add("Step1"));
-        controller.Add(async () =>
-        {
-            await Task.Delay(1);
-            results.Add("Step2");
-        });
-        controller.Add(() => results.Add("Step3"));
-
-        // Act - Execute all menu items in sequence
-        foreach (var menuItem in controller)
-        {
-            await menuItem.ExecuteAsync();
-        }
-
-        // Assert
-        results.Should().Equal("Step1", "Step2", "Step3");
-    }
-
-    [Fact]
-    public void MenuController_ErrorHandling_ShouldPropagateExceptions()
-    {
-        // Arrange
-        var controller = new AppMenuController("Error Test Menu");
-        controller.Add(() => throw new ArgumentException("Test error"));
-
-        // Act & Assert
-        var menuItem = controller.First();
-        var exception = Assert.Throws<ArgumentException>(() => menuItem.Execute());
-        exception.Message.Should().Be("Test error");
-    }
-
-    [Fact]
-    public void MenuView_Replacement_ShouldWorkCorrectly()
-    {
-        // Arrange
-        var controller = new AppMenuController("View Test");
-        var mockView = new Mock<IAppMenuView>();
-        mockView.Setup(v => v.ShouldQuit).Returns(false);
-
-        var originalView = controller.MenuView;
-
-        // Act
-        controller.MenuView = mockView.Object;
-
-        // Assert
-        controller.MenuView.Should().Be(mockView.Object);
-        controller.MenuView.Should().NotBe(originalView);
-    }
-
-    /// <summary>
-    /// Test menu action for integration testing with proper description
-    /// </summary>
-    [Description("Integration Test Menu Action")]
-    private static void TestMenuAction()
-    {
-        // Test action implementation
-    }
-}

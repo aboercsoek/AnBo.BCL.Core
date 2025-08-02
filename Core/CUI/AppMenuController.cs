@@ -29,6 +29,7 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
 
     private readonly List<MenuItemCommandBase> _menuItems = [];
     private IAppMenuView _menuView;
+    private readonly IEnvironmentService _environmentService;
 
     #endregion
 
@@ -42,9 +43,11 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
     /// The header text to display at the top of the menu.
     /// If null, a default header will be used.
     /// </param>
-    public AppMenuController(string? appMenuHeaderText)
+    /// <param name="environmentService">Environment service for exit operations</param>
+    public AppMenuController(string? appMenuHeaderText, IEnvironmentService? environmentService = null)
     {
         _menuView = new ConsoleAppMenuView(appMenuHeaderText ?? "Console Application Menu");
+        _environmentService = environmentService ?? new EnvironmentService();
     }
 
     /// <summary>
@@ -120,7 +123,7 @@ public class AppMenuController : IEnumerable<MenuItemCommandBase>
         }
 
         // User selected to quit the application
-        Environment.Exit(0);
+        _environmentService.Exit(0);
     }
 
     #endregion

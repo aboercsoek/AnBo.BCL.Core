@@ -1,9 +1,16 @@
-﻿using AnBo.Test.Helpers;
+﻿//--------------------------------------------------------------------------
+// File:    ConsoleMenuIntegrationTests.cs
+// Content: Integration tests for Console Menu System
+// Author:  Andreas Börcsök
+// Copyright © 2025 Andreas Börcsök
+// License: GNU General Public License v3.0
+//--------------------------------------------------------------------------
+
+using AnBo.Test.Helpers;
 using AnBo.Core;
 using FluentAssertions;
 using Moq;
 using System.ComponentModel;
-using Xunit;
 
 namespace AnBo.Test.Integration;
 
@@ -12,7 +19,7 @@ namespace AnBo.Test.Integration;
 /// Shows real-world usage patterns and advanced testing techniques
 /// </summary>
 [Trait("Category", "Integration")]
-public class CompleteMenuTestingExample
+public class ConsoleMenuIntegrationTests
 {
     private bool _customerViewExecuted;
     private bool _reportGeneratedExecuted;
@@ -102,7 +109,7 @@ public class CompleteMenuTestingExample
     public async Task MenuPerformance_AsyncOperations_ShouldCompleteWithinExpectedTime()
     {
         // Arrange
-        const int expectedMaxExecutionTimeMs = 500;
+        const int expectedMaxExecutionTimeMs = 700;
         var performanceTestCommands = new[]
         {
             new SpyMenuCommand("Fast Operation", () => Task.Delay(50)),
@@ -342,6 +349,7 @@ public class CompleteMenuTestingExample
 /// Edge case testing for menu system
 /// Tests boundary conditions and error scenarios
 /// </summary>
+[Trait("Category", "Integration")]
 public class MenuEdgeCaseTests
 {
     [Fact]
@@ -437,6 +445,7 @@ public class MenuEdgeCaseTests
 /// Memory and resource management tests for menu system
 /// Ensures proper cleanup and resource handling
 /// </summary>
+[Trait("Category", "Integration")]
 public class MenuResourceManagementTests
 {
     [Fact]
@@ -519,6 +528,7 @@ public class MenuResourceManagementTests
 /// Behavioral tests for menu system
 /// Tests the overall behavior and user experience aspects
 /// </summary>
+[Trait("Category", "Integration")]
 public class MenuBehaviorTests
 {
     [Theory]

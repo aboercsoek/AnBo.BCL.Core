@@ -36,13 +36,13 @@ CoreMin/
 │   ├── **NumberFormatter.cs (Migration fertig + Unittests => Verschoben nach DataTypes/Converters)
 │   └── **ObjectEx.cs (Migration fertig + Unittests => Verschoben nach Reflection)
 ├── CUI/
-│   ├── ActionBasedMenuItemCmd.cs
-│   ├── AppMenuController.cs
-│   ├── CommandLine.cs
-│   ├── ConsoleAppMenuView.cs
-│   ├── ConsoleHelper.cs
-│   ├── IAppMenuView.cs
-│   ├── MenuItemCommandBase.cs
+│   ├── **ActionBasedMenuItemCmd.cs  (Migration fertig + Unittests)
+│   ├── **AppMenuController.cs  (Migration fertig + Unittests)
+│   ├── **CommandLine.cs
+│   ├── **ConsoleAppMenuView.cs  (Migration fertig + Unittests)
+│   ├── **ConsoleHelper.cs  (Migration fertig + Unittests)
+│   ├── **IAppMenuView.cs  (Migration fertig + Unittests)
+│   ├── **MenuItemCommandBase.cs  (Migration fertig + Unittests)
 │   └── Paragraph.cs
 ├── Data/
 │   ├── Extensions/
@@ -85,7 +85,7 @@ CoreMin/
 ├── Diagnostics/
 │   ├── ActionScopeTracer.cs
 │   ├── CallStack.cs
-│   ├── Console2File.cs
+│   ├── **Console2File.cs (Migration fertig + Unittests)
 │   ├── Console2String.cs
 │   ├── ConsoleTracer.cs
 │   ├── DebugTextWriter.cs
