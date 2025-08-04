@@ -255,7 +255,6 @@ public class AppMenuControllerUnitTests
     {
         // Arrange
         _mockView.Setup(v => v.ShouldQuit).Returns(true); // Exit immediately
-        _mockView.Setup(v => v.InitView(It.IsAny<IEnumerable<string>>()));
 
         _controller.Add(TestAction1);
 
@@ -288,13 +287,10 @@ public class AppMenuControllerUnitTests
             .Returns(true); // Second call: exit
 
         _mockView.Setup(v => v.WaitForValidUserInput()).Returns(0); // Select first option
-        _mockView.Setup(v => v.InitView(It.IsAny<IEnumerable<string>>()));
-        _mockView.Setup(v => v.DisplayMenu());
-        _mockView.Setup(v => v.ClearView());
-        _mockView.Setup(v => v.WriteMenuOperationHeader(It.IsAny<string>()));
-        _mockView.Setup(v => v.PromptToContinue());
 
         _controller.Run();
+
+        actionExecuted.Should().BeTrue();
 
         // Assert - Verify complete workflow execution
         // 1. Initialization
